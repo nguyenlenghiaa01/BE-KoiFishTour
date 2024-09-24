@@ -32,12 +32,12 @@ public class OrderAPI{
     }
     // /api/order/{id} => id cua thang order minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateOrder(@Valid @RequestBody OrderCart order, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateOrder(@Valid @RequestBody OrderCart order, @PathVariable long id){//valid kich hoat co che vadilation
         OrderCart newOrder = orderService.updateOrder(order,id);
         return ResponseEntity.ok(newOrder);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteOrder(@PathVariable String id) {
+    public ResponseEntity deleteOrder(@PathVariable long id) {
         OrderCart newOrder = orderService.deleteOrder(id);
         return ResponseEntity.ok(newOrder);
     }
