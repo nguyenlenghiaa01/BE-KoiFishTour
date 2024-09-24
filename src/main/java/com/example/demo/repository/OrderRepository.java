@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface OrderRepository  extends JpaRepository<OrderCart,String> {
-    OrderCart findOrderById(String orderId);
+public interface OrderRepository  extends JpaRepository<OrderCart,Long> {
+    OrderCart findOrderById(long id);
     List<OrderCart>findOrdersByIdIsDeletedFalse();
 }

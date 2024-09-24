@@ -30,7 +30,7 @@ public class SaleStaffService {
         List<SaleStaff> saleStaffs = saleStaffRepository.findSaleStaffsByIsDeletedFalse();
         return saleStaffs;
     }
-    public SaleStaff updateSaleStaff(SaleStaff saleStaff, String saleId){
+    public SaleStaff updateSaleStaff(SaleStaff saleStaff, long saleId){
         // buoc 1: tim toi thang Sale co id nhu la FE cung cap
         SaleStaff oldSaleStaff = saleStaffRepository.findSaleStaffById(saleId);
         if(oldSaleStaff ==null){
@@ -42,7 +42,7 @@ public class SaleStaffService {
         oldSaleStaff.setPassword(saleStaff.getPassword());
         return saleStaffRepository.save(oldSaleStaff);
     }
-    public SaleStaff deleteSaleStaff(String saleId){
+    public SaleStaff deleteSaleStaff(long saleId){
         SaleStaff oldSaleStaff = saleStaffRepository.findSaleStaffById(saleId);
         if(oldSaleStaff ==null){
             throw new NotFoundException("Sale Staff not found !");//dung viec xu ly ngay tu day

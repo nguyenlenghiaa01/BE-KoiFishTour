@@ -31,9 +31,9 @@ public class ManagerService {
         List<Manager> managers = managerRepository.findManagersByIsDeletedFalse();
         return managers;
     }
-    public Manager updateManager(Manager manager, String managerId){
+    public Manager updateManager(Manager manager, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
-        Manager oldManager = managerRepository.findManagerById(managerId);
+        Manager oldManager = managerRepository.findManagerById(id);
         if(oldManager ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }
@@ -44,8 +44,8 @@ public class ManagerService {
         oldManager.setPassword(manager.getPassword());
         return managerRepository.save(oldManager);
     }
-    public Manager deleteManager(String managerId){
-        Manager oldManger = managerRepository.findManagerById(managerId);
+    public Manager deleteManager(long id){
+        Manager oldManger = managerRepository.findManagerById(id);
         if(oldManger ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }

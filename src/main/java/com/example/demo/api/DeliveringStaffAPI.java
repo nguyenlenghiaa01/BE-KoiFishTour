@@ -30,12 +30,12 @@ public class DeliveringStaffAPI {
     }
     // /api/student/{id} => id cua thang delivering minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateDelivering(@Valid @RequestBody DeliveringStaff deliveringStaff, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateDelivering(@Valid @RequestBody DeliveringStaff deliveringStaff, @PathVariable long id){//valid kich hoat co che vadilation
         DeliveringStaff newDelivering = deliveringService.updateDeliveringStaff(deliveringStaff,id);
         return ResponseEntity.ok(newDelivering);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteDelivering(@PathVariable String id){
+    public ResponseEntity deleteDelivering(@PathVariable long id){
         DeliveringStaff newDelivering = deliveringService.deleteDeliveringStaff(id);
         return ResponseEntity.ok(newDelivering);
     }

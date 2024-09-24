@@ -31,7 +31,7 @@ public class TourService {
         List<Tour> tours = tourRepository.findToursByIsDeletedFalse();
         return tours;
     }
-    public Tour updateTour(Tour tour, String TourId){
+    public Tour updateTour(Tour tour, long TourId){
         // buoc 1: tim toi thang Tour co id nhu la FE cung cap
         Tour oldTour = tourRepository.findTourById(TourId);
         if(oldTour ==null){
@@ -44,7 +44,7 @@ public class TourService {
         oldTour.setPrice(tour.getPrice());
         return tourRepository.save(oldTour);
     }
-    public Tour deleteTour(String TourId){
+    public Tour deleteTour(long TourId){
         Tour oldTour = tourRepository.findTourById(TourId);
         if(oldTour ==null){
             throw new NotFoundException("Tour not found !");//dung viec xu ly ngay tu day

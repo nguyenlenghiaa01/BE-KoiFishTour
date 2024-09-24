@@ -30,12 +30,12 @@ public class CustomerAPI {
     }
     // /api/student/{id} => id cua thang customer minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateCustomer(@Valid @RequestBody Customer customer, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateCustomer(@Valid @RequestBody Customer customer, @PathVariable long id){//valid kich hoat co che vadilation
         Customer newCustomer = customerService.updateCustomer(customer,id);
         return ResponseEntity.ok(newCustomer);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteCustomer(@PathVariable String id){
+    public ResponseEntity deleteCustomer(@PathVariable long id){
         Customer newCustomer = customerService.deleteCustomer(id);
         return ResponseEntity.ok(newCustomer);
     }

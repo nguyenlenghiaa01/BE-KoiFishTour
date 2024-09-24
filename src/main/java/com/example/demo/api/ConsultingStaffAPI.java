@@ -30,12 +30,12 @@ public class ConsultingStaffAPI {
     }
     // /api/consulting/{id} => id cua thang consulting minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateConsultingStaff(@Valid @RequestBody ConsultingStaff consultingStaff, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateConsultingStaff(@Valid @RequestBody ConsultingStaff consultingStaff, @PathVariable long id){//valid kich hoat co che vadilation
         ConsultingStaff newConsulting = consultingStaffService.updateConsultingStaff(consultingStaff,id);
         return ResponseEntity.ok(newConsulting);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteConsultingStaff(@PathVariable String id){
+    public ResponseEntity deleteConsultingStaff(@PathVariable long id){
         ConsultingStaff newConsultingStaff = consultingStaffService.deleteConsultingStaff(id);
         return ResponseEntity.ok(newConsultingStaff);
     }

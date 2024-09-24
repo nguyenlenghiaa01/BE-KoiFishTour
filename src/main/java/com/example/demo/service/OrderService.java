@@ -31,9 +31,9 @@ public class OrderService {
         List<OrderCart> orders = orderRepository.findOrdersByIdIsDeletedFalse();
         return orders;
     }
-    public OrderCart updateOrder(OrderCart order, String orderId){
+    public OrderCart updateOrder(OrderCart order, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
-        OrderCart oldManager = orderRepository.findOrderById(orderId);
+        OrderCart oldManager = orderRepository.findOrderById(id);
         if(oldManager ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }
@@ -43,8 +43,8 @@ public class OrderService {
 
         return orderRepository.save(oldManager);
     }
-    public OrderCart deleteOrder(String orderId){
-        OrderCart oldManger = orderRepository.findOrderById(orderId);
+    public OrderCart deleteOrder(long id){
+        OrderCart oldManger = orderRepository.findOrderById(id);
         if(oldManger ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }

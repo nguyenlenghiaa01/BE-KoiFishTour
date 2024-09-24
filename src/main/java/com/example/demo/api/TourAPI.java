@@ -32,12 +32,12 @@ public class TourAPI {
     }
     // /api/tour/{id} => id cua thang tour minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateTour(@Valid @RequestBody Tour tour, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateTour(@Valid @RequestBody Tour tour, @PathVariable long id){//valid kich hoat co che vadilation
         Tour newTour = tourService.updateTour(tour,id);
         return ResponseEntity.ok(newTour);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteTour(@PathVariable String id){
+    public ResponseEntity deleteTour(@PathVariable long id){
         Tour newTour = tourService.deleteTour(id);
         return ResponseEntity.ok(newTour);
     }

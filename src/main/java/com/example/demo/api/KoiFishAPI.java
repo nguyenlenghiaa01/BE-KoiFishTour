@@ -30,12 +30,12 @@ public class KoiFishAPI {
     }
     // /api/koi/{id} => id cua thang koi minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateStudent(@Valid @RequestBody KoiFish koi, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateStudent(@Valid @RequestBody KoiFish koi, @PathVariable long id){//valid kich hoat co che vadilation
         KoiFish newStudent = koiService.updateStudent(koi,id);
         return ResponseEntity.ok(newStudent);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteKoi(@PathVariable String id){
+    public ResponseEntity deleteKoi(@PathVariable long id){
         KoiFish newStudent = koiService.deleteKoi(id);
         return ResponseEntity.ok(newStudent);
     }

@@ -30,12 +30,12 @@ public class ManagerAPI {
     }
     // /api/manager/{id} => id cua thang manager minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateManager(@Valid @RequestBody Manager manager, @PathVariable String id){//valid kich hoat co che vadilation
+    public ResponseEntity updateManager(@Valid @RequestBody Manager manager, @PathVariable long id){//valid kich hoat co che vadilation
         Manager newManager = managerService.updateManager(manager,id);
         return ResponseEntity.ok(newManager);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteManager(@PathVariable String id){
+    public ResponseEntity deleteManager(@PathVariable long id){
         Manager newManager = managerService.deleteManager(id);
         return ResponseEntity.ok(newManager);
     }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ManagerRepository extends JpaRepository<Manager,String> {
-    Manager findManagerById(String ManagerId);
+public interface ManagerRepository extends JpaRepository<Manager,Long> {
+    Manager findManagerById(long id);
     List<Manager> findManagersByIsDeletedFalse();
 }

@@ -28,9 +28,9 @@ public class KoiFishService {
         List<KoiFish> kois = koiRepository.findKoiByIsDeletedFalse();
         return kois;
     }
-    public KoiFish updateStudent(KoiFish koi, String koiId){
+    public KoiFish updateStudent(KoiFish koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
-        KoiFish oldKoi = koiRepository.findKoiById(koiId);
+        KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){
             throw new NotFoundException("Koi not found !");//dung viec xu ly ngay tu day
         }
@@ -40,8 +40,8 @@ public class KoiFishService {
         oldKoi.setName(koi.getName());
         return koiRepository.save(oldKoi);
     }
-    public KoiFish deleteKoi(String KoiId){
-        KoiFish oldKoi = koiRepository.findKoiById(KoiId);
+    public KoiFish deleteKoi(long id){
+        KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){
             throw new NotFoundException("Koi not found !");//dung viec xu ly ngay tu day
         }

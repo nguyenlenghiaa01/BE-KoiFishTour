@@ -30,9 +30,9 @@ public class ConsultingStaffService {
         List<ConsultingStaff> consultingStaffs = consultingStaffRepository.findConsultingStaffsByIsDeletedFalse();
         return consultingStaffs;
     }
-    public ConsultingStaff updateConsultingStaff(ConsultingStaff customer, String consultingId){
+    public ConsultingStaff updateConsultingStaff(ConsultingStaff customer, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
-        ConsultingStaff oldConsultingStaff = consultingStaffRepository.findConsultingStaffById(consultingId);
+        ConsultingStaff oldConsultingStaff = consultingStaffRepository.findConsultingStaffById(id);
         if(oldConsultingStaff ==null){
             throw new NotFoundException("Consulting staff not found !");//dung viec xu ly ngay tu day
         }
@@ -42,8 +42,8 @@ public class ConsultingStaffService {
         oldConsultingStaff.setPassword(customer.getPassword());
         return consultingStaffRepository.save(oldConsultingStaff);
     }
-    public ConsultingStaff deleteConsultingStaff(String consultingId){
-        ConsultingStaff oldConsultingStaff = consultingStaffRepository.findConsultingStaffById(consultingId);
+    public ConsultingStaff deleteConsultingStaff(long id){
+        ConsultingStaff oldConsultingStaff = consultingStaffRepository.findConsultingStaffById(id);
         if(oldConsultingStaff ==null){
             throw new NotFoundException("Consulting not found !");//dung viec xu ly ngay tu day
         }

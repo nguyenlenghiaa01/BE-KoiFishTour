@@ -28,9 +28,9 @@ public class DeliveringService {
         List<DeliveringStaff> deliveringStaffs = deliveringStaffRepository.findDeliveringStaffsByIsDeletedFalse();
         return deliveringStaffs;
     }
-    public DeliveringStaff updateDeliveringStaff(DeliveringStaff deliveringStaff, String DeliveringId){
+    public DeliveringStaff updateDeliveringStaff(DeliveringStaff deliveringStaff, long id){
         // buoc 1: tim toi thang deli co id nhu la FE cung cap
-        DeliveringStaff oldDeliveringStaff = deliveringStaffRepository.findDeliveringStaffById(DeliveringId);
+        DeliveringStaff oldDeliveringStaff = deliveringStaffRepository.findDeliveringStaffById(id);
         if(oldDeliveringStaff ==null){
             throw new NotFoundException("Delivering staff not found !");//dung viec xu ly ngay tu day
         }
@@ -40,8 +40,8 @@ public class DeliveringService {
         oldDeliveringStaff.setPassword(deliveringStaff.getPassword());
         return deliveringStaffRepository.save(oldDeliveringStaff);
     }
-    public DeliveringStaff deleteDeliveringStaff(String DeliveringId){
-        DeliveringStaff oldDeliveringStaff = deliveringStaffRepository.findDeliveringStaffById(DeliveringId);
+    public DeliveringStaff deleteDeliveringStaff(long id){
+        DeliveringStaff oldDeliveringStaff = deliveringStaffRepository.findDeliveringStaffById(id);
         if(oldDeliveringStaff ==null){
             throw new NotFoundException("Delivering staff not found !");//dung viec xu ly ngay tu day
         }

@@ -29,9 +29,9 @@ public class FarmService {
         List<Farm> farms = farmRepository.findFarmsByIsDeletedFalse();
         return farms;
     }
-    public Farm updateFarm(Farm farm, String farmId){
+    public Farm updateFarm(Farm farm, long id){
 
-        Farm oldFarm = farmRepository.findFarmById(farmId);
+        Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){
             throw new NotFoundException("Farm not found !");//dung viec xu ly ngay tu day
         }
@@ -41,8 +41,8 @@ public class FarmService {
         oldFarm.setLocation(farm.getLocation());
         return farmRepository.save(oldFarm);
     }
-    public Farm deleteFarm(String farmId){
-        Farm oldFarm = farmRepository.findFarmById(farmId);
+    public Farm deleteFarm(long id){
+        Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){
             throw new NotFoundException("Farm not found !");//dung viec xu ly ngay tu day
         }

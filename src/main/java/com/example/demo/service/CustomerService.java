@@ -29,7 +29,7 @@ public class CustomerService {
         List<Customer> customers = customerRepository.findCustomersByIsDeletedFalse();
         return customers;
     }
-    public Customer updateCustomer(Customer customer, String customerId){
+    public Customer updateCustomer(Customer customer, long customerId){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         Customer oldCustomer = customerRepository.findCustomerById(customerId);
         if(oldCustomer ==null){
@@ -41,8 +41,8 @@ public class CustomerService {
         oldCustomer.setPassword(customer.getPassword());
         return customerRepository.save(oldCustomer);
     }
-    public Customer deleteCustomer(String customerId){
-        Customer oldCustomer = customerRepository.findCustomerById(customerId);
+    public Customer deleteCustomer(long id){
+        Customer oldCustomer = customerRepository.findCustomerById(id);
         if(oldCustomer ==null){
             throw new NotFoundException("Customer not found !");//dung viec xu ly ngay tu day
         }
