@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -38,6 +39,11 @@ public class Tour {
     @NotBlank(message = "Price can not be blank")
     @Pattern(regexp = "^(VND\\s?\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d{2})?|\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d{2})?\\s?VND)$", message = "Enter the correct format!")
     private String price; // Chuyển sang String để dễ dàng kiểm tra định dạng
+
+
+    @ManyToOne
+    @JoinColumn(name="open_tour_id")
+    private OpenTour openTour;
 
     public Tour() {
         this.tourId = generateTourId(); // Tạo ID khi khởi tạo

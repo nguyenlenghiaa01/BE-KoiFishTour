@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Random;
 
 @Getter
@@ -31,20 +30,8 @@ public class OrderCart {
     @Max(value = 1000, message = "Quantity must not be more than 1000!")
     private int quantity;
 
-    @Min(value = 0, message = "Total price must be positive!") // Thêm ràng buộc cho giá trị âm
+    @Min(value = 0, message = "Total price must be positive!")
     private BigDecimal totalPrice; // Đổi sang BigDecimal
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id") // Thêm tên cột nếu cần thiết
-    private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "delivering_id") // Thêm tên cột nếu cần thiết
-    private DeliveringStaff deliveringStaff;
-
-    @ManyToOne
-    @JoinColumn(name = "consulting_id") // Thêm tên cột nếu cần thiết
-    private ConsultingStaff consultingStaff;
 
 
     public OrderCart() {

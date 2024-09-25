@@ -26,7 +26,7 @@ public class Quotation {
 
     @ManyToOne
     @JoinColumn(name = "sale_id") // Thêm tên cột nếu cần thiết
-    private SaleStaff saleStaff; // Thay đổi thành đối tượng Sale
+    private Account account; // Thay đổi thành đối tượng Sale
 
     public Quotation() {
         this.quotationId = generateQuotationId(); // Tạo ID khi khởi tạo

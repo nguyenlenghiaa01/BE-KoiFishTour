@@ -1,8 +1,6 @@
 package com.example.demo.api;
 
-import com.example.demo.entity.ConsultingStaff;
 import com.example.demo.entity.Tour;
-import com.example.demo.service.ConsultingStaffService;
 import com.example.demo.service.TourService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

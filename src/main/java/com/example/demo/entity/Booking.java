@@ -22,17 +22,19 @@ public class Booking {
 
     private boolean isDeleted = false;
 
-    @ManyToOne
-    @JoinColumn(name = "saleId")
-    private SaleStaff sale;
 
     @ManyToOne
-    @JoinColumn(name = "customerId")
-    private Customer customer;
+    @JoinColumn(name = "saleId")
+    private Account account;
+
 
     @ManyToOne
     @JoinColumn(name = "tourId")
     private Tour tour;
+
+    @ManyToOne
+    @JoinColumn(name="open_tour_id")
+    private OpenTour openTour;
 
     @Temporal(TemporalType.DATE)
     @NotBlank(message = "Date can not be blank")

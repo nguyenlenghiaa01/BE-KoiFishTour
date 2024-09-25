@@ -1,9 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
-import com.example.demo.entity.ConsultingStaff;
 import com.example.demo.service.BreedService;
-import com.example.demo.service.ConsultingStaffService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

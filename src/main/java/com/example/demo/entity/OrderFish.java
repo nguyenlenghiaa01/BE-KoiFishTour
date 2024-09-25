@@ -15,6 +15,7 @@ public class OrderFish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "OFis\\d{7}", message = "Invalid code!")
     @Column(unique = true)
@@ -22,16 +23,13 @@ public class OrderFish {
 
 
     @ManyToOne
-    @JoinColumn(name = "koiFish_id", referencedColumnName = "id") // Giả sử 'id' là khóa chính trong Account
+    @JoinColumn(name = "koiFish_id")
     private KoiFish koiFish;
 
     @ManyToOne
-    @JoinColumn(name = "order_cart_id") // Thêm tên cột nếu cần thiết
-    private OrderCart orderCart; // Thay đổi thành đối tượng Order
+    @JoinColumn(name = "order_cart_id")
+    private OrderCart orderCart;
 
-    @ManyToOne
-    @JoinColumn(name = "consulting_id") // Thêm tên cột nếu cần thiết
-    private ConsultingStaff consultingStaff; // Thay đổi thành đối tượng Consulting
 
     public OrderFish() {
         this.orFishId = generateOrFishId(); // Tạo ID khi khởi tạo

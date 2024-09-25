@@ -1,10 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.SaleStaff;
 import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.repository.SaleStaffRepository;
 import com.example.demo.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Account implements UserDetails {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -33,14 +35,44 @@ public abstract class Account implements UserDetails {
 
     @Email(message = "Invalid Email!")
     @Column(unique = true)
-    String email;
+    private String email;
 
     @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
     @Column(unique = true)
-    String phone;
+    private String phone;
+
+    @NotBlank(message = "Name cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
+    @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
+    @Column(name="user_name",unique = true)
+    private String userName;
 
     @Size(min = 6, message = "Password must be at least 6 character!")
-    String password;
+    @Column(unique = true)
+    private String password;
+
+    @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
+    private LocalDateTime createdAt;
+
+    public Account() {
+        this.createdAt = LocalDateTime.now(); // Gán thời gian hiện tại khi tạo mới
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "breed_id")
+    private Breed breed;
+
+    @ManyToOne
+    @JoinColumn(name = "farm_id")
+    private Farm farm;
+
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "quotation_process_id")
+    private QuotationProcess quotationProcess;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
