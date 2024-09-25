@@ -9,6 +9,7 @@ import com.example.demo.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,20 +22,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Lazy
 public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    private final PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public AuthenticationService(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    private PasswordEncoder passwordEncoder;
+
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest,Account.class);
         try {

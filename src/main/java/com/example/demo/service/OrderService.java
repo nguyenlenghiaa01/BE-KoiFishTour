@@ -4,7 +4,6 @@ package com.example.demo.service;
 import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.repository.ManagerRepository;
 import com.example.demo.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class OrderService {
     }
     public List<OrderCart> getAllOrder(){
         // lay tat ca student trong DB
-        List<OrderCart> orders = orderRepository.findOrdersByIdIsDeletedFalse();
+        List<OrderCart> orders = orderRepository.findOrderCartsByIsDeletedFalse();
         return orders;
     }
     public OrderCart updateOrder(OrderCart order, long id){

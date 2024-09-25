@@ -24,8 +24,7 @@ import java.util.List;
 public class AuthenticationAPI {
 
     // DI: Dependency Injection
-    @Autowired
-    ModelMapper modelMapper;
+    ModelMapper modelMapper = new ModelMapper();
     @Autowired
     AuthenticationService authenticationService;
 

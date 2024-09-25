@@ -27,20 +27,19 @@ public class SecurityConfig {
     @Autowired
     @Lazy
     Filter filter;
-    @Bean
+
+
     // mã hóa password
+    @Bean
     public PasswordEncoder passwordEncoder(){
        return new BCryptPasswordEncoder();
+    }
 
-    }
-    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception {
         return http
