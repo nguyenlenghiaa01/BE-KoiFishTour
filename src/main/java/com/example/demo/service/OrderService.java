@@ -15,7 +15,7 @@ public class OrderService {
     // xu ly nhung logic lien qua
     @Autowired
     OrderRepository orderRepository;
-    public OrderCart createNewManager(OrderCart order){
+    public OrderCart createNewOrder(OrderCart order){
         //add customer vao database bang repsitory
         try {
             OrderCart newOrder = orderRepository.save(order);
@@ -32,22 +32,22 @@ public class OrderService {
     }
     public OrderCart updateOrder(OrderCart order, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
-        OrderCart oldManager = orderRepository.findOrderById(id);
-        if(oldManager ==null){
+        OrderCart oldOrderCart = orderRepository.findOrderById(id);
+        if(oldOrderCart ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }
         //=> co manager co ton tai;
-        oldManager.setTotalPrice(order.getTotalPrice());
-        oldManager.setQuantity(order.getQuantity());
+        oldOrderCart.setTotalPrice(order.getTotalPrice());
+        oldOrderCart.setQuantity(order.getQuantity());
 
-        return orderRepository.save(oldManager);
+        return orderRepository.save(oldOrderCart);
     }
     public OrderCart deleteOrder(long id){
-        OrderCart oldManger = orderRepository.findOrderById(id);
-        if(oldManger ==null){
+        OrderCart oldOrderCart = orderRepository.findOrderById(id);
+        if(oldOrderCart ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
         }
-        oldManger.setDeleted(true);
-        return orderRepository.save(oldManger);
+        oldOrderCart.setDeleted(true);
+        return orderRepository.save(oldOrderCart);
     }
 }

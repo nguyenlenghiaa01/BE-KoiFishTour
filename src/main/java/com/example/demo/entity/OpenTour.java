@@ -1,10 +1,9 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,7 +15,17 @@ public class OpenTour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private boolean isDeleted= false;
+
     @Min(value = 0, message = "Total price must be positive!")
     private BigDecimal totalPrice; // Đổi sang BigDecimal
 
+    @NotBlank(message = "Status cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Status cannot contain numbers!")
+    @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
+    private String status;
+
+    @ManyToOne
+    @JoinColumn(name="account_id")
+    private Account account;
 }

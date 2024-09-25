@@ -4,6 +4,7 @@ import com.example.demo.entity.QuotationProcess;
 import com.example.demo.entity.Tour;
 import com.example.demo.service.QuotationProcessService;
 import com.example.demo.service.TourService;
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/QuotationProcess")
+@CrossOrigin("*")
 public class QuotationProcessAPI {
     @Autowired
     QuotationProcessService quotationProcessService;

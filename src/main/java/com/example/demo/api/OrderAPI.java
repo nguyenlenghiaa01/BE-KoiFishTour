@@ -19,7 +19,7 @@ public class OrderAPI{
     OrderService orderService;
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody OrderCart orderCart) {
-        OrderCart newFarm = orderService.createNewManager(orderCart);
+        OrderCart newFarm = orderService.createNewOrder(orderCart);
         //return ve font end
         return ResponseEntity.ok(newFarm);
     }
