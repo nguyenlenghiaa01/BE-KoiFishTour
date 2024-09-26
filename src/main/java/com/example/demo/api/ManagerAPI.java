@@ -19,6 +19,7 @@ public class ManagerAPI {
     public ResponseEntity create(@Valid @RequestBody Manager manager) {
         Manager newManager = managerService.createNewManager(manager);
         //return ve font end
+
         return ResponseEntity.ok(newManager);
     }
 

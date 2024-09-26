@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
 import com.example.demo.entity.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -12,6 +10,12 @@ import lombok.Data;
 
 @Data
 public class RegisterRequest {
+
+
+    @NotBlank(message = "Code can not be blank!")
+    @Pattern(regexp = "[A-Z]{3}\\d{6}", message = "Invalid code!")
+    @Column(unique = true)
+    String code;
 
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
