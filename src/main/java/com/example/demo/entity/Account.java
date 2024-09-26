@@ -26,12 +26,13 @@ public class Account implements UserDetails {
     long id;
 
     @NotBlank(message = "Code can not be blank!")
-    @Pattern(regexp = "KH\\d{6}", message = "Invalid code!")
+    @Pattern(regexp = "[A-Z]{3}\\d{6}", message = "Invalid code!")
     @Column(unique = true)
     String code;
+
     @Enumerated(EnumType.STRING) // Sử dụng EnumType.STRING
     @Column(nullable = false) // Đảm bảo không null
-    private Role role;
+    private Role role; //Role để front-end nhập
 
     @Email(message = "Invalid Email!")
     @Column(unique = true)
@@ -81,7 +82,7 @@ public class Account implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.phone;
+        return this.userName;
     }
 
     @Override

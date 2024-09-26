@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Role;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.model.AccountResponse;
 import com.example.demo.model.LoginRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Lazy
@@ -34,16 +36,21 @@ public class AuthenticationService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public AccountResponse register(RegisterRequest registerRequest) {
-        Account account = modelMapper.map(registerRequest,Account.class);
+        Account account = modelMapper.map(registerRequest, Account.class);
         try {
 
             String originPassword = account.getPassword();
             account.setPassword(passwordEncoder.encode(originPassword));
+            String getAccountCode;
+            do {
+                getAccountCode = generateAccountCode(account.getRole());
+            } while (accountRepository.findAccountByCode(getAccountCode) != null);
+            account.setCode(getAccountCode);
             Account newAccount = accountRepository.save(account);
-            return modelMapper.map(newAccount,AccountResponse.class);
+            return modelMapper.map(newAccount, AccountResponse.class);
         } catch (Exception e) {
-            if (e.getMessage().contains(account.getCode())) {
-                throw new DuplicateEntity("Duplicate code!");
+            if (e.getMessage().contains(account.getUsername())) {
+                throw new DuplicateEntity("Duplicate username!");
             } else if (e.getMessage().contains(account.getEmail())) {
                 throw new DuplicateEntity("Duplicate email!");
             } else {
@@ -55,16 +62,16 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public AccountResponse login(LoginRequest loginRequest){
+    public AccountResponse login(LoginRequest loginRequest) {
         try {
-            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequest.getUserName(),
                     loginRequest.getPassword()
             ));
             // tai khoan co ton tai
-            Account account =(Account) authentication.getPrincipal();
-            return modelMapper.map(account,AccountResponse.class);
-        }catch (Exception e){
+            Account account = (Account) authentication.getPrincipal();
+            return modelMapper.map(account, AccountResponse.class);
+        } catch (Exception e) {
             throw new EntityNotFoundException("User name or password is invalid !");
         }
     }
@@ -75,12 +82,11 @@ public class AuthenticationService implements UserDetailsService {
     }
 
 
-
     @Override
-    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
-        Account account= accountRepository.findAccountByPhone(phone);
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Account account = accountRepository.findAccountByUserName(userName);
         if (account == null) {
-            throw new UsernameNotFoundException("Account with phone " + phone + " not found");
+            throw new UsernameNotFoundException("Account with username " + userName + " not found");
         }
         return account;
     }
@@ -91,7 +97,7 @@ public class AuthenticationService implements UserDetailsService {
 
         // Cập nhật thông tin tài khoản
         newAccount.setEmail(registerRequest.getEmail());
-        newAccount.setCode(registerRequest.getCode());
+        newAccount.setUserName(registerRequest.getUserName());
         newAccount.setPhone(registerRequest.getPhone());
 
         // Cập nhật mật khẩu nếu có
@@ -100,6 +106,17 @@ public class AuthenticationService implements UserDetailsService {
         }
 
         return accountRepository.save(newAccount);
+    }
+
+    //extensions
+    public String generateAccountCode(Role role) {
+        String accountCode;
+        String prefix = role.name().substring(0, 3).toUpperCase();
+
+        Random random = new Random();
+        int randomNumber = 100000 + random.nextInt(900000);
+
+        return prefix + randomNumber;
     }
 }
 
