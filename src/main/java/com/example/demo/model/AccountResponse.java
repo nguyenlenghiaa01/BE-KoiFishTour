@@ -9,5 +9,6 @@ public class AccountResponse {
     String userName;
     String phone;
     String email;
+    String token;
     Role role;
 }
