@@ -40,4 +40,8 @@ public class Sale {
     @Column(unique = true)
     private String password;
 
+    @ManyToOne
+    @JoinColumn(name= "account_id")
+    Account account;
+
 }

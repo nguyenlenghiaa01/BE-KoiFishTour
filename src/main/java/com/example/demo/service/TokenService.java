@@ -17,23 +17,26 @@ public class TokenService {
     // tao ra token
     @Autowired
     AccountRepository accountRepository;
-    private String SECRET_KEY="4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c";
+    //jdbc:mysql://103.200.20.170:3306/demo
+    private String SECRET_KEY = "4bb6d1dfbafb64a681139d1586b6f1160d18159afd57c8c79136d7490630407c";
 
-    private SecretKey getSigninKey(){
-        byte[]keyBytes= Decoders.BASE64.decode(SECRET_KEY);
+    private SecretKey getSigninKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public String generateToken(Account account){ // genera cho account nao do su dung nhu customer chi sai dc chuc nang cua customer
-    String token = Jwts.builder()
-            .subject(account.getId()+"")
-            .issuedAt(new Date(System.currentTimeMillis()))// tao luc 10g 30
-            .expiration(new Date(System.currentTimeMillis() +10008*60*60*24))
-            .signWith(getSigninKey())
-            .compact();
-    return token;
+
+    public String generateToken(Account account) { // genera cho account nao do su dung nhu customer chi sai dc chuc nang cua customer
+        String token = Jwts.builder()
+                .subject(account.getId() + "")
+                .issuedAt(new Date(System.currentTimeMillis()))// tao luc 10g 30
+                .expiration(new Date(System.currentTimeMillis() + 10008 * 60 * 60 * 24))
+                .signWith(getSigninKey())
+                .compact();
+        return token;
     }
+
     // verify token
-    public Account getAccountByToken(String token){
+    public Account getAccountByToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigninKey())
                 .build()
@@ -42,6 +45,8 @@ public class TokenService {
 
         String idString = claims.getSubject();
         long id = Long.parseLong(idString);
-        return accountRepository.findAccountById(id);
+        return accountRepository.findAccountByCode(idString);
     }
 }
+
+
