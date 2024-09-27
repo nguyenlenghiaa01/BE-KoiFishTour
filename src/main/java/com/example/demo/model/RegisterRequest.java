@@ -11,17 +11,10 @@ import lombok.Data;
 @Data
 public class RegisterRequest {
 
-
-    @NotBlank(message = "Code can not be blank!")
-    @Pattern(regexp = "[A-Z]{3}\\d{6}", message = "Invalid code!")
-    @Column(unique = true)
-    String code;
-
-    @NotBlank(message = "Name cannot be blank")
-    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
-    @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
+    @NotBlank(message = "UserName cannot be blank")
+    @Pattern(regexp = "^[^\\s].*", message = "First character of username cannot have space!")
     @Column(name="user_name",unique = true)
-    String userName;
+    private String userName;
 
     @Email(message = "Invalid Email!")
     @Column(unique = true)
@@ -33,6 +26,10 @@ public class RegisterRequest {
 
     @Size(min = 6, message = "Password must be at least 6 character!")
     String password;
+
+    @NotBlank(message = "Name cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
+    private String fullName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

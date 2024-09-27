@@ -116,6 +116,7 @@ public class AuthenticationService implements UserDetailsService {
         newAccount.setEmail(registerRequest.getEmail());
         newAccount.setUserName(registerRequest.getUserName());
         newAccount.setPhone(registerRequest.getPhone());
+        newAccount.setFullName(registerRequest.getFullName());
 
         // Cập nhật mật khẩu nếu có
         if (registerRequest.getPassword() != null) {

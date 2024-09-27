@@ -43,15 +43,18 @@ public class Account implements UserDetails {
     @Column(unique = true)
     private String phone;
 
-    @NotBlank(message = "Name cannot be blank")
-    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
-    @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
+    @NotBlank(message = "UserName cannot be blank")
+    @Pattern(regexp = "^[^\\s].*", message = "First character of username cannot have space!")
     @Column(name="user_name",unique = true)
     private String userName;
 
     @Size(min = 6, message = "Password must be at least 6 character!")
     @Column(unique = true)
     private String password;
+
+    @NotBlank(message = "Name cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
+    private String fullName;
 
     @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
     private LocalDateTime createdAt;
