@@ -44,7 +44,7 @@ public class Account implements UserDetails {
     private String phone;
 
     @NotBlank(message = "UserName cannot be blank")
-    @Pattern(regexp = "^[^\\s].*", message = "First character of username cannot have space!")
+    @Pattern(regexp = "^\\S+$", message = "username cannot have space!")
     @Column(name="user_name",unique = true)
     private String userName;
 
