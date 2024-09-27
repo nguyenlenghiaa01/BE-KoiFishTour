@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Random;
 
 @Getter
@@ -42,4 +43,7 @@ public class Breed {
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
         return String.format("BRE%07d", number); // Định dạng với 7 chữ số
     }
+
+    @OneToMany
+    List<KoiFish> koiFishes;
 }

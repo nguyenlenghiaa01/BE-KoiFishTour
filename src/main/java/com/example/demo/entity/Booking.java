@@ -22,20 +22,6 @@ public class Booking {
 
     private boolean isDeleted = false;
 
-
-    @ManyToOne
-    @JoinColumn(name = "saleId")
-    private Account account;
-
-
-    @ManyToOne
-    @JoinColumn(name = "tourId")
-    private Tour tour;
-
-    @ManyToOne
-    @JoinColumn(name="open_tour_id")
-    private OpenTour openTour;
-
     @Temporal(TemporalType.DATE)
     @NotBlank(message = "Date can not be blank")
     @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
@@ -69,4 +55,12 @@ public class Booking {
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
         return String.format("BOK%07d", number); // Định dạng với 7 chữ số
     }
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "openTour_id")
+    OpenTour openTour;
 }

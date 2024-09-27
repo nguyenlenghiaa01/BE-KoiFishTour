@@ -28,7 +28,7 @@ public class KoiFishService {
         List<KoiFish> kois = koiRepository.findKoiByIsDeletedFalse();
         return kois;
     }
-    public KoiFish updateStudent(KoiFish koi, long id){
+    public KoiFish updateKoiFish(KoiFish koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){

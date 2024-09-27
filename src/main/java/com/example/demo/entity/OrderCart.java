@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -44,5 +45,17 @@ public class OrderCart {
         int number = random.nextInt(10000000); // Thay đổi giới hạn thành 7 chữ số
         return String.format("ORD%07d", number); // Tạo mã có 7 chữ số
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_koiFish",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "koiFish_id")
+    )
+    Set<KoiFish> koiFishes;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    Account account;
 }
 

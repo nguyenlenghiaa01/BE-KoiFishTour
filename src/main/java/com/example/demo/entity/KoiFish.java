@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,17 +28,8 @@ public class KoiFish {
     @Pattern(regexp = "^[^\\d\\s].*", message = "Name not have number and first character not have space!")
     private String name;
 
-
-    @ManyToOne
-    @JoinColumn(name = "breed_id")
-    private Breed breed;
-
     @Column(nullable = false)
     private boolean isDeleted = false;
-
-    @ManyToOne
-    @JoinColumn(name = "farm_id")
-    private Farm farm;
 
     public KoiFish() {
         this.koiId = generateKoiId();
@@ -48,4 +40,15 @@ public class KoiFish {
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
         return String.format("KOI%07d", number); // Định dạng với 7 chữ số
     }
+
+    @ManyToOne
+    @JoinColumn(name = "breed_id")
+    Breed breed;
+
+    @ManyToMany(mappedBy = "koiFishes")
+    Set<OrderCart> orderCarts;
+
+    @ManyToOne
+    @JoinColumn(name = "farm_id")
+    Farm farm;
 }

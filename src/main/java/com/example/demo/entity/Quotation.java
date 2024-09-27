@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Random;
 
 @Getter
@@ -20,14 +21,6 @@ public class Quotation {
     @Column(unique = true)
     private String quotationId;
 
-    @OneToOne
-    @JoinColumn(name = "booking_id") // Thêm tên cột nếu cần thiết
-    private Booking booking; // Thay đổi thành đối tượng Booking
-
-    @ManyToOne
-    @JoinColumn(name = "sale_id") // Thêm tên cột nếu cần thiết
-    private Account account; // Thay đổi thành đối tượng Sale
-
     public Quotation() {
         this.quotationId = generateQuotationId(); // Tạo ID khi khởi tạo
     }
@@ -37,4 +30,6 @@ public class Quotation {
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
         return String.format("QUO%07d", number); // Định dạng với 7 chữ số
     }
+    @OneToMany(mappedBy = "quotation")
+    List<QuotationProcess> quotationProcesses;
 }

@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,4 +42,10 @@ public class Farm {
     @Pattern(regexp = "^[^\\d]*$", message = "Owner name must not contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
+
+    @ManyToMany(mappedBy = "farms")
+    Set<Tour> tours;
+
+    @OneToMany(mappedBy = "farm")
+    List<KoiFish> koiFishes;
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,11 +41,6 @@ public class Tour {
     @Pattern(regexp = "^(VND\\s?\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d{2})?|\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d{2})?\\s?VND)$", message = "Enter the correct format!")
     private String price; // Chuyển sang String để dễ dàng kiểm tra định dạng
 
-
-    @ManyToOne
-    @JoinColumn(name="open_tour_id")
-    private OpenTour openTour;
-
     public Tour() {
         this.tourId = generateTourId(); // Tạo ID khi khởi tạo
     }
@@ -54,4 +50,15 @@ public class Tour {
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
         return String.format("TOUR%07d", number); // Định dạng với 7 chữ số
     }
+
+    @OneToMany(mappedBy = "tour")
+    Set<OpenTour> openTours;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tour_farm",
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "farm_id")
+    )
+    Set<Farm> farms;
 }

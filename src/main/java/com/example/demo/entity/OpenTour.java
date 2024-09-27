@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @Entity
@@ -26,6 +27,9 @@ public class OpenTour {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name="account_id")
-    private Account account;
+    @JoinColumn(name = "tour_id")
+    Tour tour;
+
+    @OneToMany(mappedBy = "openTour")
+    Set<Booking> bookings;
 }

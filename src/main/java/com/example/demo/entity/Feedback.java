@@ -18,10 +18,7 @@ public class Feedback {
     private int rating;
 
     @ManyToOne
-    @JoinColumn(name="account_id")
-    private Account account;
+    @JoinColumn(name = "account_id")
+    Account account;
 
-    @ManyToOne
-    @JoinColumn(name ="booking_id")
-    private Booking booking;
 }

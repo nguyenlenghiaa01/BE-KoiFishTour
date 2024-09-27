@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -59,22 +60,6 @@ public class Account implements UserDetails {
         this.createdAt = LocalDateTime.now(); // Gán thời gian hiện tại khi tạo mới
     }
 
-    @ManyToOne
-    @JoinColumn(name = "breed_id")
-    private Breed breed;
-
-    @ManyToOne
-    @JoinColumn(name = "farm_id")
-    private Farm farm;
-
-    @OneToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "quotation_process_id")
-    private QuotationProcess quotationProcess;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -106,6 +91,15 @@ public class Account implements UserDetails {
     }
 
     @OneToMany(mappedBy = "account")
-    List<Sale> sales;
+    List<Booking> bookings;
+
+    @OneToMany(mappedBy = "account")
+    List<OrderCart> orderCarts;
+
+    @OneToMany(mappedBy = "account")
+    List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "account")
+    List<QuotationProcess> quotationProcesses;
 }
 
