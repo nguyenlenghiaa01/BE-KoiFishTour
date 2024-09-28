@@ -5,6 +5,7 @@ import com.example.demo.model.AccountResponse;
 import com.example.demo.model.LoginRequest;
 import com.example.demo.model.RegisterRequest;
 import com.example.demo.service.AuthenticationService;
+import com.example.demo.service.EmailService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -26,10 +27,14 @@ public class AuthenticationAPI {
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
     AuthenticationService authenticationService;
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("register")
     public ResponseEntity <AccountResponse>register(@Valid @RequestBody RegisterRequest registerRequest) {
         AccountResponse newAccount = authenticationService.register(registerRequest);
+//        String otp = String.valueOf(100000 + (int) (Math.random() * 900000));
+        String email = registerRequest.getEmail();
         return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }
     @PostMapping("login")
@@ -66,7 +71,7 @@ public class AuthenticationAPI {
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
-            return ResponseEntity.ok("User ID: " + uid); // Xử lý thêm nếu cần
+            return ResponseEntity.ok("User ID: " + uid);
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: " + e.getMessage());
         }

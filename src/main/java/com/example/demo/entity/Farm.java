@@ -1,4 +1,5 @@
 package com.example.demo.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -47,5 +48,6 @@ public class Farm {
     Set<Tour> tours;
 
     @OneToMany(mappedBy = "farm")
+    @JsonIgnore
     List<KoiFish> koiFishes;
 }

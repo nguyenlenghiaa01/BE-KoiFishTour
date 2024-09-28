@@ -4,6 +4,7 @@ import com.example.demo.model.EmailDetail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -42,4 +43,11 @@ public class EmailService {
         }
 
     }
+//    public void sendOtp(String to, String otp) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(to);
+//        message.setSubject("Your OTP Code");
+//        message.setText("Your OTP code is: " + otp);
+//        javaMailSender.send(message);
+//    }
 }

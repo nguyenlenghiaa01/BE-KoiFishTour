@@ -94,15 +94,19 @@ public class Account implements UserDetails {
     }
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     List<Booking> bookings;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     List<OrderCart> orderCarts;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     List<QuotationProcess> quotationProcesses;
 }
 

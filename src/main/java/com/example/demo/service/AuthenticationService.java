@@ -42,6 +42,8 @@ public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    OTPService otpService;
 
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest, Account.class);
@@ -56,7 +58,9 @@ public class AuthenticationService implements UserDetailsService {
             } while (accountRepository.findAccountByCode(getAccountCode) != null);
             account.setCode(getAccountCode);
             Account newAccount = accountRepository.save(account);
-            // gui mail
+//            String otp = otpService.generateOtp(); // Tạo OTP
+//            emailService.sendOtp(account.getEmail(), otp); // Gửi OTP đến email
+//            // gui mail
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setReceiver(newAccount);
             emailDetail.setSubject("WelCome");
@@ -120,9 +124,11 @@ public class AuthenticationService implements UserDetailsService {
         newAccount.setPhone(registerRequest.getPhone());
         newAccount.setFullName(registerRequest.getFullName());
 
-        // Cập nhật mật khẩu nếu có
         if (registerRequest.getPassword() != null) {
             newAccount.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            // Gửi OTP qua email khi cập nhật mật khẩu
+//            String otp = otpService.generateOtp();
+//            emailService.sendOtp(newAccount.getEmail(), otp);
         }
 
         return accountRepository.save(newAccount);

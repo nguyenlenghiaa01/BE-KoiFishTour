@@ -34,6 +34,10 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
        return new BCryptPasswordEncoder();
     }
+    @Bean
+    public ModelMapper modelMap(){
+        return new ModelMapper();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{

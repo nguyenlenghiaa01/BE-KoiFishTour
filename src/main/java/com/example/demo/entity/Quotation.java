@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -31,5 +32,6 @@ public class Quotation {
         return String.format("QUO%07d", number); // Định dạng với 7 chữ số
     }
     @OneToMany(mappedBy = "quotation")
+    @JsonIgnore
     List<QuotationProcess> quotationProcesses;
 }
