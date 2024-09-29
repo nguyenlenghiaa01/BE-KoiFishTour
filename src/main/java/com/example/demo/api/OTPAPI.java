@@ -1,15 +1,15 @@
-//package com.example.demo.api;
-//
-//import com.example.demo.service.EmailService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//@RequestMapping("/api/otp")
-//@CrossOrigin("*")
-//public class OTPAPI {
-//
-//
+package com.example.demo.api;
+
+import com.example.demo.service.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/otp")
+@CrossOrigin("*")
+public class OTPAPI {
+
+
 //        @Autowired
 //        private EmailService emailService;
 //
@@ -23,6 +23,6 @@
 //
 //            return "OTP has been sent to " + email;
 //        }
-//    }
+    }
 
 

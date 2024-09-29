@@ -4,7 +4,7 @@ import com.example.demo.model.EmailDetail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,36 +18,36 @@ public class EmailService {
 
     @Autowired
     JavaMailSender javaMailSender;
-    public void sendEmail(EmailDetail emailDetail){
-        try{
+
+    public void sendEmail(EmailDetail emailDetail) {
+        try {
+            // Prepare the email template
             Context context = new Context();
-            context.setVariable("name",emailDetail.getReceiver().getEmail());
-            context.setVariable("button","Go to home page");
-            context.setVariable("link",emailDetail.getLink());
+            context.setVariable("name", emailDetail.getReceiver().getEmail());
+            context.setVariable("button", "Go to home page");
+            context.setVariable("link", emailDetail.getLink());
 
-            String template = templateEngine.process("welcome-template",context);
+            String template = templateEngine.process("welcome-template", context);
 
-            // tao cai simple email message
+            // Create a MimeMessage for HTML content
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper= new MimeMessageHelper(mimeMessage);
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            // setting up necessary
+            // Set email details
             mimeMessageHelper.setFrom("nghialncse170125@fpt.edu.vn");
             mimeMessageHelper.setTo(emailDetail.getReceiver().getEmail());
-            mimeMessageHelper.setText(template,true);
             mimeMessageHelper.setSubject(emailDetail.getSubject());
+            mimeMessageHelper.setText(template, true);
+
+            // Send the email
             javaMailSender.send(mimeMessage);
 
-        }catch(MessagingException e){
-            System.out.println("Error Sent Email !!!");
+        } catch (MailAuthenticationException e) {
+            System.err.println("Authentication failed: " + e.getMessage());
+        } catch (MessagingException e) {
+            System.err.println("Messaging error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("General error: " + e.getMessage());
         }
-
     }
-//    public void sendOtp(String to, String otp) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(to);
-//        message.setSubject("Your OTP Code");
-//        message.setText("Your OTP code is: " + otp);
-//        javaMailSender.send(message);
-//    }
 }

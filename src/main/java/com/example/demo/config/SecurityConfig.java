@@ -25,7 +25,6 @@ public class SecurityConfig {
     AuthenticationService authenticationService;
 
     @Autowired
-    @Lazy
     Filter filter;
 
 

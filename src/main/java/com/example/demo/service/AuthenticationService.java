@@ -75,6 +75,7 @@ public class AuthenticationService implements UserDetailsService {
             } else if (e.getMessage().contains(account.getPhone())) {
                 throw new DuplicateEntity("Duplicate phone!");
             } else {
+                System.out.println(e.getMessage());
                 throw e;
             }
         }
