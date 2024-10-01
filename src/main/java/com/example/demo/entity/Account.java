@@ -111,5 +111,6 @@ public class Account implements UserDetails {
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     List<QuotationProcess> quotationProcesses;
+
 }
 

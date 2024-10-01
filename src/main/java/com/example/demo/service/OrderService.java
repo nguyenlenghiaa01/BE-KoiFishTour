@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 
+import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.repository.KoiRepository;
 import com.example.demo.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class OrderService {
     // xu ly nhung logic lien qua
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    KoiRepository koiRepository;
     public OrderCart createNewOrder(OrderCart order){
         //add customer vao database bang repsitory
         try {
@@ -34,14 +39,42 @@ public class OrderService {
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         OrderCart oldOrderCart = orderRepository.findOrderById(id);
         if(oldOrderCart ==null){
-            throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Order not found !");//dung viec xu ly ngay tu day
         }
-        //=> co manager co ton tai;
+        //=> co order co ton tai;
         oldOrderCart.setTotalPrice(order.getTotalPrice());
         oldOrderCart.setQuantity(order.getQuantity());
 
         return orderRepository.save(oldOrderCart);
     }
+//    public OrderCart updateCart(Long orderId, Long fishId, int quantity) {
+//        // Tìm đơn hàng theo orderId
+//        OrderCart order = orderRepository.findOrderById(orderId);
+//        if (order == null) {
+//            throw new RuntimeException("Order not found");
+//        }
+//
+//        KoiFish koiFish = koiRepository.findKoiById(fishId);
+//        if (koiFish == null) {
+//            throw new RuntimeException("Fish not found");
+//        }
+//
+//        // Kiểm tra xem cá koi đã có trong giỏ hàng chưa
+//        if (order.getKoiFishes().stream().anyMatch(fish -> fish.getId().contains(koiFish.getId()))) {
+//            throw new DuplicateEntity("Fish already exists in the cart!");
+//        } else {
+//            // Thêm cá koi vào giỏ hàng
+//            order.getKoiFishes().add(koiFish);
+//        }
+//
+//        // Lưu thay đổi
+//        orderRepository.save(order);
+//
+//        return order;
+//    }
+
+
+
     public OrderCart deleteOrder(long id){
         OrderCart oldOrderCart = orderRepository.findOrderById(id);
         if(oldOrderCart ==null){

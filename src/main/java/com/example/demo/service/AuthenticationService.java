@@ -48,7 +48,7 @@ public class AuthenticationService implements UserDetailsService {
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest, Account.class);
         try {
-
+            // bam pass
             String originPassword = account.getPassword();
             account.setPassword(passwordEncoder.encode(originPassword));
             //generate code account
@@ -57,6 +57,7 @@ public class AuthenticationService implements UserDetailsService {
                 getAccountCode = generateAccountCode(account.getRole());
             } while (accountRepository.findAccountByCode(getAccountCode) != null);
             account.setCode(getAccountCode);
+            //save code account
             Account newAccount = accountRepository.save(account);
 //            String otp = otpService.generateOtp(); // Tạo OTP
 //            emailService.sendOtp(account.getEmail(), otp); // Gửi OTP đến email
@@ -64,7 +65,7 @@ public class AuthenticationService implements UserDetailsService {
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setReceiver(newAccount);
             emailDetail.setSubject("WelCome");
-            emailDetail.setLink("https://www.ansovatravel.com/send-an-inquiry/");
+            emailDetail.setLink("https://www.ansovatravel.com/send-an-inquiry/");// ve trang home page
             emailService.sendEmail(emailDetail);
             return modelMapper.map(newAccount, AccountResponse.class);
         } catch (Exception e) {
@@ -127,7 +128,7 @@ public class AuthenticationService implements UserDetailsService {
 
         if (registerRequest.getPassword() != null) {
             newAccount.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            // Gửi OTP qua email khi cập nhật mật khẩu
+//            // Gửi OTP qua email khi cập nhật mật khẩu
 //            String otp = otpService.generateOtp();
 //            emailService.sendOtp(newAccount.getEmail(), otp);
         }
