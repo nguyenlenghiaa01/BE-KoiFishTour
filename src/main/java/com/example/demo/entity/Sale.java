@@ -47,4 +47,7 @@ public class Sale {
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
+
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
 }

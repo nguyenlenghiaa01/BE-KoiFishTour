@@ -8,10 +8,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
-public class Admin {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -47,6 +49,8 @@ public class Admin {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
+    @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
+    private LocalDateTime createdAt;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;

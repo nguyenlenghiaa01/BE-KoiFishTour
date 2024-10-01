@@ -40,6 +40,9 @@ public class SaleRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;

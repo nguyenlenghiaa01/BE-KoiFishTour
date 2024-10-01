@@ -1,17 +1,15 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
+import com.example.demo.entity.Account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@Entity
-public class Admin {
+import java.time.LocalDateTime;
+
+public class CustomerRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -47,6 +45,8 @@ public class Admin {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
+    @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
+    private LocalDateTime createdAt;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;

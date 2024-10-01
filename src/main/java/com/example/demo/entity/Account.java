@@ -56,6 +56,9 @@ public class Account implements UserDetails {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
+
     @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
     private LocalDateTime createdAt;
 

@@ -46,4 +46,6 @@ public class Manager {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
 }
