@@ -39,7 +39,7 @@ public class OrderAPI{
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteOrder(@PathVariable long id) {
-        OrderCart newOrder = orderService.deleteOrder(id);
+        OrderCart newOrder = orderService.deleteOrderCart(id);
         return ResponseEntity.ok(newOrder);
     }
 

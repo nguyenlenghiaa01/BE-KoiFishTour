@@ -3,10 +3,8 @@ package com.example.demo.service;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.DuplicateEntity;
-import com.example.demo.model.AccountResponse;
-import com.example.demo.model.EmailDetail;
-import com.example.demo.model.LoginRequest;
-import com.example.demo.model.RegisterRequest;
+import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.*;
 import com.example.demo.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -150,6 +148,25 @@ public class AuthenticationService implements UserDetailsService {
         int randomNumber = 100000 + random.nextInt(900000);
 
         return prefix + randomNumber;
+    }
+    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest){
+        Account account = accountRepository.findAccountByEmail(forgotPasswordRequest.getEmail());
+        if(account == null){
+            throw new NotFoundException("Email not found !");
+        }else{
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setReceiver(account);
+            emailDetail.setSubject("Reset Password");
+            emailDetail.setLink("https://www.google.com/?token="+tokenService.generateToken(account));
+            emailService.sendEmail(emailDetail);
+        }
+    }
+
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest){
+        Account account = getCurrentAccount();
+        account.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+        accountRepository.save(account);
+
     }
 }
 

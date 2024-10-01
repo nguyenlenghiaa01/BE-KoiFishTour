@@ -1,9 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Account;
-import com.example.demo.model.AccountResponse;
-import com.example.demo.model.LoginRequest;
-import com.example.demo.model.RegisterRequest;
+import com.example.demo.model.*;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.EmailService;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,6 +73,19 @@ public class AuthenticationAPI {
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: " + e.getMessage());
         }
+    }
+
+
+    @PostMapping("forgot-password")
+    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest){
+        authenticationService.forgotPassword(forgotPasswordRequest);
+        return ResponseEntity.ok("forgot password successfully");
+    }
+
+    @PostMapping("reset-password")
+    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest){
+        authenticationService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok("reset password successfully");
     }
 
 }

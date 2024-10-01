@@ -21,22 +21,22 @@ public class OrderService {
     @Autowired
     KoiRepository koiRepository;
     public OrderCart createNewOrder(OrderCart order){
-        //add customer vao database bang repsitory
+        //add fish vao database bang repsitory
         try {
             OrderCart newOrder = orderRepository.save(order);
             return newOrder;
         }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate Manager id !");
+            throw new DuplicateEntity("Duplicate Order id !");
         }
 
     }
     public List<OrderCart> getAllOrder(){
-        // lay tat ca student trong DB
+        // lay tat ca order trong DB
         List<OrderCart> orders = orderRepository.findOrderCartsByIsDeletedFalse();
         return orders;
     }
     public OrderCart updateOrder(OrderCart order, long id){
-        // buoc 1: tim toi thang student co id nhu la FE cung cap
+        // buoc 1: tim toi thang order co id nhu la FE cung cap
         OrderCart oldOrderCart = orderRepository.findOrderById(id);
         if(oldOrderCart ==null){
             throw new NotFoundException("Order not found !");//dung viec xu ly ngay tu day
@@ -44,7 +44,7 @@ public class OrderService {
         //=> co order co ton tai;
         oldOrderCart.setTotalPrice(order.getTotalPrice());
         oldOrderCart.setQuantity(order.getQuantity());
-
+        oldOrderCart.setKoiFishes(order.getKoiFishes());
         return orderRepository.save(oldOrderCart);
     }
 //    public OrderCart updateCart(Long orderId, Long fishId, int quantity) {
@@ -75,7 +75,7 @@ public class OrderService {
 
 
 
-    public OrderCart deleteOrder(long id){
+    public OrderCart deleteOrderCart(long id){
         OrderCart oldOrderCart = orderRepository.findOrderById(id);
         if(oldOrderCart ==null){
             throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day

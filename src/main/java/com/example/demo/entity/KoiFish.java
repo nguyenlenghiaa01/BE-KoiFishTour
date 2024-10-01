@@ -28,7 +28,6 @@ public class KoiFish {
     @Pattern(regexp = "^[^\\d\\s].*", message = "Name not have number and first character not have space!")
     private String name;
 
-    @Column(nullable = false)
     private boolean isDeleted = false;
 
     public KoiFish() {

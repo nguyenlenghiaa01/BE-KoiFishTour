@@ -12,8 +12,9 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Comment can not be blank")
     private String comment;
+
+    private boolean isDeleted = false;
 
     private int rating;
 

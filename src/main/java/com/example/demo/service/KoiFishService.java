@@ -14,7 +14,7 @@ public class KoiFishService {
     @Autowired
     KoiRepository koiRepository;
     public KoiFish createNewKoi(KoiFish koi){
-        //add student vao database bang repsitory
+        //add fish vao database bang repsitory
         try {
             KoiFish newKoi = koiRepository.save(koi);
             return newKoi;
