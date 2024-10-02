@@ -5,6 +5,7 @@ import com.example.demo.entity.OrderCart;
 import com.example.demo.model.OpenTourRequest;
 import com.example.demo.service.OpenTourService;
 import com.example.demo.service.OrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/OpenTour")
 @RestController
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
 public class OpenTourAPI {
     @Autowired
     OpenTourService openTourService;

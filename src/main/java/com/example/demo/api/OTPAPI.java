@@ -1,12 +1,14 @@
 package com.example.demo.api;
 
 import com.example.demo.service.EmailService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/otp")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
 public class OTPAPI {
 
 

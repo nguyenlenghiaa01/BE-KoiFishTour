@@ -4,6 +4,7 @@ package com.example.demo.api;
 import com.example.demo.entity.OrderCart;
 
 import com.example.demo.service.OrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
 public class OrderAPI{
     @Autowired
     OrderService orderService;

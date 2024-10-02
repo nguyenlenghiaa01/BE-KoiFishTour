@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.model.KoiFishRequest;
 import com.example.demo.service.KoiFishService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/koi")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
 public class KoiFishAPI {
     @Autowired
     KoiFishService koiService;

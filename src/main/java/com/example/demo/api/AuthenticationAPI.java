@@ -7,6 +7,7 @@ import com.example.demo.service.EmailService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api")
+@SecurityRequirement(name = "api")
+
 public class AuthenticationAPI {
 
     // DI: Dependency Injection
@@ -29,18 +32,14 @@ public class AuthenticationAPI {
     EmailService emailService;
 
     @PostMapping("register")
-    public ResponseEntity <AccountResponse>register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AccountResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         AccountResponse newAccount = authenticationService.register(registerRequest);
-//        String otp = String.valueOf(100000 + (int) (Math.random() * 900000));
         String email = registerRequest.getEmail();
-        return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
+        return ResponseEntity.ok(newAccount);
     }
     @PostMapping("login")
     public ResponseEntity <AccountResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         AccountResponse accountResponse = authenticationService.login(loginRequest);
-        if (accountResponse == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         return ResponseEntity.ok(accountResponse);
     }
 
@@ -50,20 +49,20 @@ public class AuthenticationAPI {
         List<Account> accounts = authenticationService.getAllAccount();
         return ResponseEntity.ok(accounts);
     }
-    @PutMapping("/account/{id}")
-    public ResponseEntity<AccountResponse> updateAccount(
-            @PathVariable Long id,
-            @RequestBody RegisterRequest registerRequest) {
-        try {
-            Account updatedAccount = authenticationService.updateAccount(id, registerRequest);
-            AccountResponse accountResponse = modelMapper.map(updatedAccount, AccountResponse.class);
-            return ResponseEntity.ok(accountResponse);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
+//    @PutMapping("/account/{id}")
+//    public ResponseEntity<AccountResponse> updateAccount(
+//            @PathVariable Long id,
+//            @RequestBody RegisterRequest registerRequest) {
+//        try {
+//            Account updatedAccount = authenticationService.updateAccount(id, registerRequest);
+//            AccountResponse accountResponse = modelMapper.map(updatedAccount, AccountResponse.class);
+//            return ResponseEntity.ok(accountResponse);
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {
         try {

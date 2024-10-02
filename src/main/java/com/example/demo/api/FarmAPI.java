@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Farm;
 import com.example.demo.model.FarmRequest;
 import com.example.demo.service.FarmService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/farm")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
 public class FarmAPI {
     @Autowired
     FarmService farmService;

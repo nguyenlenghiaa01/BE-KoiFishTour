@@ -40,8 +40,7 @@ public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     private EmailService emailService;
-    @Autowired
-    OTPService otpService;
+
 
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest, Account.class);
