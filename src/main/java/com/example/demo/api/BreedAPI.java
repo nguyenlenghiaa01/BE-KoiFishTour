@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
+import com.example.demo.model.BreedRequest;
 import com.example.demo.service.BreedService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/breed")
+@CrossOrigin("*")
 public class BreedAPI {
     @Autowired
     BreedService breedService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Breed breed) {
+    public ResponseEntity create(@Valid @RequestBody BreedRequest breed) {
         Breed newBreed = breedService.createNewBreed(breed);
-        //return ve font end
+        //rBreedRequest newBreed = breedService.createNewBreed(breed);eturn ve font end
         return ResponseEntity.ok(newBreed);
     }
 

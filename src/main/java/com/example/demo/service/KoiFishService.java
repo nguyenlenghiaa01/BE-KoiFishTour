@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.KoiFishRequest;
 import com.example.demo.repository.KoiRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,12 +13,14 @@ import java.util.List;
 @Service // danh dau day la mot lop xu ly logic
 public class KoiFishService {
     // xu ly nhung logic lien qua
+    private ModelMapper modelMapper = new ModelMapper();
     @Autowired
     KoiRepository koiRepository;
-    public KoiFish createNewKoi(KoiFish koi){
+    public KoiFish createNewKoi(KoiFishRequest koiFishRequest){
         //add fish vao database bang repsitory
+        KoiFish koiFish = modelMapper.map(koiFishRequest, KoiFish.class);
         try {
-            KoiFish newKoi = koiRepository.save(koi);
+            KoiFish newKoi = koiRepository.save(koiFish);
             return newKoi;
         }catch (Exception  e){
             throw new DuplicateEntity("Duplicate Koi id !");

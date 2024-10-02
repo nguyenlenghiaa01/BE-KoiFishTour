@@ -4,8 +4,10 @@ import com.example.demo.entity.OpenTour;
 import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.OpenTourRequest;
 import com.example.demo.repository.OpenTourRepository;
 import com.example.demo.repository.OrderRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,12 @@ import java.util.List;
 
 @Service
 public class OpenTourService {
+    private ModelMapper modelMapper = new ModelMapper();
     @Autowired
     OpenTourRepository openTourRepository;
-    public OpenTour createNewOpenTour(OpenTour openTour){
+    public OpenTour createNewOpenTour(OpenTourRequest openTourRequest){
         //add customer vao database bang repsitory
+        OpenTour openTour = modelMapper.map(openTourRequest, OpenTour.class);
         try {
             OpenTour newOpenTour = openTourRepository.save(openTour);
             return newOpenTour;

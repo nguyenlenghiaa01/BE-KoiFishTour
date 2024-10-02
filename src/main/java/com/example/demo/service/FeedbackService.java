@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.FeedbackRequest;
 import com.example.demo.repository.FeedbackRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.List;
 @Service
 public class FeedbackService {
     // xu ly nhung logic lien qua
+    private ModelMapper modelMapper = new ModelMapper();
     @Autowired
     FeedbackRepository feedbackRepository;
-    public Feedback createNewFeedback(Feedback feedback){
+    public Feedback createNewFeedback(FeedbackRequest feedbackRequest){
         //add feedback vao database bang repsitory
+        Feedback feedback = modelMapper.map(feedbackRequest, Feedback.class);
         try {
             Feedback newFeedback = feedbackRepository.save(feedback);
             return newFeedback;

@@ -2,9 +2,11 @@ package com.example.demo.api;
 
 import com.example.demo.entity.OpenTour;
 import com.example.demo.entity.OrderCart;
+import com.example.demo.model.OpenTourRequest;
 import com.example.demo.service.OpenTourService;
 import com.example.demo.service.OrderService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +20,8 @@ public class OpenTourAPI {
     @Autowired
     OpenTourService openTourService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody OpenTour openTour) {
-        OpenTour newOpenTour = openTourService.createNewOpenTour(openTour);
+    public ResponseEntity create(@Valid @RequestBody OpenTourRequest openTourRequest) {
+        OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
         //return ve font end
         return ResponseEntity.ok(newOpenTour);
     }

@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.KoiFish;
+import com.example.demo.model.KoiFishRequest;
 import com.example.demo.service.KoiFishService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class KoiFishAPI {
     @Autowired
     KoiFishService koiService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody KoiFish koi) {
+    public ResponseEntity create(@Valid @RequestBody KoiFishRequest koi) {
         KoiFish newStudent = koiService.createNewKoi(koi);
         //return ve font end
         return ResponseEntity.ok(newStudent);
