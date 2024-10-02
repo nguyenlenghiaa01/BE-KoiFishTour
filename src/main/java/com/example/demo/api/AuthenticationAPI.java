@@ -32,14 +32,17 @@ public class AuthenticationAPI {
     EmailService emailService;
 
     @PostMapping("register")
-    public ResponseEntity<AccountResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity <AccountResponse>register(@Valid @RequestBody RegisterRequest registerRequest) {
         AccountResponse newAccount = authenticationService.register(registerRequest);
         String email = registerRequest.getEmail();
-        return ResponseEntity.ok(newAccount);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }
     @PostMapping("login")
     public ResponseEntity <AccountResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         AccountResponse accountResponse = authenticationService.login(loginRequest);
+        if (accountResponse == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.ok(accountResponse);
     }
 
@@ -49,20 +52,20 @@ public class AuthenticationAPI {
         List<Account> accounts = authenticationService.getAllAccount();
         return ResponseEntity.ok(accounts);
     }
-//    @PutMapping("/account/{id}")
-//    public ResponseEntity<AccountResponse> updateAccount(
-//            @PathVariable Long id,
-//            @RequestBody RegisterRequest registerRequest) {
-//        try {
-//            Account updatedAccount = authenticationService.updateAccount(id, registerRequest);
-//            AccountResponse accountResponse = modelMapper.map(updatedAccount, AccountResponse.class);
-//            return ResponseEntity.ok(accountResponse);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//        }
-//    }
+    @PutMapping("/account/{id}")
+    public ResponseEntity<AccountResponse> updateAccount(
+            @PathVariable Long id,
+            @RequestBody RegisterRequest registerRequest) {
+        try {
+            Account updatedAccount = authenticationService.updateAccount(id, registerRequest);
+            AccountResponse accountResponse = modelMapper.map(updatedAccount, AccountResponse.class);
+            return ResponseEntity.ok(accountResponse);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {
         try {
