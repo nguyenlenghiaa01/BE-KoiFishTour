@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 @SecurityRequirement(name = "api")
-
+@CrossOrigin("*")
 public class AuthenticationAPI {
 
     // DI: Dependency Injection
