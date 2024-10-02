@@ -11,9 +11,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,8 +58,8 @@ public class Account implements UserDetails {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
-    @NotBlank(message = "Address cannot be blank")
-    private String address;
+//    @NotBlank(message = "Address cannot be blank")
+//    private String address;
 
     @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
     private LocalDateTime createdAt;
@@ -68,7 +70,9 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        if (this.role != null) authorities.add(new SimpleGrantedAuthority(this.role.toString()));
+        return authorities;
     }
 
     @Override

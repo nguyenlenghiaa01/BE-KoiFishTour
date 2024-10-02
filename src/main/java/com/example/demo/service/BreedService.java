@@ -31,7 +31,7 @@ public class BreedService {
     }
     public List<Breed> getAllBreed(){
         // lay tat ca student trong DB
-        List<Breed> breeds = breedRepository.findBreedsByIsDeletedFalse();
+        List<Breed> breeds = breedRepository.findAll();
         return breeds;
     }
     public Breed updateBreed(Breed breed, long BreedId){

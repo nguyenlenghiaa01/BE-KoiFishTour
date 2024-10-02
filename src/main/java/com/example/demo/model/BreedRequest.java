@@ -6,9 +6,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
 import java.util.List;
-
+@Data
 public class BreedRequest {
     @Column(nullable = false)
     @NotBlank(message = "Name cannot be blank")

@@ -8,10 +8,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
 import java.util.List;
 import java.util.Set;
-
+@Data
 public class FarmRequest {
     @Column(nullable = false)
 

@@ -40,12 +40,12 @@ public class TokenService {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigninKey())
                 .build()
-                .parseEncryptedClaims(token)
+                .parseSignedClaims(token)
                 .getPayload();
 
         String idString = claims.getSubject();
         long id = Long.parseLong(idString);
-        return accountRepository.findAccountByCode(idString);
+        return accountRepository.findAccountById(id);
     }
 }
 
