@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Breed;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
@@ -111,6 +112,15 @@ public class AuthenticationService implements UserDetailsService {
             throw new UsernameNotFoundException("Account with username " + userName + " not found");
         }
         return account;
+    }
+
+    public Account deleteAccount(long id){
+        Account oldAccount = accountRepository.findAccountById(id);
+        if(oldAccount ==null){
+            throw new NotFoundException("Account not found !");//dung viec xu ly ngay tu day
+        }
+        oldAccount.setDeleted(true);
+        return accountRepository.save(oldAccount);
     }
 
     public Account updateAccount(Long accountId, RegisterRequest registerRequest) {

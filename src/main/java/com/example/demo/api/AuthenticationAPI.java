@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Breed;
 import com.example.demo.model.*;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.EmailService;
@@ -66,6 +67,14 @@ public class AuthenticationAPI {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteAcount(@PathVariable long id){
+        Account newAccount = authenticationService.deleteAccount(id);
+        return ResponseEntity.ok(newAccount);
+    }
+
+
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {
         try {
@@ -76,6 +85,7 @@ public class AuthenticationAPI {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: " + e.getMessage());
         }
     }
+
 
 
     @PostMapping("forgot-password")

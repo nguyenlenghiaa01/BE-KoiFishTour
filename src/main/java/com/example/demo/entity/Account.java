@@ -37,6 +37,8 @@ public class Account implements UserDetails {
     @Column(nullable = false) // Đảm bảo không null
     private Role role; //Role để front-end nhập
 
+    private boolean isDeleted=false;
+
     @Email(message = "Invalid Email!")
     @Column(unique = true)
     private String email;

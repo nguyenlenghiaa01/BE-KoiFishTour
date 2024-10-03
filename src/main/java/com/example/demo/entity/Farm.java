@@ -44,8 +44,14 @@ public class Farm {
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
 
+    @PrePersist
+    private void prePersist() {
+        this.farmId = generateFarmId();
+    }
+
     @ManyToMany(mappedBy = "farms")
     Set<Tour> tours;
+
 
     @OneToMany(mappedBy = "farm")
     @JsonIgnore

@@ -19,8 +19,8 @@ public class FarmAPI {
     @Autowired
     FarmService farmService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody FarmRequest farm) {
-        Farm newFarm = farmService.createNewFarm(farm);
+    public ResponseEntity create(@Valid @RequestBody FarmRequest farmRequest) {
+        Farm newFarm = farmService.createNewFarm(farmRequest);
         //return ve font end
         return ResponseEntity.ok(newFarm);
     }

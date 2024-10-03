@@ -24,7 +24,7 @@ public class TourAPI {
         return ResponseEntity.ok(newTour);
     }
 
-    // Get danh sách consulting
+    // Get danh sách tour
     @GetMapping
     public ResponseEntity get(){
         List<Tour> tours = tourService.getAllTour();

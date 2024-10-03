@@ -15,7 +15,6 @@ import java.util.Set;
 @Data
 public class FarmRequest {
     @Column(nullable = false)
-
     @NotBlank(message = "Name can not be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name must not contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
@@ -28,6 +27,7 @@ public class FarmRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Owner name must not contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
+
 
     @ManyToMany(mappedBy = "farms")
     Set<Tour> tours;
