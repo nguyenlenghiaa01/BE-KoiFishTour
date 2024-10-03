@@ -22,9 +22,6 @@ public class KoiFishRequest {
     @JoinColumn(name = "breed_id")
     Breed breed;
 
-    @ManyToMany(mappedBy = "koiFishes")
-    Set<OrderCart> orderCarts;
-
     @ManyToOne
     @JoinColumn(name = "farm_id")
     Farm farm;

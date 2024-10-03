@@ -28,10 +28,6 @@ public class FarmRequest {
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
 
-
-    @ManyToMany(mappedBy = "farms")
-    Set<Tour> tours;
-
     @OneToMany(mappedBy = "farm")
     @JsonIgnore
     List<KoiFish> koiFishes;
