@@ -3,7 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.KoiFishRequest;
+import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.repository.KoiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class KoiFishService {
         List<KoiFish> kois = koiRepository.findKoiByIsDeletedFalse();
         return kois;
     }
-    public KoiFish updateKoiFish(KoiFish koi, long id){
+    public KoiFish updateKoiFish(KoiFishRequest koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){
@@ -42,6 +42,7 @@ public class KoiFishService {
         oldKoi.setFarm(koi.getFarm());
         oldKoi.setBreed(koi.getBreed());
         oldKoi.setName(koi.getName());
+        oldKoi.setImage(koi.getImage());
         return koiRepository.save(oldKoi);
     }
     public KoiFish deleteKoi(long id){

@@ -1,7 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
-import com.example.demo.model.BreedRequest;
+import com.example.demo.model.Request.BreedRequest;
 import com.example.demo.service.BreedService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

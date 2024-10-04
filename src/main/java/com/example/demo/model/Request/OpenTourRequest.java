@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.Request;
 
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Tour;
@@ -26,6 +26,7 @@ public class OpenTourRequest {
 
     @ManyToOne
     @JoinColumn(name = "tour_id")
+    @JsonIgnore
     Tour tour;
 
     @OneToMany(mappedBy = "openTour")

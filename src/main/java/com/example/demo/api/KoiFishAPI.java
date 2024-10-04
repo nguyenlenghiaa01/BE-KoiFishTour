@@ -1,7 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.KoiFish;
-import com.example.demo.model.KoiFishRequest;
+import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -19,8 +19,8 @@ public class KoiFishAPI {
     @Autowired
     KoiFishService koiService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody KoiFishRequest koi) {
-        KoiFish newStudent = koiService.createNewKoi(koi);
+    public ResponseEntity create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
+        KoiFish newStudent = koiService.createNewKoi(koiFishRequest);
         //return ve font end
         return ResponseEntity.ok(newStudent);
     }
@@ -33,7 +33,7 @@ public class KoiFishAPI {
     }
     // /api/koi/{id} => id cua thang koi minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateStudent(@Valid @RequestBody KoiFish koi, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateStudent(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id){//valid kich hoat co che vadilation
         KoiFish newStudent = koiService.updateKoiFish(koi,id);
         return ResponseEntity.ok(newStudent);
     }

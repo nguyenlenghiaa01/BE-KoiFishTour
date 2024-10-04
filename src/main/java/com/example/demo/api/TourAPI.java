@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
+import com.example.demo.model.Request.TourRequest;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -17,9 +18,16 @@ import java.util.List;
 public class TourAPI {
     @Autowired
     TourService tourService;
+
+//    @PostMapping
+//    public ResponseEntity create(@Valid @RequestBody Tour tour) {
+//        Tour newTour = tourService.createNewTour(tour);
+//        //return ve font end
+//        return ResponseEntity.ok(newTour);
+//    }
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Tour tour) {
-        Tour newTour = tourService.createNewTour(tour);
+    public ResponseEntity create(@Valid @RequestBody TourRequest tourRequest) {
+        Tour newTour = tourService.createNewTour(tourRequest);
         //return ve font end
         return ResponseEntity.ok(newTour);
     }
@@ -32,7 +40,7 @@ public class TourAPI {
     }
     // /api/tour/{id} => id cua thang tour minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateTour(@Valid @RequestBody Tour tour, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateTour(@Valid @RequestBody TourRequest tour, @PathVariable long id){//valid kich hoat co che vadilation
         Tour newTour = tourService.updateTour(tour,id);
         return ResponseEntity.ok(newTour);
     }

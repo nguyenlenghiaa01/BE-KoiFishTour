@@ -2,7 +2,7 @@ package com.example.demo.api;
 
 
 import com.example.demo.entity.Feedback;
-import com.example.demo.model.FeedbackRequest;
+import com.example.demo.model.Request.FeedbackRequest;
 import com.example.demo.service.FeedbackService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class FeedBackAPI {
     }
     // /api/feedback/{id} => id cua thang feedback minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateFeedback(@Valid @RequestBody Feedback feedback, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id){//valid kich hoat co che vadilation
         Feedback newFeedback = feedbackService.updateFeedback(feedback,id);
         return ResponseEntity.ok(newFeedback);
     }

@@ -3,7 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Breed;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.BreedRequest;
+import com.example.demo.model.Request.BreedRequest;
 import com.example.demo.repository.BreedRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ public class BreedService {
     @Autowired
     BreedRepository breedRepository;
     public Breed createNewBreed(BreedRequest breedRequest){
-        //add breed vao database bang repsitory
         Breed breed = modelMapper.map(breedRequest, Breed.class);
         try {
 

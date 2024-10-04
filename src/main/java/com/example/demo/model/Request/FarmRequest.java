@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.Request;
 
 import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.Tour;
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 @Data
 public class FarmRequest {
-    @Column(nullable = false)
     @NotBlank(message = "Name can not be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name must not contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
@@ -27,6 +26,8 @@ public class FarmRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Owner name must not contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
+
+    private String image;
 
     @OneToMany(mappedBy = "farm")
     @JsonIgnore

@@ -1,8 +1,11 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Account;
-import com.example.demo.entity.Breed;
-import com.example.demo.model.*;
+import com.example.demo.model.Request.ForgotPasswordRequest;
+import com.example.demo.model.Request.LoginRequest;
+import com.example.demo.model.Request.RegisterRequest;
+import com.example.demo.model.Request.ResetPasswordRequest;
+import com.example.demo.model.Response.AccountResponse;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.EmailService;
 import com.google.firebase.auth.FirebaseAuth;

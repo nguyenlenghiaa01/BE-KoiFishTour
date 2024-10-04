@@ -1,11 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
-import com.example.demo.entity.Breed;
 import com.example.demo.entity.Role;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
+import com.example.demo.model.Request.ForgotPasswordRequest;
+import com.example.demo.model.Request.LoginRequest;
+import com.example.demo.model.Request.RegisterRequest;
+import com.example.demo.model.Request.ResetPasswordRequest;
+import com.example.demo.model.Response.AccountResponse;
 import com.example.demo.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -123,24 +127,25 @@ public class AuthenticationService implements UserDetailsService {
         return accountRepository.save(oldAccount);
     }
 
-    public Account updateAccount(Long accountId, RegisterRequest registerRequest) {
-        Account newAccount = accountRepository.findById(accountId)
+    public Account updateAccount(Long Id, RegisterRequest registerRequest) {
+        Account oldAccount = accountRepository.findById(Id)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
         // Cập nhật thông tin tài khoản
-        newAccount.setEmail(registerRequest.getEmail());
-        newAccount.setUserName(registerRequest.getUserName());
-        newAccount.setPhone(registerRequest.getPhone());
-        newAccount.setFullName(registerRequest.getFullName());
+        oldAccount.setEmail(registerRequest.getEmail());
+        oldAccount.setUserName(registerRequest.getUserName());
+        oldAccount.setPhone(registerRequest.getPhone());
+        oldAccount.setFullName(registerRequest.getFullName());
+        oldAccount.setAddress(registerRequest.getAddress());
 
         if (registerRequest.getPassword() != null) {
-            newAccount.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            oldAccount.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 //            // Gửi OTP qua email khi cập nhật mật khẩu
 //            String otp = otpService.generateOtp();
 //            emailService.sendOtp(newAccount.getEmail(), otp);
         }
 
-        return accountRepository.save(newAccount);
+        return accountRepository.save(oldAccount);
     }
 
     public Account getCurrentAccount(){

@@ -1,6 +1,7 @@
-package com.example.demo.model;
+package com.example.demo.model.Request;
 
 import com.example.demo.entity.Account;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
@@ -13,5 +14,6 @@ public class FeedbackRequest {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     Account account;
 }

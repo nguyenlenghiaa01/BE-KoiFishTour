@@ -3,7 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.FeedbackRequest;
+import com.example.demo.model.Request.FeedbackRequest;
 import com.example.demo.repository.FeedbackRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class FeedbackService {
         List<Feedback> feedbacks = feedbackRepository.findFeedbacksByIsDeletedFalse();
         return feedbacks;
     }
-    public Feedback updateFeedback(Feedback feedback, long id){
+    public Feedback updateFeedback(FeedbackRequest feedback, long id){
 
         Feedback oldFeedback = feedbackRepository.findFeedbackById(id);
         if(oldFeedback ==null){

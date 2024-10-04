@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.Request;
 
 import com.example.demo.entity.Role;
 import jakarta.persistence.*;
@@ -30,6 +30,9 @@ public class RegisterRequest {
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
+
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

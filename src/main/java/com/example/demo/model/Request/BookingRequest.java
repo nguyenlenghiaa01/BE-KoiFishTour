@@ -1,8 +1,10 @@
-package com.example.demo.entity;
+package com.example.demo.model.Request;
 
+import com.example.demo.entity.Account;
+import com.example.demo.entity.OpenTour;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -11,21 +13,10 @@ import java.util.Date;
 import java.util.Random;
 
 @Data
-@Entity
-public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @NotBlank(message = "Code can not be blank!")
-    @Pattern(regexp = "BOK\\d{7}", message = "Invalid code!")
-    @Column(unique = true)
-    private String bookingId;
-
-    private boolean isDeleted = false;
+public class BookingRequest {
 
     @Temporal(TemporalType.DATE)
-    @NotNull(message = "Date can not be blank")
+    @NotBlank(message = "Date can not be blank")
     @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
     private Date startDate;
 
@@ -47,22 +38,13 @@ public class Booking {
     @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
     private Date bookingDate;
 
-    @PrePersist
-    private void prePersist() {
-        this.bookingId = generateBookingId();
-    }
-
-    private String generateBookingId() {
-        Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
-        return String.format("BOK%07d", number); // Định dạng với 7 chữ số
-    }
-
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     Account account;
 
     @ManyToOne
     @JoinColumn(name = "openTour_id")
+    @JsonIgnore
     OpenTour openTour;
 }

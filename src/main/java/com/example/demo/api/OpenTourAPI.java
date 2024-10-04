@@ -1,13 +1,10 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.OpenTour;
-import com.example.demo.entity.OrderCart;
-import com.example.demo.model.OpenTourRequest;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.service.OpenTourService;
-import com.example.demo.service.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +33,7 @@ public class OpenTourAPI {
     }
     // /api/order/{id} => id cua thang order minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateOpenTour(@Valid @RequestBody OpenTour openTour, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateOpenTour(@Valid @RequestBody OpenTourRequest openTour, @PathVariable long id){//valid kich hoat co che vadilation
         OpenTour newOpenTour = openTourService.updateOpenTour(openTour,id);
         return ResponseEntity.ok(newOpenTour);
     }

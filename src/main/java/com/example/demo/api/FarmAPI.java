@@ -1,7 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Farm;
-import com.example.demo.model.FarmRequest;
+import com.example.demo.model.Request.FarmRequest;
 import com.example.demo.service.FarmService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class FarmAPI {
     }
     // /api/farm/{id} => id cua thang farm minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateFarm(@Valid @RequestBody Farm farm, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id){//valid kich hoat co che vadilation
         Farm newFarm = farmService.updateFarm(farm,id);
         return ResponseEntity.ok(newFarm);
     }

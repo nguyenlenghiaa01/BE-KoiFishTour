@@ -1,8 +1,9 @@
-package com.example.demo.model;
+package com.example.demo.model.Request;
 
 import com.example.demo.entity.Breed;
 import com.example.demo.entity.Farm;
 import com.example.demo.entity.OrderCart;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -18,11 +19,22 @@ public class KoiFishRequest {
     @Pattern(regexp = "^[^\\d\\s].*", message = "Name not have number and first character not have space!")
     private String name;
 
+    @NotBlank(message = "Name can not be blank")
+    @Pattern(regexp = "^[^\\d\\s].*", message = "Name not have number and first character not have space!")
+    private String description;
+
+    private String image;
+
+
+
     @ManyToOne
     @JoinColumn(name = "breed_id")
+    @JsonIgnore
     Breed breed;
+
 
     @ManyToOne
     @JoinColumn(name = "farm_id")
+    @JsonIgnore
     Farm farm;
 }

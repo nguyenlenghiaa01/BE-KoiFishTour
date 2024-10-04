@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.OpenTour;
-import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.OpenTourRequest;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.repository.OpenTourRepository;
-import com.example.demo.repository.OrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ public class OpenTourService {
         List<OpenTour> openTours = openTourRepository.findOpenToursByIsDeletedFalse();
         return openTours;
     }
-    public OpenTour updateOpenTour(OpenTour openTour, long id){
+    public OpenTour updateOpenTour(OpenTourRequest openTour, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
         if(oldOpenTour ==null){

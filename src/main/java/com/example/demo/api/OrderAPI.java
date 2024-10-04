@@ -3,6 +3,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.OrderCart;
 
+import com.example.demo.model.Request.OrderRequest;
 import com.example.demo.service.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class OrderAPI{
     @Autowired
     OrderService orderService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody OrderCart orderCart) {
+    public ResponseEntity create(@Valid @RequestBody OrderRequest orderCart) {
         OrderCart newFarm = orderService.createNewOrder(orderCart);
         //return ve font end
         return ResponseEntity.ok(newFarm);
@@ -34,7 +35,7 @@ public class OrderAPI{
     }
     // /api/order/{id} => id cua thang order minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateOrder(@Valid @RequestBody OrderCart order, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateOrder(@Valid @RequestBody OrderRequest order, @PathVariable long id){//valid kich hoat co che vadilation
         OrderCart newOrder = orderService.updateOrder(order,id);
         return ResponseEntity.ok(newOrder);
     }

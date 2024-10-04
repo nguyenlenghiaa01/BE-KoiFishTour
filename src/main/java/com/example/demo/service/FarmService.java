@@ -3,7 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Farm;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.FarmRequest;
+import com.example.demo.model.Request.FarmRequest;
 import com.example.demo.repository.FarmRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class FarmService {
         List<Farm> farms = farmRepository.findFarmsByIsDeletedFalse();
         return farms;
     }
-    public Farm updateFarm(Farm farm, long id){
+    public Farm updateFarm(FarmRequest farm, long id){
 
         Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){
@@ -45,6 +45,7 @@ public class FarmService {
         oldFarm.setOwner(farm.getOwner());
         oldFarm.setFarmName(farm.getFarmName());
         oldFarm.setLocation(farm.getLocation());
+        oldFarm.setImage(farm.getImage());
         return farmRepository.save(oldFarm);
     }
     public Farm deleteFarm(long id){

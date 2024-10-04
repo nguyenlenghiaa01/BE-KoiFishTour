@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
 
-import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Request.OrderRequest;
 import com.example.demo.repository.KoiRepository;
 import com.example.demo.repository.OrderRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,14 @@ public class OrderService {
     @Autowired
     OrderRepository orderRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     KoiRepository koiRepository;
-    public OrderCart createNewOrder(OrderCart order){
-        //add fish vao database bang repsitory
+    public OrderCart createNewOrder(OrderRequest orderRequest){
+        OrderCart orders = modelMapper.map(orderRequest,OrderCart.class);
         try {
-            OrderCart newOrder = orderRepository.save(order);
+            OrderCart newOrder = orderRepository.save(orders);
             return newOrder;
         }catch (Exception  e){
             throw new DuplicateEntity("Duplicate Order id !");
@@ -35,7 +38,7 @@ public class OrderService {
         List<OrderCart> orders = orderRepository.findOrderCartsByIsDeletedFalse();
         return orders;
     }
-    public OrderCart updateOrder(OrderCart order, long id){
+    public OrderCart updateOrder(OrderRequest order, long id){
         // buoc 1: tim toi thang order co id nhu la FE cung cap
         OrderCart oldOrderCart = orderRepository.findOrderById(id);
         if(oldOrderCart ==null){

@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.model.Response;
 
 import com.example.demo.entity.Role;
 import lombok.Data;
@@ -11,7 +11,7 @@ public class AccountResponse {
     String fullName;
     String phone;
     String email;
-//    String address;
+    String address;
     Role role;
     String token;
 }
