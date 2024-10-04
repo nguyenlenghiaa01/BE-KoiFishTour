@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,5 +34,5 @@ public class OpenTour {
 
     @OneToMany(mappedBy = "openTour")
     @JsonIgnore
-    Set<Booking> bookings;
+    List<Booking> bookings;
 }

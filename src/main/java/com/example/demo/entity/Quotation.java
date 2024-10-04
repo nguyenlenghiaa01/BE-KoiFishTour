@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -17,21 +18,39 @@ public class Quotation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "QUO\\d{7}", message = "Invalid code!")
     @Column(unique = true)
     private String quotationId;
 
-    public Quotation() {
-        this.quotationId = generateQuotationId(); // Tạo ID khi khởi tạo
+    @PrePersist
+    private void prePersist() {
+        this.quotationId = generateQuotationId(); // Sử dụng hàm để tạo mã duy nhất
+        this.uploadAt = LocalDateTime.now(); // Gán thời gian upload khi lưu vào DB
     }
 
-    private String generateQuotationId() {
+    public String generateQuotationId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
+        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 9999999
         return String.format("QUO%07d", number); // Định dạng với 7 chữ số
     }
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "upload_at", nullable = false)
+    private LocalDateTime uploadAt;
+
+    private String fileUrl;
+
     @OneToMany(mappedBy = "quotation")
     @JsonIgnore
-    List<QuotationProcess> quotationProcesses;
+    private List<QuotationProcess> quotationProcesses;
+
+    @OneToOne // Mối quan hệ 1-1 với Booking
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking; // Quotation liên kết với một Booking duy nhất
+
+
 }

@@ -20,7 +20,4 @@ public class BreedRequest {
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String description;
 
-    @OneToMany(mappedBy = "breed")
-    @JsonIgnore
-    List<KoiFish> koiFishes;
 }

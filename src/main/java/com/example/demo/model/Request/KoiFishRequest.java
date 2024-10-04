@@ -13,6 +13,7 @@ import lombok.Data;
 
 import java.util.Random;
 import java.util.Set;
+
 @Data
 public class KoiFishRequest {
     @NotBlank(message = "Name can not be blank")
@@ -25,16 +26,7 @@ public class KoiFishRequest {
 
     private String image;
 
+    long breedId;
+    long farmId;
 
-
-    @ManyToOne
-    @JoinColumn(name = "breed_id")
-    @JsonIgnore
-    Breed breed;
-
-
-    @ManyToOne
-    @JoinColumn(name = "farm_id")
-    @JsonIgnore
-    Farm farm;
 }

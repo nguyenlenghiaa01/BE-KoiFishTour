@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.OpenTour;
+import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.repository.OpenTourRepository;
+import com.example.demo.repository.TourRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,19 @@ import java.util.List;
 @Service
 public class OpenTourService {
     private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     OpenTourRepository openTourRepository;
+
+    @Autowired
+    TourRepository tourRepository;
+
     public OpenTour createNewOpenTour(OpenTourRequest openTourRequest){
         //add customer vao database bang repsitory
         OpenTour openTour = modelMapper.map(openTourRequest, OpenTour.class);
+        Tour tour = tourRepository.findById(openTourRequest.getTourId()).orElseThrow(() -> new NotFoundException("Tour not exist"));
+
+        openTour.setTour(tour);
         try {
             OpenTour newOpenTour = openTourRepository.save(openTour);
             return newOpenTour;
@@ -35,10 +45,13 @@ public class OpenTourService {
     public OpenTour updateOpenTour(OpenTourRequest openTour, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap
         OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
+
         if(oldOpenTour ==null){
             throw new NotFoundException("Tour open not found !");//dung viec xu ly ngay tu day
         }
         //=> co manager co ton tai;
+        Tour tour = tourRepository.findById(openTour.getTourId()).orElseThrow(() -> new NotFoundException("Tour not exist"));
+        oldOpenTour.setTour(tour);
         oldOpenTour.setTotalPrice(openTour.getTotalPrice());
         oldOpenTour.setStatus(openTour.getStatus());
 

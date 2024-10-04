@@ -29,16 +29,5 @@ public class TourRequest {
     private String image;
 
 
-    @OneToMany(mappedBy = "tour")
-    @JsonIgnore
-    Set<OpenTour> openTours;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tour_farm",
-            joinColumns = @JoinColumn(name = "tour_id"),
-            inverseJoinColumns = @JoinColumn(name = "farm_id")
-    )
-    @JsonIgnore
-    Set<Farm> farms;
+    Set<Long> farmId;
 }

@@ -16,7 +16,7 @@ import java.util.Random;
 public class Breed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Thêm chiến lược tự động tăng cho khóa chính
-    private Long id; // Thêm trường id làm khóa chính
+    private long id; // Thêm trường id làm khóa chính
 
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "BRE\\d{7}", message = "Invalid code!")

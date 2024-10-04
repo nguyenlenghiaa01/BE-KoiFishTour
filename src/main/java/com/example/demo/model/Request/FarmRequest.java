@@ -29,7 +29,4 @@ public class FarmRequest {
 
     private String image;
 
-    @OneToMany(mappedBy = "farm")
-    @JsonIgnore
-    List<KoiFish> koiFishes;
 }

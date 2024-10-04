@@ -26,7 +26,7 @@ import java.util.List;
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "[A-Z]{3}\\d{6}", message = "Invalid code!")

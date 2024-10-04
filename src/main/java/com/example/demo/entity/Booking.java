@@ -47,6 +47,14 @@ public class Booking {
     @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
     private Date bookingDate;
 
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "openTour_id")
+    OpenTour openTour;
+
     @PrePersist
     private void prePersist() {
         this.bookingId = generateBookingId();
@@ -58,11 +66,5 @@ public class Booking {
         return String.format("BOK%07d", number); // Định dạng với 7 chữ số
     }
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    Account account;
 
-    @ManyToOne
-    @JoinColumn(name = "openTour_id")
-    OpenTour openTour;
 }

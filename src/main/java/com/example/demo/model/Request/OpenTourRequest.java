@@ -24,12 +24,5 @@ public class OpenTourRequest {
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "tour_id")
-    @JsonIgnore
-    Tour tour;
-
-    @OneToMany(mappedBy = "openTour")
-    @JsonIgnore
-    Set<Booking> bookings;
+    long tourId;
 }

@@ -38,13 +38,7 @@ public class BookingRequest {
     @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
     private Date bookingDate;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    @JsonIgnore
-    Account account;
+    long openTourId;
 
-    @ManyToOne
-    @JoinColumn(name = "openTour_id")
-    @JsonIgnore
-    OpenTour openTour;
+    long accountId;
 }

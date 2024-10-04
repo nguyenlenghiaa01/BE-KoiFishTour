@@ -18,11 +18,7 @@ public class QuotationProcessRequest {
 
     private String notes;
 
-    @ManyToOne
-    @JoinColumn(name = "quotation_id")
-    Quotation quotation;
+    long quotationId;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    Account account;
+    long accountId;
 }

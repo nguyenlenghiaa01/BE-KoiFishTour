@@ -12,8 +12,5 @@ public class FeedbackRequest {
 
     private int rating;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    @JsonIgnore
-    Account account;
+    long accountId;
 }

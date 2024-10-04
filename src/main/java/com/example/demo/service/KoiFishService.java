@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Breed;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
+import com.example.demo.repository.BreedRepository;
+import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.KoiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,18 @@ public class KoiFishService {
     private ModelMapper modelMapper = new ModelMapper();
     @Autowired
     KoiRepository koiRepository;
+
+    @Autowired
+    BreedRepository breedRepository;
+
+    @Autowired
+    FarmRepository farmRepository;
+
     public KoiFish createNewKoi(KoiFishRequest koiFishRequest){
         //add fish vao database bang repsitory
         KoiFish koiFish = modelMapper.map(koiFishRequest, KoiFish.class);
+        koiFish.setBreed(breedRepository.findById(koiFishRequest.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
+        koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
         try {
             KoiFish newKoi = koiRepository.save(koiFish);
             return newKoi;
@@ -39,8 +51,8 @@ public class KoiFishService {
             throw new NotFoundException("Koi not found !");//dung viec xu ly ngay tu day
         }
         //=> co farm co ton tai
-        oldKoi.setFarm(koi.getFarm());
-        oldKoi.setBreed(koi.getBreed());
+        oldKoi.setFarm(farmRepository.findById(koi.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
+        oldKoi.setBreed(breedRepository.findById(koi.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
         oldKoi.setName(koi.getName());
         oldKoi.setImage(koi.getImage());
         return koiRepository.save(oldKoi);

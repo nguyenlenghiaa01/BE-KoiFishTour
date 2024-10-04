@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FeedbackRequest;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.FeedbackRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,20 @@ import java.util.List;
 public class FeedbackService {
     // xu ly nhung logic lien qua
     private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     FeedbackRepository feedbackRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
+
     public Feedback createNewFeedback(FeedbackRequest feedbackRequest){
         //add feedback vao database bang repsitory
         Feedback feedback = modelMapper.map(feedbackRequest, Feedback.class);
+
+        Account account = accountRepository.findById(feedbackRequest.getAccountId()).orElseThrow(() -> new NotFoundException("Account not exist!"));
+
+        feedback.setAccount(account);
         try {
             Feedback newFeedback = feedbackRepository.save(feedback);
             return newFeedback;
