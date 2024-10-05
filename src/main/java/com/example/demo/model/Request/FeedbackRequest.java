@@ -14,6 +14,5 @@ public class FeedbackRequest {
 
     long accountId;
 
-    private long booking_id;
-    private long account_id;
+    private long bookingId;
 }
