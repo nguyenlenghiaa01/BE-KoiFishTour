@@ -1,44 +1,36 @@
 package com.example.demo.model.Request;
 
-import com.example.demo.entity.Account;
-import com.example.demo.entity.OpenTour;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Random;
+import java.time.LocalDate;
 
 @Data
 public class BookingRequest {
 
-    @Temporal(TemporalType.DATE)
-    @NotBlank(message = "Date can not be blank")
-    @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
-    private Date startDate;
+    @NotNull(message = "Start date cannot be null")
+    private LocalDate startDate; // Sử dụng LocalDate thay vì Date
 
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot have numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String status;
 
-    @NotBlank(message = "Price cannot be blank")
-    @Pattern(regexp = "^(VND)?\\s?\\d+(?:[.,]\\d{3})*(?:[.,]\\d{2})?$", message = "Enter the correct format!")
+    @NotNull(message = "Price cannot be null")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @Digits(integer = 10, fraction = 2, message = "Invalid price format, max 10 digits and 2 decimal places")
     private BigDecimal price;
 
-    @Temporal(TemporalType.DATE)
-    @NotBlank(message = "Date cannot be blank")
-    @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
-    private Date endDate;
+    @NotNull(message = "End date cannot be null")
+    private LocalDate endDate;
 
-    @Temporal(TemporalType.DATE)
-    @NotBlank(message = "Date cannot be blank")
-    @Pattern(regexp = "(([1-2][0-9])|([1-9])|(3[0-1]))/(0?[1-9]|1[0-2])/[0-9]{4}", message = "Enter the correct format!")
-    private Date bookingDate;
+    @NotNull(message = "Booking date cannot be null")
+    private LocalDate bookingDate;
 
-    long openTourId;
-
-    long accountId;
+    private long openTourId;
+    private long accountId;
 }
+

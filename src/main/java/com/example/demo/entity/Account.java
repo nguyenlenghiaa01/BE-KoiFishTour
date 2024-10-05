@@ -64,6 +64,7 @@ public class Account implements UserDetails {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
+    private String image;
 
     @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
     private LocalDateTime createdAt;

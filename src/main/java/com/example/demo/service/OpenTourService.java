@@ -15,54 +15,56 @@ import java.util.List;
 
 @Service
 public class OpenTourService {
-    private ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    OpenTourRepository openTourRepository;
+    private OpenTourRepository openTourRepository;
 
     @Autowired
-    TourRepository tourRepository;
+    private TourRepository tourRepository;
 
-    public OpenTour createNewOpenTour(OpenTourRequest openTourRequest){
-        //add customer vao database bang repsitory
-        OpenTour openTour = modelMapper.map(openTourRequest, OpenTour.class);
-        Tour tour = tourRepository.findById(openTourRequest.getTourId()).orElseThrow(() -> new NotFoundException("Tour not exist"));
+    public OpenTour createNewOpenTour(OpenTourRequest openTourRequest) {
+        // Lấy Tour từ repository
+        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
 
-        openTour.setTour(tour);
+        OpenTour newOpenTour = modelMapper.map(openTourRequest, OpenTour.class);
+        newOpenTour.setTour(tour); // Thiết lập Tour cho OpenTour
+
         try {
-            OpenTour newOpenTour = openTourRepository.save(openTour);
-            return newOpenTour;
-        }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate Manager id !");
+            return openTourRepository.save(newOpenTour);
+        } catch (Exception e) {
+            throw new DuplicateEntity("Duplicate Open Tour ID !");
         }
-
     }
+
     public List<OpenTour> getAllOpenTour(){
-        // lay tat ca student trong DB
-        List<OpenTour> openTours = openTourRepository.findOpenToursByIsDeletedFalse();
-        return openTours;
+        // Lấy tất cả Open Tours không bị xóa
+        return openTourRepository.findOpenToursByIsDeletedFalse();
     }
-    public OpenTour updateOpenTour(OpenTourRequest openTour, long id){
-        // buoc 1: tim toi thang student co id nhu la FE cung cap
-        OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
 
-        if(oldOpenTour ==null){
-            throw new NotFoundException("Tour open not found !");//dung viec xu ly ngay tu day
+    public OpenTour updateOpenTour(OpenTourRequest openTourRequest, long id){
+        OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
+        if (oldOpenTour == null) {
+            throw new NotFoundException("Open Tour not found !");
         }
-        //=> co manager co ton tai;
-        Tour tour = tourRepository.findById(openTour.getTourId()).orElseThrow(() -> new NotFoundException("Tour not exist"));
-        oldOpenTour.setTour(tour);
-        oldOpenTour.setTotalPrice(openTour.getTotalPrice());
-        oldOpenTour.setStatus(openTour.getStatus());
+
+        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
+
+        modelMapper.map(openTourRequest, oldOpenTour);
+        oldOpenTour.setTour(tour); // Cập nhật Tour cho OpenTour
 
         return openTourRepository.save(oldOpenTour);
     }
+
     public OpenTour deleteOpenTour(long id){
         OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
-        if(oldOpenTour ==null){
-            throw new NotFoundException("Manager not found !");//dung viec xu ly ngay tu day
+        if (oldOpenTour == null) {
+            throw new NotFoundException("Open Tour not found !");
         }
         oldOpenTour.setDeleted(true);
         return openTourRepository.save(oldOpenTour);
     }
 }
+

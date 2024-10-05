@@ -24,21 +24,33 @@ public class FeedbackService {
     @Autowired
     AccountRepository accountRepository;
 
-    public Feedback createNewFeedback(FeedbackRequest feedbackRequest){
-        //add feedback vao database bang repsitory
-        Feedback feedback = modelMapper.map(feedbackRequest, Feedback.class);
+    public Feedback createNewFeedback(FeedbackRequest feedbackRequest) {
+        // Tạo đối tượng Feedback mới
+        Feedback feedback = new Feedback();
 
-        Account account = accountRepository.findById(feedbackRequest.getAccountId()).orElseThrow(() -> new NotFoundException("Account not exist!"));
+        // Lấy Account từ repository
+        Account account = accountRepository.findById(feedbackRequest.getAccountId())
+                .orElseThrow(() -> new NotFoundException("Account not exist!"));
 
+        feedback.setComment(feedbackRequest.getComment());
+        feedback.setRating(feedbackRequest.getRating());
         feedback.setAccount(account);
-        try {
-            Feedback newFeedback = feedbackRepository.save(feedback);
-            return newFeedback;
-        }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate FeedBack id !");
+
+        if (feedback.getComment() == null || feedback.getComment().isEmpty()) {
+            throw new IllegalArgumentException("Comment cannot be empty!");
+        }
+        if (feedback.getRating() < 1 || feedback.getRating() > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5!");
         }
 
+        try {
+            // Lưu và trả về Feedback mới
+            return feedbackRepository.save(feedback);
+        } catch (Exception e) {
+            throw new DuplicateEntity("Duplicate Feedback id!");
+        }
     }
+
     public List<Feedback> getAllFeedback(){
         // lay tat ca feedback trong DB
         List<Feedback> feedbacks = feedbackRepository.findFeedbacksByIsDeletedFalse();

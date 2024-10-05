@@ -7,6 +7,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.TourRepository;
+import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,28 +27,36 @@ public class TourService {
     @Autowired
     FarmRepository farmRepository;
 
-    public Tour createNewTour(TourRequest tourRequest){
-        //add tour vao database bang repsitory
-        Tour tour = modelMapper.map(tourRequest, Tour.class);
+    public Tour createNewTour(TourRequest tourRequest) {
+        // Tạo đối tượng Tour mới
+        Tour newTour = new Tour();
+        newTour.setTourName(tourRequest.getTourName());
+        newTour.setStartDate(tourRequest.getStartDate());
+        newTour.setDuration(tourRequest.getDuration());
+        newTour.setImage(tourRequest.getImage());
 
         Set<Farm> farms = new HashSet<>();
 
-        for(Long farmId : tourRequest.getFarmId()) {
-            Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new NotFoundException("Farm not exist"));
+        // Lấy danh sách farm
+        for (Long farmId : tourRequest.getFarmId()) {
+            Farm farm = farmRepository.findById(farmId)
+                    .orElseThrow(() -> new NotFoundException("Farm không tồn tại với ID: " + farmId));
             farms.add(farm);
         }
+        newTour.setFarms(farms);
 
-        tour.setFarms(farms);
         try {
-            Tour newTour = tourRepository.save(tour);
-            return newTour;
-        }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate Tour id !");
+            return tourRepository.save(newTour);
+        } catch (ConstraintViolationException e) {
+            // Xử lý lỗi vi phạm ràng buộc
+            throw new IllegalArgumentException("Dữ liệu không hợp lệ: " + e.getMessage());
+        } catch (Exception e) {
+            throw new DuplicateEntity("Tour đã tồn tại với ID: " + newTour.getId());
         }
-
-
-
     }
+
+
+
     public List<Tour> getAllTour(){
         // lay tat ca student trong DB
         List<Tour> tours = tourRepository.findToursByIsDeletedFalse();

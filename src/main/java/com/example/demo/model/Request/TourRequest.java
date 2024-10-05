@@ -5,6 +5,7 @@ import com.example.demo.entity.OpenTour;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class TourRequest {
     @Pattern(regexp = "^[^\\s].*", message = "First character not have space!")
     private String tourName;
 
-    @NotBlank(message = "Start date can not be blank")
+    @NotNull(message = "Start date cannot be null")
     private LocalDate startDate; // Sử dụng LocalDate thay vì Date
 
     @NotBlank(message = "Duration can not be blank")
@@ -27,7 +28,6 @@ public class TourRequest {
     private String duration; // Chuyển sang String để dễ dàng kiểm tra định dạng
 
     private String image;
-
 
     Set<Long> farmId;
 }

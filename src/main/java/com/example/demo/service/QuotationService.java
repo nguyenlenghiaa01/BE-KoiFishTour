@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QuotationService {
@@ -25,11 +24,12 @@ public class QuotationService {
     private ModelMapper modelMapper = new ModelMapper();
 
     public Quotation createQuotation(QuotationRequest quotationRequest) {
-        Quotation quotation = modelMapper.map(quotationRequest, Quotation.class);
+        Quotation quotation = new Quotation();
         Booking booking = bookingRepository.findById(quotationRequest.getBookingId()).
                 orElseThrow(() -> new NotFoundException("Booking not exist!"));
 
         quotation.setBooking(booking);
+        quotation.setFileUrl(quotationRequest.getFileUrl());
 
         try {
             Quotation newQuotation = quotationRepository.save(quotation);
@@ -54,6 +54,7 @@ public class QuotationService {
         Booking booking = bookingRepository.findById(quotationRequest.getBookingId()).
                 orElseThrow(() -> new NotFoundException("Booking not exist!"));
         quotation.setBooking(booking);
+        quotation.setFileUrl(quotationRequest.getFileUrl());
 
         return quotationRepository.save(quotation);
     }
@@ -67,3 +68,4 @@ public class QuotationService {
         return quotationRepository.save(oldQuotation);
     }
 }
+

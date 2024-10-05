@@ -29,24 +29,30 @@ public class BookingService {
     AccountRepository accountRepository;
 
     public Booking createNewBooking(BookingRequest bookingRequest) {
-        Booking booking = modelMapper.map(bookingRequest, Booking.class);
-        OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId()).
-                orElseThrow(() -> new NotFoundException("Open-Tour not exist"));
+        // Tạo đối tượng Booking mới
+        Booking booking = new Booking();
 
-        Account account = accountRepository.findById(bookingRequest.getAccountId()).
-                orElseThrow(() -> new NotFoundException("Account not exist"));
+        OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId())
+                .orElseThrow(() -> new NotFoundException("Open-Tour not exist"));
 
+        Account account = accountRepository.findById(bookingRequest.getAccountId())
+                .orElseThrow(() -> new NotFoundException("Account not exist"));
+
+        booking.setBookingDate(bookingRequest.getBookingDate());
+        booking.setStatus(bookingRequest.getStatus());
+        booking.setEndDate(bookingRequest.getEndDate());
+        booking.setStartDate(bookingRequest.getStartDate());
+        booking.setPrice(bookingRequest.getPrice());
         booking.setOpenTour(openTour);
         booking.setAccount(account);
-        try {
 
-            Booking newBooking = bookingRepository.save(booking);
-            return newBooking;
+        try {
+            return bookingRepository.save(booking);
         } catch (Exception e) {
             throw new DuplicateEntity("Duplicate booking id !");
         }
-
     }
+
 
     public List<Booking> getAllBooking() {
         // lay tat ca student trong DB

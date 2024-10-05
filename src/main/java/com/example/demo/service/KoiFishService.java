@@ -26,19 +26,30 @@ public class KoiFishService {
     @Autowired
     FarmRepository farmRepository;
 
-    public KoiFish createNewKoi(KoiFishRequest koiFishRequest){
-        //add fish vao database bang repsitory
-        KoiFish koiFish = modelMapper.map(koiFishRequest, KoiFish.class);
-        koiFish.setBreed(breedRepository.findById(koiFishRequest.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
-        koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
+    public KoiFish createNewKoi(KoiFishRequest koiFishRequest) {
+        // Tạo đối tượng KoiFish mới
+        KoiFish koiFish = new KoiFish();
+
+        // Thiết lập thuộc tính breed và farm
+        koiFish.setBreed(breedRepository.findById(koiFishRequest.getBreedId())
+                .orElseThrow(() -> new NotFoundException("Breed not exist")));
+
+        koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId())
+                .orElseThrow(() -> new NotFoundException("Farm not exist")));
+
+         koiFish.setName(koiFishRequest.getName());
+         koiFish.setImage(koiFishRequest.getImage());
+         koiFish.setDescription(koiFishRequest.getDescription());
+
         try {
-            KoiFish newKoi = koiRepository.save(koiFish);
-            return newKoi;
-        }catch (Exception  e){
+            // Lưu và trả về KoiFish mới
+            return koiRepository.save(koiFish);
+        } catch (Exception e) {
             throw new DuplicateEntity("Duplicate Koi id !");
         }
-
     }
+
+
     public List<KoiFish> getAllKoi(){
         // lay tat ca student trong DB
         List<KoiFish> kois = koiRepository.findKoiByIsDeletedFalse();

@@ -52,6 +52,7 @@ public class Farm {
     }
 
     @ManyToMany(mappedBy = "farms")
+    @JsonIgnore
     Set<Tour> tours;
 
     @OneToMany(mappedBy = "farm")
