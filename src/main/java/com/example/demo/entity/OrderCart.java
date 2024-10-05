@@ -25,6 +25,7 @@ public class OrderCart {
     @Column(unique = true)
     private String orderId;
 
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     @Min(value = 10, message = "Quantity must be at least 10!")

@@ -35,7 +35,7 @@ public class FarmService {
         List<Farm> farms = farmRepository.findFarmsByIsDeletedFalse();
         return farms;
     }
-    public Farm updateFarm(FarmRequest farm, long id){
+    public Farm updateFarm(Farm farm, long id){
 
         Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){

@@ -23,6 +23,7 @@ public class Breed {
     @Column(unique = true)
     private String breedId;
 
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     @NotBlank(message = "Name cannot be blank")

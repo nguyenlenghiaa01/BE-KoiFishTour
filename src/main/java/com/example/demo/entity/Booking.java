@@ -22,6 +22,7 @@ public class Booking {
     @Column(unique = true)
     private String bookingId;
 
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     @Temporal(TemporalType.DATE)

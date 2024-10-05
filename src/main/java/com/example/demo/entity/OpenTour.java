@@ -18,6 +18,7 @@ public class OpenTour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private boolean isDeleted= false;
 
     @Min(value = 0, message = "Total price must be positive!")
