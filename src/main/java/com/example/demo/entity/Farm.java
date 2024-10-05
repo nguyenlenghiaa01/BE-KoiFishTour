@@ -54,7 +54,6 @@ public class Farm {
     @ManyToMany(mappedBy = "farms")
     Set<Tour> tours;
 
-
     @OneToMany(mappedBy = "farm")
     @JsonIgnore
     List<KoiFish> koiFishes;

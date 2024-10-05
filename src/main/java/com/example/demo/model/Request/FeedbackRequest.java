@@ -13,4 +13,7 @@ public class FeedbackRequest {
     private int rating;
 
     long accountId;
+
+    private long booking_id;
+    private long account_id;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Data
@@ -67,5 +69,8 @@ public class Booking {
         return String.format("BOK%07d", number); // Định dạng với 7 chữ số
     }
 
+    @OneToMany(mappedBy = "booking")
+    @JsonIgnore
+    List<Feedback> feedbacks;
 
 }
