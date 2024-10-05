@@ -44,6 +44,8 @@ public class Farm {
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
 
+    private String image;
+
     @PrePersist
     private void prePersist() {
         this.farmId = generateFarmId();
