@@ -25,7 +25,7 @@ public class FeedbackService {
     AccountRepository accountRepository;
 
     public Feedback createNewFeedback(FeedbackRequest feedbackRequest) {
-        // Tạo đối tượng Feedback mới
+        // create feedback
         Feedback feedback = new Feedback();
 
         // Lấy Account từ repository

@@ -29,7 +29,7 @@ public class BookingService {
     AccountRepository accountRepository;
 
     public Booking createNewBooking(BookingRequest bookingRequest) {
-        // Tạo đối tượng Booking mới
+        //  create booking
         Booking booking = new Booking();
 
         OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId())

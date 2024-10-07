@@ -29,7 +29,7 @@ public class EmailService {
 
             String template = templateEngine.process("welcome-template", context);
 
-            // Create a MimeMessage for HTML content
+
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
@@ -39,7 +39,7 @@ public class EmailService {
             mimeMessageHelper.setSubject(emailDetail.getSubject());
             mimeMessageHelper.setText(template, true);
 
-            // Send the email
+            // Send email
             javaMailSender.send(mimeMessage);
 
         } catch (MailAuthenticationException e) {

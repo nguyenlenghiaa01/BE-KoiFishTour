@@ -50,7 +50,7 @@ public class AuthenticationService implements UserDetailsService {
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest, Account.class);
         try {
-            // bam pass
+            // hash pass
             String originPassword = account.getPassword();
             account.setPassword(passwordEncoder.encode(originPassword));
             //generate code account

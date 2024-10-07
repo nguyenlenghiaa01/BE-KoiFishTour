@@ -44,7 +44,7 @@ public class Booking {
 
     @NotNull(message = "Booking date cannot be null")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate bookingDate; // Đã thay đổi từ Date thành LocalDate
+    private LocalDate bookingDate;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
