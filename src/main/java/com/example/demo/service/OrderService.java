@@ -5,12 +5,16 @@ import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OrderRequest;
+import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.KoiRepository;
 import com.example.demo.repository.OrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,10 +37,24 @@ public class OrderService {
         }
 
     }
-    public List<OrderCart> getAllOrder(){
-        // lay tat ca order trong DB
-        List<OrderCart> orders = orderRepository.findOrderCartsByIsDeletedFalse();
-        return orders;
+    public OrderResponse getAllOrder(int page, int size){
+        Page orderPage = orderRepository.findAll(PageRequest.of(page, size));
+        List<OrderCart> orderCarts = orderPage.getContent();
+        List<OrderCart> activeOrderCarts = new ArrayList<>();
+
+        for (OrderCart order : orderCarts) {
+            if(!order.isDeleted()) {
+                activeOrderCarts.add(order);
+            }
+        }
+
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setListOrderCart(activeOrderCarts);
+        orderResponse.setPageNumber(orderPage.getNumber());
+        orderResponse.setTotalElements(orderPage.getTotalElements());
+        orderResponse.setTotalPages(orderPage.getTotalPages());
+
+        return  orderResponse;
     }
     public OrderCart updateOrder(OrderRequest order, long id){
         // buoc 1: tim toi thang order co id nhu la FE cung cap

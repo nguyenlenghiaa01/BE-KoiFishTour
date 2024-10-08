@@ -2,10 +2,12 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Farm;
 import com.example.demo.model.Request.FarmRequest;
+import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.service.FarmService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +31,9 @@ public class FarmAPI {
 
     // Get danh sách farm
     @GetMapping
-    public ResponseEntity get(){
-        List<Farm> farms = farmService.getAllFarm();
-        return ResponseEntity.ok(farms);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        FarmResponse farmResponse = farmService.getAllFarm(page, size);
+        return ResponseEntity.ok(farmResponse);
     }
     // /api/farm/{id} => id cua thang farm minh muon update
     @PreAuthorize("hasAuthority('MANAGER')")

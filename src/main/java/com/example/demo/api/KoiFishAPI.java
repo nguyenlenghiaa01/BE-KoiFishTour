@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.KoiFish;
 import com.example.demo.model.Request.KoiFishRequest;
+import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -29,9 +30,9 @@ public class KoiFishAPI {
 
     // Get danh sách sinh viên
     @GetMapping
-    public ResponseEntity get(){
-        List<KoiFish> kois = koiService.getAllKoi();
-        return ResponseEntity.ok(kois);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        KoiFishResponse koiFishResponse = koiService.getAllKoi(page, size);
+        return ResponseEntity.ok(koiFishResponse);
     }
     // /api/koi/{id} => id cua thang koi minh muon update
     @PreAuthorize("hasAuthority('MANAGER')")

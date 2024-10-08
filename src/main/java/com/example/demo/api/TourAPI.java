@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
 import com.example.demo.model.Request.TourRequest;
+import com.example.demo.model.Response.TourResponse;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -37,9 +38,9 @@ public class TourAPI {
     // Get danh sách tour
 
     @GetMapping
-    public ResponseEntity get(){
-        List<Tour> tours = tourService.getAllTour();
-        return ResponseEntity.ok(tours);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        TourResponse tourResponse = tourService.getAllTour(page, size);
+        return ResponseEntity.ok(tourResponse);
     }
     // /api/tour/{id} => id cua thang tour minh muon update
     @PreAuthorize("hasAuthority('MANAGER')")
