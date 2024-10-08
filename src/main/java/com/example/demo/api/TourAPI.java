@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class TourAPI {
 //        //return ve font end
 //        return ResponseEntity.ok(newTour);
 //    }
+@PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody TourRequest tourRequest) {
         Tour newTour = tourService.createNewTour(tourRequest);
@@ -33,17 +35,20 @@ public class TourAPI {
     }
 
     // Get danh sách tour
+
     @GetMapping
     public ResponseEntity get(){
         List<Tour> tours = tourService.getAllTour();
         return ResponseEntity.ok(tours);
     }
     // /api/tour/{id} => id cua thang tour minh muon update
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("{id}")
     public ResponseEntity updateTour(@Valid @RequestBody TourRequest tour, @PathVariable long id){//valid kich hoat co che vadilation
         Tour newTour = tourService.updateTour(tour,id);
         return ResponseEntity.ok(newTour);
     }
+    @PreAuthorize("hasAuthority('MANAGER')")
     @DeleteMapping("{id}")
     public ResponseEntity deleteTour(@PathVariable long id){
         Tour newTour = tourService.deleteTour(id);

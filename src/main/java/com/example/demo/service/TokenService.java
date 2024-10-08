@@ -29,7 +29,7 @@ public class TokenService {
         String token = Jwts.builder()
                 .subject(account.getId() + "")
                 .issuedAt(new Date(System.currentTimeMillis()))// tao luc 10g 30
-                .expiration(new Date(System.currentTimeMillis() + 10008 * 60 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + 10008 * 60 * 60 * 24))//1 day
                 .signWith(getSigninKey())
                 .compact();
         return token;

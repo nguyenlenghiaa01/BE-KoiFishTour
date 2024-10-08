@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/order")
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
+@PreAuthorize("hasAuthority('CONSULTING')")
 public class OrderAPI{
     @Autowired
     OrderService orderService;

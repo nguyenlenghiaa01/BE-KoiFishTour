@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 public class FeedBackAPI {
     @Autowired
     FeedbackService feedbackService;
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody FeedbackRequest feedbackRequest) {
         Feedback newFeedBack = feedbackService.createNewFeedback(feedbackRequest);
@@ -27,17 +29,20 @@ public class FeedBackAPI {
     }
 
     // Get danh sách breed
+    @PreAuthorize("hasAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity get(){
         List<Feedback> feedbacks = feedbackService.getAllFeedback();
         return ResponseEntity.ok(feedbacks);
     }
     // /api/feedback/{id} => id cua thang feedback minh muon update
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("{id}")
     public ResponseEntity updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id){//valid kich hoat co che vadilation
         Feedback newFeedback = feedbackService.updateFeedback(feedback,id);
         return ResponseEntity.ok(newFeedback);
     }
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @DeleteMapping("{id}")
     public ResponseEntity deleteFeedback(@PathVariable long id){
         Feedback newFeedback = feedbackService.deleteFeedback(id);

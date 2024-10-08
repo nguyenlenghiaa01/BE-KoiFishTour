@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class KoiFishAPI {
     @Autowired
     KoiFishService koiService;
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
         KoiFish newStudent = koiService.createNewKoi(koiFishRequest);
@@ -32,11 +34,13 @@ public class KoiFishAPI {
         return ResponseEntity.ok(kois);
     }
     // /api/koi/{id} => id cua thang koi minh muon update
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("{id}")
-    public ResponseEntity updateStudent(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id){//valid kich hoat co che vadilation
         KoiFish newStudent = koiService.updateKoiFish(koi,id);
         return ResponseEntity.ok(newStudent);
     }
+    @PreAuthorize("hasAuthority('MANAGER')")
     @DeleteMapping("{id}")
     public ResponseEntity deleteKoi(@PathVariable long id){
         KoiFish newStudent = koiService.deleteKoi(id);

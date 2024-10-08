@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/booking")
 @CrossOrigin("*")
 @SecurityRequirement(name="api")
+@PreAuthorize("hasAuthority('SALE')")
 public class BookingAPI {
     @Autowired
     BookingService bookingService;
