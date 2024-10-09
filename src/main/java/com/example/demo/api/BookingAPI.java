@@ -34,7 +34,7 @@ public class BookingAPI {
         BookingResponse bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
     }
-    // /api/booking/{id} => id cua thang boking minh muon update
+    // /api/booking/{id} => id cua thang booking minh muon update
     @PutMapping("{id}")
     public ResponseEntity updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
         Booking newBooking = bookingService.updateBooking(booking,id);
