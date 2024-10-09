@@ -3,10 +3,12 @@ package com.example.demo.api;
 import com.example.demo.entity.Farm;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
+import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.service.FarmService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,14 +28,15 @@ public class FarmAPI {
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody FarmRequest farmRequest) {
         Farm newFarm = farmService.createNewFarm(farmRequest);
+        //return ve font end
         return ResponseEntity.ok(newFarm);
     }
 
     // Lấy farm
     @GetMapping
-    public ResponseEntity<List<Farm>> get() {
-        List<Farm> farms = farmService.getAllFarm();
-        return ResponseEntity.ok(farms);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        FarmResponse farmResponse = farmService.getAllFarm(page, size);
+        return ResponseEntity.ok(farmResponse);
     }
 
     // Cập nhật farm

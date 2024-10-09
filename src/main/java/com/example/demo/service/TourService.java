@@ -5,13 +5,18 @@ import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
+import com.example.demo.model.Response.TourResponse;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.TourRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,22 +61,37 @@ public class TourService {
     }
 
 
+    public TourResponse getAllTour(int page, int size) {
+        Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        List<Tour> tours = tourPage.getContent();
+        List<Tour> activeTours = new ArrayList<>();
 
-    public List<Tour> getAllTour(){
-        // lay tat ca student trong DB
-        List<Tour> tours = tourRepository.findToursByIsDeletedFalse();
-        return tours;
+        for (Tour tour : tours) {
+            if(!tour.isDeleted()) {
+                activeTours.add(tour);
+            }
+        }
+
+        TourResponse tourResponse = new TourResponse();
+
+        tourResponse.setListTour(activeTours);
+        tourResponse.setPageNumber(tourPage.getNumber());
+        tourResponse.setTotalElements(tourPage.getTotalElements());
+        tourResponse.setTotalPages(tourPage.getTotalPages());
+
+        return tourResponse;
     }
-    public Tour updateTour(TourRequest tour, long TourId){
+
+    public Tour updateTour(TourRequest tour, long TourId) {
         // buoc 1: tim toi thang Tour co id nhu la FE cung cap
         Tour oldTour = tourRepository.findTourById(TourId);
-        if(oldTour ==null){
+        if (oldTour == null) {
             throw new NotFoundException("Tour not found !");//dung viec xu ly ngay tu day
         }
         //=> co tour co ton tai;
         Set<Farm> farms = new HashSet<>();
 
-        for(Long farmId : tour.getFarmId()) {
+        for (Long farmId : tour.getFarmId()) {
             Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new NotFoundException("Farm not exist"));
             farms.add(farm);
         }
@@ -82,9 +102,10 @@ public class TourService {
         oldTour.setImage(tour.getImage());
         return tourRepository.save(oldTour);
     }
-    public Tour deleteTour(long TourId){
+
+    public Tour deleteTour(long TourId) {
         Tour oldTour = tourRepository.findTourById(TourId);
-        if(oldTour ==null){
+        if (oldTour == null) {
             throw new NotFoundException("Tour not found !");//dung viec xu ly ngay tu day
         }
         oldTour.setDeleted(true);

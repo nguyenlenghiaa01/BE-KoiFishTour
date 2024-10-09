@@ -2,10 +2,12 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
 import com.example.demo.model.Request.BookingRequest;
+import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +30,11 @@ public class BookingAPI {
 
     // Get danh sách breed
     @GetMapping
-    public ResponseEntity get(){
-        List<Booking> bookings = bookingService.getAllBooking();
-        return ResponseEntity.ok(bookings);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        BookingResponse bookingResponse = bookingService.getAllBooking(page, size);
+        return ResponseEntity.ok(bookingResponse);
     }
-    // /api/booking/{id} => id cua thang boking minh muon update
+    // /api/booking/{id} => id cua thang booking minh muon update
     @PutMapping("{id}")
     public ResponseEntity updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
         Booking newBooking = bookingService.updateBooking(booking,id);

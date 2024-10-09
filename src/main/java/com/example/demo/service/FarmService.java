@@ -4,11 +4,15 @@ import com.example.demo.entity.Farm;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
+import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.repository.FarmRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,10 +34,23 @@ public class FarmService {
         }
 
     }
-    public List<Farm> getAllFarm(){
-        // lay tat ca student trong DB
-        List<Farm> farms = farmRepository.findFarmsByIsDeletedFalse();
-        return farms;
+    public FarmResponse getAllFarm(int page, int size){
+      Page farmPage = farmRepository.findAll(PageRequest.of(page, size));
+      List<Farm> farmList = farmPage.getContent();
+      List<Farm> activeFarms = new ArrayList<>();
+      for(Farm farm : farmList) {
+            if(!farm.isDeleted()) {
+                activeFarms.add(farm);
+            }
+      }
+
+      FarmResponse farmResponse = new FarmResponse();
+      farmResponse.setTotalPages(farmPage.getTotalPages());
+      farmResponse.setListFarm(activeFarms);
+      farmResponse.setPageNumber(farmPage.getNumber());
+      farmResponse.setTotalElements(farmPage.getTotalElements());
+
+      return farmResponse;
     }
     public Farm updateFarm(FarmRequest farm, long id){
 

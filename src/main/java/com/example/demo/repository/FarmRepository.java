@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Farm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,4 +10,6 @@ import java.util.List;
 public interface FarmRepository extends JpaRepository<Farm, Long> {
     Farm findFarmById(long id);
     List<Farm> findFarmsByIsDeletedFalse();
+
+    Page<Farm> findAll(Pageable pageable);
 }

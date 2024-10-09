@@ -1,16 +1,21 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Breed;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
+import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.repository.BreedRepository;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.KoiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service // danh dau day la mot lop xu ly logic
@@ -50,10 +55,25 @@ public class KoiFishService {
     }
 
 
-    public List<KoiFish> getAllKoi(){
-        // lay tat ca student trong DB
-        List<KoiFish> kois = koiRepository.findKoiByIsDeletedFalse();
-        return kois;
+    public KoiFishResponse getAllKoi(@RequestParam int page, @RequestParam int size){
+        Page fishPage = koiRepository.findAll(PageRequest.of(page, size));
+        List<KoiFish> koiFishes = fishPage.getContent();
+        List<KoiFish> activeKoiFish = new ArrayList<>();
+
+        for(KoiFish fish : koiFishes) {
+            if(!fish.isDeleted()) {
+                activeKoiFish.add(fish);
+            }
+        }
+
+        KoiFishResponse koiFishResponse = new KoiFishResponse();
+
+        koiFishResponse.setListFish(activeKoiFish);
+        koiFishResponse.setPageNumber(fishPage.getNumber());
+        koiFishResponse.setTotalElements(fishPage.getTotalElements());
+        koiFishResponse.setTotalPages(fishPage.getTotalPages());
+
+        return koiFishResponse;
     }
     public KoiFish updateKoiFish(KoiFishRequest koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap

@@ -1,17 +1,13 @@
 package com.example.demo.model.Response;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.example.demo.entity.Tour;
 import lombok.Data;
-
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class TourResponse {
-
-    private String tourName;
-
-    private LocalDate startDate;
-
-    private String duration;
+    private List<Tour> listTour;
+    private int pageNumber;
+    private long totalElements;
+    private int totalPages;
 }

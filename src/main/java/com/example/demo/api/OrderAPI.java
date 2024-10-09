@@ -6,6 +6,7 @@ import com.example.demo.entity.OrderCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OrderRequest;
+import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.service.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -38,8 +39,8 @@ public class OrderAPI {
 
     // Get danh sách đơn hàng
     @GetMapping
-    public ResponseEntity<List<OrderCart>> get() {
-        List<OrderCart> orders = orderService.getAllOrder();
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        OrderResponse orders = orderService.getAllOrder(page, size);
         return ResponseEntity.ok(orders);
     }
 
@@ -63,5 +64,5 @@ public class OrderAPI {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
-}
 
+}

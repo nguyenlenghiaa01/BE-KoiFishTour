@@ -1,14 +1,14 @@
 package com.example.demo.model.Response;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.example.demo.entity.KoiFish;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class KoiFishResponse {
-    private  String name;
-
-    private String description;
-
-    private String image;
+    private List<KoiFish> listFish;
+    private int pageNumber;
+    private long totalElements;
+    private int totalPages;
 }
