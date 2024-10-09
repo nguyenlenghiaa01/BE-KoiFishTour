@@ -3,10 +3,10 @@ package com.example.demo.model.Response;
 import com.example.demo.entity.OrderCart;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+
 public class OrderResponse {
     private List<OrderCart> listOrderCart;
     private int pageNumber;
