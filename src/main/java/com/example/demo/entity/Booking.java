@@ -5,13 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Booking {
     @Id
@@ -46,14 +49,6 @@ public class Booking {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate bookingDate;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "openTour_id")
-    private OpenTour openTour;
-
     @PrePersist
     private void prePersist() {
         this.bookingId = generateBookingId();
@@ -68,4 +63,13 @@ public class Booking {
     @OneToMany(mappedBy = "booking")
     @JsonIgnore
     private List<Feedback> feedbacks;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "openTour_id")
+    private OpenTour openTour;
+
 }

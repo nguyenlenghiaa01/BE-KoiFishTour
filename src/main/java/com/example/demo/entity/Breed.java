@@ -47,5 +47,5 @@ public class Breed {
 
     @OneToMany(mappedBy = "breed")
     @JsonIgnore
-    List<KoiFish> koiFishes;
+    private List<KoiFish> koiFishes;
 }

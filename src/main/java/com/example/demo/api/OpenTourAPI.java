@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.OpenTour;
+import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.service.OpenTourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -12,36 +14,54 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/OpenTour")
 @RestController
+@RequestMapping("/api/OpenTour")
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
-@PreAuthorize("hasAuthority('MANAGER')")
 public class OpenTourAPI {
+
     @Autowired
-    OpenTourService openTourService;
+    private OpenTourService openTourService;
+
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody OpenTourRequest openTourRequest) {
-        OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
-        //return ve font end
-        return ResponseEntity.ok(newOpenTour);
+    public ResponseEntity<?> create(@Valid @RequestBody OpenTourRequest openTourRequest) {
+        try {
+            OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
+            return ResponseEntity.ok(newOpenTour);
+        } catch (DuplicateEntity e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Get danh sách order
+    // Get danh sách tour mở
     @GetMapping
-    public ResponseEntity get(){
-        List<OpenTour> orders = openTourService.getAllOpenTour();
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OpenTour>> get() {
+        List<OpenTour> openTours = openTourService.getAllOpenTour();
+        return ResponseEntity.ok(openTours);
     }
-    // /api/order/{id} => id cua thang order minh muon update
+
+    // Cập nhật tour mở
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("{id}")
-    public ResponseEntity updateOpenTour(@Valid @RequestBody OpenTourRequest openTour, @PathVariable long id){//valid kich hoat co che vadilation
-        OpenTour newOpenTour = openTourService.updateOpenTour(openTour,id);
-        return ResponseEntity.ok(newOpenTour);
+    public ResponseEntity<?> updateOpenTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long id) {
+        try {
+            OpenTour updatedOpenTour = openTourService.updateOpenTour(openTourRequest, id);
+            return ResponseEntity.ok(updatedOpenTour);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
+
+    // Xóa tour mở
+    @PreAuthorize("hasAuthority('MANAGER')")
     @DeleteMapping("{id}")
-    public ResponseEntity deleteOpenTour(@PathVariable long id) {
-        OpenTour newOpenTour = openTourService.deleteOpenTour(id);
-        return ResponseEntity.ok(newOpenTour);
+    public ResponseEntity<?> deleteOpenTour(@PathVariable long id) {
+        try {
+            OpenTour deletedOpenTour = openTourService.deleteOpenTour(id);
+            return ResponseEntity.ok(deletedOpenTour);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

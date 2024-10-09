@@ -33,15 +33,15 @@ public class BreedService {
         List<Breed> breeds = breedRepository.findBreedsByIsDeletedFalse();
         return breeds;
     }
-    public Breed updateBreed(Breed breed, long BreedId){
+    public Breed updateBreed(BreedRequest breedRequest, long BreedId){
 
         Breed oldBreed = breedRepository.findBreedById(BreedId);
         if(oldBreed ==null){
             throw new NotFoundException("Breed not found !");//dung viec xu ly ngay tu day
         }
         //=> co breed co ton tai;
-        oldBreed.setBreedName(breed.getBreedName());
-        oldBreed.setDescription(breed.getDescription());
+        oldBreed.setBreedName(breedRequest.getBreedName());
+        oldBreed.setDescription(breedRequest.getDescription());
         return breedRepository.save(oldBreed);
     }
     public Breed deleteBreed(long BreedId){

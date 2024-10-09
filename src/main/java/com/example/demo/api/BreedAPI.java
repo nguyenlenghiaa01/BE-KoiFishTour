@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.BreedRequest;
 import com.example.demo.service.BreedService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,34 +19,45 @@ import java.util.List;
 @SecurityRequirement(name = "api")
 public class BreedAPI {
 
-
     @Autowired
-    BreedService breedService;
-    @PreAuthorize("hasAuthority('MANAGER')")
+    private BreedService breedService;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody BreedRequest breed) {
-        Breed newBreed = breedService.createNewBreed(breed);
-        //rBreedRequest newBreed = breedService.createNewBreed(breed);eturn ve font end
+    public ResponseEntity<?> create(@Valid @RequestBody BreedRequest breedRequest) {
+        Breed newBreed = breedService.createNewBreed(breedRequest);
         return ResponseEntity.ok(newBreed);
     }
 
-    // Get danh sách breed
+    // Lấy danh sách breed
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<List<Breed>> get() {
         List<Breed> breeds = breedService.getAllBreed();
         return ResponseEntity.ok(breeds);
     }
-    // /api/breed/{id} => id cua thang breed minh muon update
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Cập nhật breed
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity updateBreed(@Valid @RequestBody Breed breed, @PathVariable long id){//valid kich hoat co che vadilation
-        Breed newBreed = breedService.updateBreed(breed,id);
-        return ResponseEntity.ok(newBreed);
+    public ResponseEntity<?> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable long id) {
+        try {
+            Breed updatedBreed = breedService.updateBreed(breedRequest, id);
+            return ResponseEntity.ok(updatedBreed);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Xóa breed
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity deleteBreed(@PathVariable long id){
-        Breed newBreed = breedService.deleteBreed(id);
-        return ResponseEntity.ok(newBreed);
+    public ResponseEntity<?> deleteBreed(@PathVariable long id) {
+        try {
+            Breed deletedBreed = breedService.deleteBreed(id);
+            return ResponseEntity.ok(deletedBreed);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
+

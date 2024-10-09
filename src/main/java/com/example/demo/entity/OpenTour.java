@@ -6,12 +6,15 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class OpenTour {
     @Id
@@ -54,5 +57,9 @@ public class OpenTour {
     @OneToMany(mappedBy = "openTour")
     @JsonIgnore
     private List<Booking> bookings;
+
+    @ManyToOne
+    @JoinColumn(name="account_id")
+    private Account account;
 }
 

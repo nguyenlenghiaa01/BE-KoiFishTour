@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Farm;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
 import com.example.demo.service.FarmService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,33 +18,45 @@ import java.util.List;
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
 public class FarmAPI {
+
     @Autowired
-    FarmService farmService;
-    @PreAuthorize("hasAuthority('MANAGER')")
+    private FarmService farmService;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody FarmRequest farmRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody FarmRequest farmRequest) {
         Farm newFarm = farmService.createNewFarm(farmRequest);
-        //return ve font end
         return ResponseEntity.ok(newFarm);
     }
 
-    // Get danh sách farm
+    // Lấy farm
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<List<Farm>> get() {
         List<Farm> farms = farmService.getAllFarm();
         return ResponseEntity.ok(farms);
     }
-    // /api/farm/{id} => id cua thang farm minh muon update
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Cập nhật farm
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id){//valid kich hoat co che vadilation
-        Farm newFarm = farmService.updateFarm(farm,id);
-        return ResponseEntity.ok(newFarm);
+    public ResponseEntity<?> updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id) {
+        try {
+            Farm updatedFarm = farmService.updateFarm(farm, id);
+            return ResponseEntity.ok(updatedFarm);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Xóa farm
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity deleteFarm(@PathVariable long id) {
-        Farm newFarm = farmService.deleteFarm(id);
-        return ResponseEntity.ok(newFarm);
+    public ResponseEntity<?> deleteFarm(@PathVariable long id) {
+        try {
+            Farm deletedFarm = farmService.deleteFarm(id);
+            return ResponseEntity.ok(deletedFarm);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

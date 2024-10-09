@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.ShoppingCart;
+import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.ShoppingCartResponse;
 import com.example.demo.service.ShoppingCartService;
@@ -17,35 +19,49 @@ import java.util.List;
 @RequestMapping("/api/cart")
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
-
 public class ShoppingCartAPI {
 
     @Autowired
-    ShoppingCartService shoppingCartService;
-    @PreAuthorize("hasAuthority('MANAGER')")
+    private ShoppingCartService shoppingCartService;
+
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody ShoppingCartRequest shoppingCartRequest) {
-        ShoppingCart newShoppingCart = shoppingCartService.createNewShoppingCart(shoppingCartRequest);
-        return ResponseEntity.ok(newShoppingCart);
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<?> create(@Valid @RequestBody ShoppingCartRequest shoppingCartRequest) {
+        try {
+            ShoppingCart newShoppingCart = shoppingCartService.createNewShoppingCart(shoppingCartRequest);
+            return ResponseEntity.ok(newShoppingCart);
+        } catch (DuplicateEntity e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Get danh sách breed
     @GetMapping
-    public ResponseEntity get(){
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<List<ShoppingCart>> getAll() {
         List<ShoppingCart> shoppingCarts = shoppingCartService.getAllShoppingCart();
         return ResponseEntity.ok(shoppingCarts);
     }
-    // /api/ShoppingCart/{id} => id cua thang ShoppingCart minh muon update
-    @PreAuthorize("hasAuthority('MANAGER')")
+
     @PutMapping("{id}")
-    public ResponseEntity updateShoppingCart(@Valid @RequestBody ShoppingCartResponse shoppingCartRequest, @PathVariable long id){//valid kich hoat co che vadilation
-        ShoppingCart newShoppingCart = shoppingCartService.updateShoppingCart(shoppingCartRequest,id);
-        return ResponseEntity.ok(newShoppingCart);
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateShoppingCart(@Valid @RequestBody ShoppingCartResponse shoppingCartRequest, @PathVariable long id) {
+        try {
+            ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCartRequest, id);
+            return ResponseEntity.ok(updatedShoppingCart);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-    @PreAuthorize("hasAuthority('MANAGER')")
+
     @DeleteMapping("{id}")
-    public ResponseEntity deleteShoppingCart(@PathVariable long id){
-        ShoppingCart newShoppingCart = shoppingCartService.deleteShoppingCart(id);
-        return ResponseEntity.ok(newShoppingCart);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteShoppingCart(@PathVariable long id) {
+        try {
+            ShoppingCart deletedShoppingCart = shoppingCartService.deleteShoppingCart(id);
+            return ResponseEntity.ok(deletedShoppingCart);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
+

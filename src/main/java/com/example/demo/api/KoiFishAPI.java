@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.KoiFish;
+import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,33 +19,49 @@ import java.util.List;
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
 public class KoiFishAPI {
+
     @Autowired
-    KoiFishService koiService;
-    @PreAuthorize("hasAuthority('MANAGER')")
+    private KoiFishService koiService;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
-        KoiFish newStudent = koiService.createNewKoi(koiFishRequest);
-        //return ve font end
-        return ResponseEntity.ok(newStudent);
+    public ResponseEntity<?> create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
+        try {
+            KoiFish newKoiFish = koiService.createNewKoi(koiFishRequest);
+            return ResponseEntity.ok(newKoiFish);
+        } catch (DuplicateEntity e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Get danh sách sinh viên
+    // Get danh sách cá Koi
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<List<KoiFish>> get() {
         List<KoiFish> kois = koiService.getAllKoi();
         return ResponseEntity.ok(kois);
     }
-    // /api/koi/{id} => id cua thang koi minh muon update
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Cập nhật cá Koi
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id){//valid kich hoat co che vadilation
-        KoiFish newStudent = koiService.updateKoiFish(koi,id);
-        return ResponseEntity.ok(newStudent);
+    public ResponseEntity<?> updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id) {
+        try {
+            KoiFish updatedKoiFish = koiService.updateKoiFish(koi, id);
+            return ResponseEntity.ok(updatedKoiFish);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    // Xóa cá Koi
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity deleteKoi(@PathVariable long id){
-        KoiFish newStudent = koiService.deleteKoi(id);
-        return ResponseEntity.ok(newStudent);
+    public ResponseEntity<?> deleteKoi(@PathVariable long id) {
+        try {
+            KoiFish deletedKoiFish = koiService.deleteKoi(id);
+            return ResponseEntity.ok(deletedKoiFish);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

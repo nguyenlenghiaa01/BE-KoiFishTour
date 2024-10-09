@@ -16,7 +16,7 @@ import java.util.Random;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity // Bổ sung annotation này
+@Entity
 public class QuotationProcess {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,9 +52,9 @@ public class QuotationProcess {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    Account account;
+    private Account account;
 
     @ManyToOne
     @JoinColumn(name = "quotation_id")
-    Quotation quotation;
+    private Quotation quotation;
 }

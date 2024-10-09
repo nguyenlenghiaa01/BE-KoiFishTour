@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Feedback {
     @Id
@@ -25,10 +28,10 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    Account account;
+    private Account account;
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
-    Booking booking;
+    private Booking booking;
 
 }

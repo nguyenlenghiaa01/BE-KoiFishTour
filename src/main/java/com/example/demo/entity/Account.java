@@ -33,7 +33,7 @@ public class Account implements UserDetails {
     @Column(unique = true)
     String code;
 
-    @Enumerated(EnumType.STRING) // Sử dụng EnumType.STRING
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false) // Đảm bảo không null
     private Role role; //Role để front-end nhập
 
@@ -54,7 +54,6 @@ public class Account implements UserDetails {
     private String userName;
 
     @Size(min = 6, message = "Password must be at least 6 character!")
-    @Column(unique = true)
     private String password;
 
     @NotBlank(message = "Name cannot be blank")
@@ -66,11 +65,11 @@ public class Account implements UserDetails {
 
     private String image;
 
-    @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Account() {
-        this.createdAt = LocalDateTime.now(); // Gán thời gian hiện tại khi tạo mới
+        this.createdAt = LocalDateTime.now();
     }
 
     @Override
@@ -107,19 +106,22 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    List<Booking> bookings;
+    private List<Booking> bookings;
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    List<OrderCart> orderCarts;
+    private List<OrderCart> orderCarts;
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    List<Feedback> feedbacks;
+    private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    List<QuotationProcess> quotationProcesses;
+    private List<QuotationProcess> quotationProcesses;
 
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    private List<OpenTour>openTours;
 }
 

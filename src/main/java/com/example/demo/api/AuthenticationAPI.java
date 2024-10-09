@@ -57,6 +57,7 @@ public class AuthenticationAPI {
         List<Account> accounts = authenticationService.getAllAccount();
         return ResponseEntity.ok(accounts);
     }
+
     @PutMapping("/account/{id}")
     public ResponseEntity<AccountResponse> updateAccount(
             @PathVariable Long id,

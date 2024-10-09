@@ -30,13 +30,10 @@ public class ShoppingCartService {
     KoiRepository koiRepository;
     public ShoppingCart createNewShoppingCart(ShoppingCartRequest shoppingCartRequest){
         ShoppingCart shoppingCart = modelMapper.map(shoppingCartRequest, ShoppingCart.class);
-        Account account = accountRepository.findById(shoppingCartRequest.getAccountId()).
-                orElseThrow(() -> new NotFoundException("Account not exist!"));
         KoiFish koiFish = koiRepository.findById(shoppingCartRequest.getKoiFishId()).
                 orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
 
         shoppingCart.setKoiFish(koiFish);
-        shoppingCart.setAccount(account);
         try {
 
             ShoppingCart newShoppingCart = shoppingCartRepository.save(shoppingCart);

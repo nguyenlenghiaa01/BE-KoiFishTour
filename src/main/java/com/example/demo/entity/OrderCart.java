@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -33,31 +35,24 @@ public class OrderCart {
     private int quantity;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private BigDecimal totalPrice; // Đổi sang BigDecimal
-
+    private BigDecimal totalPrice;
 
     public OrderCart() {
-        this.orderId = generateOrderId(); // Tạo ID khi khởi tạo
+        this.orderId = generateOrderId();
     }
 
-    // Thay đổi phương thức để tránh trùng lặp mã đơn hàng
     private String generateOrderId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Thay đổi giới hạn thành 7 chữ số
-        return String.format("ORD%07d", number); // Tạo mã có 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("ORD%07d", number);
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_koiFish",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "koiFish_id")
-    )
-    Set<KoiFish> koiFishes;
-
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    Account account;
+    @JoinColumn(name = "customer_id")
+    private Account account;
 
+    @OneToMany
+    @JoinColumn(name="orderCart_id")
+    @JsonIgnore
+    private List<ShoppingCart> shoppingCart;
 }
-

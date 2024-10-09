@@ -3,6 +3,8 @@ package com.example.demo.api;
 
 import com.example.demo.entity.OrderCart;
 
+import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OrderRequest;
 import com.example.demo.service.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,34 +20,48 @@ import java.util.List;
 @RequestMapping("/api/order")
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
-@PreAuthorize("hasAuthority('CONSULTING')")
-public class OrderAPI{
+public class OrderAPI {
+
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
+
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody OrderRequest orderCart) {
-        OrderCart newFarm = orderService.createNewOrder(orderCart);
-        //return ve font end
-        return ResponseEntity.ok(newFarm);
+    public ResponseEntity<?> create(@Valid @RequestBody OrderRequest orderRequest) {
+        try {
+            OrderCart newOrder = orderService.createNewOrder(orderRequest);
+            return ResponseEntity.ok(newOrder);
+        } catch (DuplicateEntity e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Get danh sách order
+    // Get danh sách đơn hàng
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<List<OrderCart>> get() {
         List<OrderCart> orders = orderService.getAllOrder();
         return ResponseEntity.ok(orders);
     }
-    // /api/order/{id} => id cua thang order minh muon update
+
+    // /api/order/{id} => id của đơn hàng mà mình muốn cập nhật
     @PutMapping("{id}")
-    public ResponseEntity updateOrder(@Valid @RequestBody OrderRequest order, @PathVariable long id){//valid kich hoat co che vadilation
-        OrderCart newOrder = orderService.updateOrder(order,id);
-        return ResponseEntity.ok(newOrder);
+    public ResponseEntity<?> updateOrder(@Valid @RequestBody OrderRequest orderRequest, @PathVariable long id) {
+        try {
+            OrderCart updatedOrder = orderService.updateOrder(orderRequest, id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteOrder(@PathVariable long id) {
-        OrderCart newOrder = orderService.deleteOrderCart(id);
-        return ResponseEntity.ok(newOrder);
+    public ResponseEntity<?> deleteOrder(@PathVariable long id) {
+        try {
+            OrderCart deletedOrder = orderService.deleteOrderCart(id);
+            return ResponseEntity.ok(deletedOrder);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-
 }
+

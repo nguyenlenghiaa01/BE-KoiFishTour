@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
+import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,41 +19,47 @@ import java.util.List;
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
 public class TourAPI {
-    @Autowired
-    TourService tourService;
 
-//    @PostMapping
-//    public ResponseEntity create(@Valid @RequestBody Tour tour) {
-//        Tour newTour = tourService.createNewTour(tour);
-//        //return ve font end
-//        return ResponseEntity.ok(newTour);
-//    }
-@PreAuthorize("hasAuthority('MANAGER')")
+    @Autowired
+    private TourService tourService;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody TourRequest tourRequest) {
-        Tour newTour = tourService.createNewTour(tourRequest);
-        //return ve font end
-        return ResponseEntity.ok(newTour);
+    public ResponseEntity<?> create(@Valid @RequestBody TourRequest tourRequest) {
+        try {
+            Tour newTour = tourService.createNewTour(tourRequest);
+            return ResponseEntity.ok(newTour);
+        } catch (DuplicateEntity e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // Get danh sách tour
-
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<List<Tour>> get() {
         List<Tour> tours = tourService.getAllTour();
         return ResponseEntity.ok(tours);
     }
-    // /api/tour/{id} => id cua thang tour minh muon update
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity updateTour(@Valid @RequestBody TourRequest tour, @PathVariable long id){//valid kich hoat co che vadilation
-        Tour newTour = tourService.updateTour(tour,id);
-        return ResponseEntity.ok(newTour);
+    public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
+        try {
+            Tour updatedTour = tourService.updateTour(tourRequest, id);
+            return ResponseEntity.ok(updatedTour);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-    @PreAuthorize("hasAuthority('MANAGER')")
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity deleteTour(@PathVariable long id){
-        Tour newTour = tourService.deleteTour(id);
-        return ResponseEntity.ok(newTour);
+    public ResponseEntity<?> deleteTour(@PathVariable long id) {
+        try {
+            Tour deletedTour = tourService.deleteTour(id);
+            return ResponseEntity.ok(deletedTour);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
+

@@ -28,7 +28,7 @@ public class TokenService {
     public String generateToken(Account account) { // genera cho account nao do su dung nhu customer chi sai dc chuc nang cua customer
         String token = Jwts.builder()
                 .subject(account.getId() + "")
-                .issuedAt(new Date(System.currentTimeMillis()))// tao luc 10g 30
+                .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 10008 * 60 * 60 * 24))//1 day
                 .signWith(getSigninKey())
                 .compact();

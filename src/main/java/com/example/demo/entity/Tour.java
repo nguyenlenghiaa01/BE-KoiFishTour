@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.Set;
 
 @Data
+@Getter
+@Setter
 @Entity
 public class Tour {
     @Id
@@ -51,7 +53,7 @@ public class Tour {
 
     @OneToMany(mappedBy = "tour")
     @JsonIgnore
-    Set<OpenTour> openTours;
+    private Set<OpenTour> openTours;
 
     @ManyToMany
     @JoinTable(
@@ -59,5 +61,5 @@ public class Tour {
             joinColumns = @JoinColumn(name = "tour_id"),
             inverseJoinColumns = @JoinColumn(name = "farm_id")
     )
-    Set<Farm> farms;
+    private Set<Farm> farms;
 }

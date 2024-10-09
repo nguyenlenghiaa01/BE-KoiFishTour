@@ -24,25 +24,23 @@ public class ShoppingCart {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @ManyToOne
-    @JoinColumn(name = "koi_fish_id")
-    @JsonIgnore
-    KoiFish koiFish;
-
-    @OneToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    Account account;
-
     @PrePersist
     private void prePersist() {
-        this.cartId = generateBookingId();
+        this.cartId = generateCartId();
     }
 
-    private String generateBookingId() {
+    private String generateCartId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
-        return String.format("CAR%07d", number); // Định dạng với 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("CAR%07d", number);
     }
 
+    @ManyToOne
+    @JoinColumn(name = "koiFish_id")
+    private KoiFish koiFish;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private OrderCart order;
 
 }
