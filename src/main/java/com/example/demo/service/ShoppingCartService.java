@@ -2,12 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.KoiFish;
+import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.entity.ShoppingCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.ShoppingCartResponse;
 import com.example.demo.repository.AccountRepository;
+import com.example.demo.repository.KoiFishOrderRepository;
 import com.example.demo.repository.KoiRepository;
 import com.example.demo.repository.ShoppingCartRepository;
 import org.modelmapper.ModelMapper;
@@ -28,11 +30,17 @@ public class ShoppingCartService {
 
     @Autowired
     KoiRepository koiRepository;
+
+    @Autowired
+    KoiFishOrderRepository koiFishOrderRepository;
     public ShoppingCart createNewShoppingCart(ShoppingCartRequest shoppingCartRequest){
         ShoppingCart shoppingCart = modelMapper.map(shoppingCartRequest, ShoppingCart.class);
         KoiFish koiFish = koiRepository.findById(shoppingCartRequest.getKoiFishId()).
                 orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
+        KoiFishOrder koiFishOrder = koiFishOrderRepository.findById(shoppingCartRequest.getKoiFishId()).
+                orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
 
+        shoppingCart.setKoiFishOrder(koiFishOrder);
         shoppingCart.setKoiFish(koiFish);
         try {
 

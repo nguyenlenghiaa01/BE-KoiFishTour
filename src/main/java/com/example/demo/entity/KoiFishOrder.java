@@ -12,12 +12,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-public class OrderCart {
+public class KoiFishOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,7 +24,7 @@ public class OrderCart {
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "ORD\\d{7}", message = "Invalid code!")
     @Column(unique = true)
-    private String orderId;
+    private String koiFishOrderId;
 
     @Column(nullable = false)
     private boolean isDeleted = false;
@@ -37,8 +36,8 @@ public class OrderCart {
     @Min(value = 0, message = "Total price must be positive!")
     private BigDecimal totalPrice;
 
-    public OrderCart() {
-        this.orderId = generateOrderId();
+    public KoiFishOrder() {
+        this.koiFishOrderId = generateOrderId();
     }
 
     private String generateOrderId() {
@@ -52,7 +51,7 @@ public class OrderCart {
     private Account account;
 
     @OneToMany
-    @JoinColumn(name="orderCart_id")
+    @JoinColumn(name="koiFishOrder_id")
     @JsonIgnore
     private List<ShoppingCart> shoppingCart;
 }

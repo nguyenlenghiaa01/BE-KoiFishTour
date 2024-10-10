@@ -26,12 +26,8 @@ public class OpenTourAPI {
     @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody OpenTourRequest openTourRequest) {
-        try {
             OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
             return ResponseEntity.ok(newOpenTour);
-        } catch (DuplicateEntity e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     // Get danh sách tour mở
@@ -45,23 +41,15 @@ public class OpenTourAPI {
     @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateOpenTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long id) {
-        try {
             OpenTour updatedOpenTour = openTourService.updateOpenTour(openTourRequest, id);
             return ResponseEntity.ok(updatedOpenTour);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     // Xóa tour mở
     @PreAuthorize("hasAuthority('MANAGER')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteOpenTour(@PathVariable long id) {
-        try {
             OpenTour deletedOpenTour = openTourService.deleteOpenTour(id);
             return ResponseEntity.ok(deletedOpenTour);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 }

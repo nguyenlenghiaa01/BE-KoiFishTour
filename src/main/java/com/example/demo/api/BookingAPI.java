@@ -23,25 +23,25 @@ public class BookingAPI {
     @Autowired
     BookingService bookingService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody BookingRequest bookingRequest) {
         Booking newBooking = bookingService.createNewBooking(bookingRequest);
         return ResponseEntity.ok(newBooking);
     }
 
     // Get danh sách breed
     @GetMapping
-    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
         BookingResponse bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
     }
     // /api/booking/{id} => id cua thang booking minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity<?> updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
         Booking newBooking = bookingService.updateBooking(booking,id);
         return ResponseEntity.ok(newBooking);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteBooking(@PathVariable long id){
+    public ResponseEntity<?> deleteBooking(@PathVariable long id){
         Booking newBooking = bookingService.deleteBooking(id);
         return ResponseEntity.ok(newBooking);
     }

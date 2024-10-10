@@ -27,12 +27,8 @@ public class ShoppingCartAPI {
     @PostMapping
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     public ResponseEntity<?> create(@Valid @RequestBody ShoppingCartRequest shoppingCartRequest) {
-        try {
             ShoppingCart newShoppingCart = shoppingCartService.createNewShoppingCart(shoppingCartRequest);
             return ResponseEntity.ok(newShoppingCart);
-        } catch (DuplicateEntity e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @GetMapping
@@ -45,23 +41,15 @@ public class ShoppingCartAPI {
     @PutMapping("{id}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
     public ResponseEntity<?> updateShoppingCart(@Valid @RequestBody ShoppingCartResponse shoppingCartRequest, @PathVariable long id) {
-        try {
             ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCartRequest, id);
             return ResponseEntity.ok(updatedShoppingCart);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteShoppingCart(@PathVariable long id) {
-        try {
             ShoppingCart deletedShoppingCart = shoppingCartService.deleteShoppingCart(id);
             return ResponseEntity.ok(deletedShoppingCart);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 }
 

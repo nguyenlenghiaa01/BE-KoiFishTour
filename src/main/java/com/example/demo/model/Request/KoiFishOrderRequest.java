@@ -12,18 +12,16 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Random;
 import java.util.Set;
 
 @Data
-public class OrderRequest {
+public class KoiFishOrderRequest {
     @Min(value = 10, message = "Quantity must be at least 10!")
     @Max(value = 1000, message = "Quantity must not be more than 1000!")
     private int quantity;
 
     @Min(value = 0, message = "Total price must be positive!")
     private BigDecimal totalPrice; // Đổi sang BigDecimal
-
 
     @ManyToMany
     @JoinTable(

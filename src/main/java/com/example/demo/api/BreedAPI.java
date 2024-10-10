@@ -30,7 +30,7 @@ public class BreedAPI {
     }
 
     // Lấy danh sách breed
-    @GetMapping
+    @GetMapping("/guest/get")
     public ResponseEntity<List<Breed>> get() {
         List<Breed> breeds = breedService.getAllBreed();
         return ResponseEntity.ok(breeds);
@@ -40,24 +40,16 @@ public class BreedAPI {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable long id) {
-        try {
             Breed updatedBreed = breedService.updateBreed(breedRequest, id);
             return ResponseEntity.ok(updatedBreed);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     // Xóa breed
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBreed(@PathVariable long id) {
-        try {
             Breed deletedBreed = breedService.deleteBreed(id);
             return ResponseEntity.ok(deletedBreed);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 }
 

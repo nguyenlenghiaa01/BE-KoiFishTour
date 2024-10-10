@@ -24,7 +24,7 @@ public class QuotationProcessAPI {
     @Autowired
     QuotationProcessService quotationProcessService;
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody QuotationProcessRequest quotationProcessRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody QuotationProcessRequest quotationProcessRequest) {
         QuotationProcess newQuotationProcess = quotationProcessService.createNewQuotationProcess(quotationProcessRequest);
         //return ve font end
         return ResponseEntity.ok(quotationProcessRequest);
@@ -32,18 +32,18 @@ public class QuotationProcessAPI {
 
     // Get danh sách quotation Process
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<?> get(){
         List<QuotationProcess> quotationProcesses = quotationProcessService.getAllQuotationProcess();
         return ResponseEntity.ok(quotationProcesses);
     }
     // /api/tour/{id} => id cua thang tour minh muon update
     @PutMapping("{id}")
-    public ResponseEntity updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity<?> updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation
         QuotationProcess newQuotationProcess = quotationProcessService.updateQuotationProcess(quotationProcess,id);
         return ResponseEntity.ok(newQuotationProcess);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity deleteQuotationProcess(@PathVariable long id){
+    public ResponseEntity<?> deleteQuotationProcess(@PathVariable long id){
         QuotationProcess newQuotationProcess = quotationProcessService.deleteQuotationProcess(id);
         return ResponseEntity.ok(newQuotationProcess);
     }

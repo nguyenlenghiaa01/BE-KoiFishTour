@@ -27,16 +27,12 @@ public class TourAPI {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody TourRequest tourRequest) {
-        try {
             Tour newTour = tourService.createNewTour(tourRequest);
             return ResponseEntity.ok(newTour);
-        } catch (DuplicateEntity e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
-    @GetMapping
-    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+    @GetMapping("/guest/get")
+    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
         TourResponse tourResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(tourResponse);
     }
@@ -44,23 +40,15 @@ public class TourAPI {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
-        try {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTour(@PathVariable long id) {
-        try {
             Tour deletedTour = tourService.deleteTour(id);
             return ResponseEntity.ok(deletedTour);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 }
 

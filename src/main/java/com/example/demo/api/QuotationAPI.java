@@ -22,25 +22,25 @@ public class QuotationAPI {
     QuotationService quotationService;
 
     @PostMapping
-    public ResponseEntity createQuotation(@Valid @RequestBody QuotationRequest quotationRequest) {
+    public ResponseEntity<?> createQuotation(@Valid @RequestBody QuotationRequest quotationRequest) {
         Quotation newQuotation = quotationService.createQuotation(quotationRequest);
         return ResponseEntity.ok(newQuotation);
     }
 
     @GetMapping
-    public ResponseEntity getAllQuotation() {
+    public ResponseEntity<?> getAllQuotation() {
         List<Quotation> quotations = quotationService.getAllQuotation();
         return ResponseEntity.ok(quotations);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
+    public ResponseEntity<?> updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotation(quotationRequest, id);
         return ResponseEntity.ok(newQuotation);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteQuotation(@PathVariable long id) {
+    public ResponseEntity<?> deleteQuotation(@PathVariable long id) {
         Quotation quotation = quotationService.deleteQuotation(id);
         return ResponseEntity.ok(quotation);
     }

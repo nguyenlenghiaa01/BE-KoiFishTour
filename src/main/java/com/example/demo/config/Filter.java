@@ -21,6 +21,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class Filter extends OncePerRequestFilter {
@@ -38,7 +39,12 @@ public class Filter extends OncePerRequestFilter {
             "/swagger-resources/**",
             "/api/login",
             "/api/register",
-            "/api/forgot-password"
+            "/api/forgot-password",
+            "/api/farm/guest/get",
+            "api/tour/guest/get",
+            "api/breed/guest/get",
+            "api/koi/guest/get",
+            "api/feedback/guest/get"
     );
 
     public boolean checkIsPublicAPI(String uri) {

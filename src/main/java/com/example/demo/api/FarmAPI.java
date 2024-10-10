@@ -33,7 +33,7 @@ public class FarmAPI {
     }
 
     // Lấy farm
-    @GetMapping
+    @GetMapping("/guest/get")
     public ResponseEntity get(@RequestParam int page, @RequestParam int size){
         FarmResponse farmResponse = farmService.getAllFarm(page, size);
         return ResponseEntity.ok(farmResponse);
@@ -43,23 +43,15 @@ public class FarmAPI {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id) {
-        try {
             Farm updatedFarm = farmService.updateFarm(farm, id);
             return ResponseEntity.ok(updatedFarm);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     // Xóa farm
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteFarm(@PathVariable long id) {
-        try {
             Farm deletedFarm = farmService.deleteFarm(id);
             return ResponseEntity.ok(deletedFarm);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 }

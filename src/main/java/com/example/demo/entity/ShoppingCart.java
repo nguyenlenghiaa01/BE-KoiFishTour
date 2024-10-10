@@ -1,5 +1,4 @@
 package com.example.demo.entity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -40,7 +39,7 @@ public class ShoppingCart {
     private KoiFish koiFish;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private OrderCart order;
+    @JoinColumn(name = "koiFishOrder_id")
+    private KoiFishOrder koiFishOrder;
 
 }

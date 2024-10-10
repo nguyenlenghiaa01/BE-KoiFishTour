@@ -1,13 +1,13 @@
 package com.example.demo.service;
 
 
-import com.example.demo.entity.OrderCart;
+import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.Request.OrderRequest;
+import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.KoiRepository;
-import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.KoiFishOrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,39 +19,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderService {
+public class KoiFishOrderService {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private KoiFishOrderRepository koiFishOrderRepository;
 
     @Autowired
     private KoiRepository koiRepository;
 
     private final ModelMapper modelMapper = new ModelMapper();
 
-    public OrderCart createNewOrder(OrderRequest orderRequest) {
-        OrderCart orders = modelMapper.map(orderRequest, OrderCart.class);
+    public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
+        KoiFishOrder orders = modelMapper.map(koiFishOrderRequest, KoiFishOrder.class);
 
         try {
-            return orderRepository.save(orders);
+            return koiFishOrderRepository.save(orders);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntity("Duplicate Order id!");
         }
 
     }
     public OrderResponse getAllOrder(int page, int size){
-        Page orderPage = orderRepository.findAll(PageRequest.of(page, size));
-        List<OrderCart> orderCarts = orderPage.getContent();
-        List<OrderCart> activeOrderCarts = new ArrayList<>();
+        Page orderPage = koiFishOrderRepository.findAll(PageRequest.of(page, size));
+        List<KoiFishOrder> koiFishOrders = orderPage.getContent();
+        List<KoiFishOrder> activeKoiFishOrders = new ArrayList<>();
 
-        for (OrderCart order : orderCarts) {
+        for (KoiFishOrder order : koiFishOrders) {
             if(!order.isDeleted()) {
-                activeOrderCarts.add(order);
+                activeKoiFishOrders.add(order);
             }
         }
 
         OrderResponse orderResponse = new OrderResponse();
-        orderResponse.setListOrderCart(activeOrderCarts);
+        orderResponse.setListKoiFishOrder(activeKoiFishOrders);
         orderResponse.setPageNumber(orderPage.getNumber());
         orderResponse.setTotalElements(orderPage.getTotalElements());
         orderResponse.setTotalPages(orderPage.getTotalPages());
@@ -59,14 +59,14 @@ public class OrderService {
         return  orderResponse;
     }
 
-    public OrderCart updateOrder(OrderRequest orderRequest, long id) {
-        OrderCart oldOrderCart = orderRepository.findById(id)
+    public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
+        KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-        oldOrderCart.setTotalPrice(orderRequest.getTotalPrice());
-        oldOrderCart.setQuantity(orderRequest.getQuantity());
+        oldKoiFishOrder.setTotalPrice(koiFishOrderRequest.getTotalPrice());
+        oldKoiFishOrder.setQuantity(koiFishOrderRequest.getQuantity());
 
-        return orderRepository.save(oldOrderCart);
+        return koiFishOrderRepository.save(oldKoiFishOrder);
     }
 //    public OrderCart updateCart(Long orderId, Long fishId, int quantity) {
 //        // Tìm đơn hàng theo orderId
@@ -96,12 +96,12 @@ public class OrderService {
 
 
 
-    public OrderCart deleteOrderCart(long id) {
-        OrderCart oldOrderCart = orderRepository.findById(id)
+    public KoiFishOrder deleteOrderCart(long id) {
+        KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-        oldOrderCart.setDeleted(true);
-        return orderRepository.save(oldOrderCart);
+        oldKoiFishOrder.setDeleted(true);
+        return koiFishOrderRepository.save(oldKoiFishOrder);
     }
 
 }

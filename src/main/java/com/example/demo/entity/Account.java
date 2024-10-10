@@ -110,7 +110,7 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    private List<OrderCart> orderCarts;
+    private List<KoiFishOrder> koiFishOrders;
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore

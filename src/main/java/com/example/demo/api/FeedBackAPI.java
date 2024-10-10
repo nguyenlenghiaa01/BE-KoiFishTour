@@ -31,7 +31,7 @@ public class FeedBackAPI {
     }
 
     // Lấy feedback
-    @GetMapping
+    @GetMapping("/guest/get")
     public ResponseEntity<List<Feedback>> get() {
         List<Feedback> feedbacks = feedbackService.getAllFeedback();
         return ResponseEntity.ok(feedbacks);
@@ -53,11 +53,8 @@ public class FeedBackAPI {
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteFeedback(@PathVariable long id) {
-        try {
             Feedback deletedFeedback = feedbackService.deleteFeedback(id);
             return ResponseEntity.ok(deletedFeedback);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+
     }
 }
