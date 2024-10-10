@@ -34,7 +34,7 @@ public class KoiFishOrder {
     private int quantity;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 
     public KoiFishOrder() {
         this.koiFishOrderId = generateOrderId();

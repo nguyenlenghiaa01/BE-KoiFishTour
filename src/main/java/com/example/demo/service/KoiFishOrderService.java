@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
@@ -27,11 +28,14 @@ public class KoiFishOrderService {
     @Autowired
     private KoiRepository koiRepository;
 
+    @Autowired
+    private AuthenticationService authenticationService;
     private final ModelMapper modelMapper = new ModelMapper();
 
     public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder orders = modelMapper.map(koiFishOrderRequest, KoiFishOrder.class);
-
+        Account currentAccount = authenticationService.getCurrentAccount();
+        orders.setAccount(currentAccount);
         try {
             return koiFishOrderRepository.save(orders);
         } catch (DataIntegrityViolationException e) {
@@ -63,7 +67,7 @@ public class KoiFishOrderService {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-        oldKoiFishOrder.setTotalPrice(koiFishOrderRequest.getTotalPrice());
+        oldKoiFishOrder.setPrice(koiFishOrderRequest.getPrice());
         oldKoiFishOrder.setQuantity(koiFishOrderRequest.getQuantity());
 
         return koiFishOrderRepository.save(oldKoiFishOrder);

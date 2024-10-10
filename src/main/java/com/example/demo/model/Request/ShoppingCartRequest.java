@@ -7,5 +7,4 @@ public class ShoppingCartRequest {
 
     private  long koiFishId;
 
-    private long koiFishOrderId;
 }

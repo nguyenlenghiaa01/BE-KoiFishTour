@@ -1,10 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Account;
-import com.example.demo.model.Request.ForgotPasswordRequest;
-import com.example.demo.model.Request.LoginRequest;
-import com.example.demo.model.Request.RegisterRequest;
-import com.example.demo.model.Request.ResetPasswordRequest;
+import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.EmailService;
@@ -59,9 +56,7 @@ public class AuthenticationAPI {
     }
 
     @PutMapping("/account/{id}")
-    public ResponseEntity<AccountResponse> updateAccount(
-            @PathVariable Long id,
-            @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AccountResponse> updateAccount(@PathVariable Long id, @RequestBody AccountUpdateRequest registerRequest) {
         try {
             Account updatedAccount = authenticationService.updateAccount(id, registerRequest);
             AccountResponse accountResponse = modelMapper.map(updatedAccount, AccountResponse.class);

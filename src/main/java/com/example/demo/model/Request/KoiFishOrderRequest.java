@@ -2,6 +2,7 @@ package com.example.demo.model.Request;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.KoiFish;
+import com.example.demo.entity.ShoppingCart;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -21,20 +23,7 @@ public class KoiFishOrderRequest {
     private int quantity;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private BigDecimal totalPrice; // Đổi sang BigDecimal
+    private BigDecimal price; // Đổi sang BigDecimal
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_koiFish",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "koiFish_id")
-    )
-    @JsonIgnore
-    Set<KoiFish> koiFishes;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    @JsonIgnore
-    Account account;
-
+    List<ShoppingCartRequest> shoppingCarts;
 }
