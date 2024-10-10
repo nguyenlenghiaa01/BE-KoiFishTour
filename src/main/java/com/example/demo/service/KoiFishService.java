@@ -4,6 +4,7 @@ import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.repository.BreedRepository;
 import com.example.demo.repository.FarmRepository;
@@ -55,25 +56,37 @@ public class KoiFishService {
     }
 
 
-    public KoiFishResponse getAllKoi(@RequestParam int page, @RequestParam int size){
+    public DataResponse<KoiFishResponse> getAllKoi(@RequestParam int page, @RequestParam int size){
+        int totalElements = 0;
         Page fishPage = koiRepository.findAll(PageRequest.of(page, size));
         List<KoiFish> koiFishes = fishPage.getContent();
-        List<KoiFish> activeKoiFish = new ArrayList<>();
 
-        for(KoiFish fish : koiFishes) {
-            if(!fish.isDeleted()) {
-                activeKoiFish.add(fish);
-            }
+//        for(KoiFish fish : koiFishes) {
+//            if(!fish.isDeleted()) {
+//                activeKoiFish.add(fish);
+//                totalElements++;
+//            }
+//        }
+
+        List<KoiFishResponse> koiFishResponses = new ArrayList<>();
+        for(KoiFish koiFish: koiFishes) {
+            KoiFishResponse koiFishResponse = new KoiFishResponse();
+            koiFishResponse.setKoiCode(koiFish.getKoiId());
+            koiFishResponse.setFarm(koiFish.getFarm());
+            koiFishResponse.setName(koiFish.getName());
+            koiFishResponse.setDescription(koiFish.getDescription());
+            koiFishResponse.setBreed(koiFish.getBreed());
+            koiFishResponse.setImage(koiFish.getImage());
+            koiFishResponse.setId(koiFish.getId());
+            koiFishResponses.add(koiFishResponse);
         }
 
-        KoiFishResponse koiFishResponse = new KoiFishResponse();
-
-        koiFishResponse.setListFish(activeKoiFish);
-        koiFishResponse.setPageNumber(fishPage.getNumber());
-        koiFishResponse.setTotalElements(fishPage.getTotalElements());
-        koiFishResponse.setTotalPages(fishPage.getTotalPages());
-
-        return koiFishResponse;
+        DataResponse<KoiFishResponse> dataResponse = new DataResponse<KoiFishResponse>();
+        dataResponse.setListData(koiFishResponses);
+        dataResponse.setTotalElements(fishPage.getTotalElements());
+        dataResponse.setPageNumber(fishPage.getNumber());
+        dataResponse.setPageNumber(fishPage.getNumber());
+        return dataResponse;
     }
     public KoiFish updateKoiFish(KoiFishRequest koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap

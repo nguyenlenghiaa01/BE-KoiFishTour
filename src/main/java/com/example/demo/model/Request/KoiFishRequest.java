@@ -1,5 +1,6 @@
 package com.example.demo.model.Request;
 
+import com.example.demo.model.Response.AdditionEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;

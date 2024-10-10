@@ -4,6 +4,7 @@ import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,8 +35,8 @@ public class KoiFishAPI {
     // Get danh sách cá Koi
     @GetMapping("/guest/get")
     public ResponseEntity get(@RequestParam int page, @RequestParam int size){
-        KoiFishResponse koiFishResponse = koiService.getAllKoi(page, size);
-        return ResponseEntity.ok(koiFishResponse);
+        DataResponse dataResponse = koiService.getAllKoi(page, size);
+        return ResponseEntity.ok(dataResponse);
     }
 
     // Cập nhật cá Koi
