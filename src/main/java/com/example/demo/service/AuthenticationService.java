@@ -5,10 +5,7 @@ import com.example.demo.entity.Role;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
-import com.example.demo.model.Request.ForgotPasswordRequest;
-import com.example.demo.model.Request.LoginRequest;
-import com.example.demo.model.Request.RegisterRequest;
-import com.example.demo.model.Request.ResetPasswordRequest;
+import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
 import com.example.demo.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -127,19 +124,19 @@ public class AuthenticationService implements UserDetailsService {
         return accountRepository.save(oldAccount);
     }
 
-    public Account updateAccount(Long Id, RegisterRequest registerRequest) {
+    public Account updateAccount(Long Id, AccountUpdateRequest newAccount) {
         Account oldAccount = accountRepository.findById(Id)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
         // Cập nhật thông tin tài khoản
-        oldAccount.setEmail(registerRequest.getEmail());
-        oldAccount.setUserName(registerRequest.getUserName());
-        oldAccount.setPhone(registerRequest.getPhone());
-        oldAccount.setFullName(registerRequest.getFullName());
-        oldAccount.setAddress(registerRequest.getAddress());
+        oldAccount.setEmail(newAccount.getEmail());
+        oldAccount.setPhone(newAccount.getPhone());
+        oldAccount.setFullName(newAccount.getFullName());
+        oldAccount.setAddress(newAccount.getAddress());
+        oldAccount.setImage(newAccount.getImage());
 
-        if (registerRequest.getPassword() != null) {
-            oldAccount.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        if (newAccount.getPassword() != null) {
+            oldAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
 //            // Gửi OTP qua email khi cập nhật mật khẩu
 //            String otp = otpService.generateOtp();
 //            emailService.sendOtp(newAccount.getEmail(), otp);

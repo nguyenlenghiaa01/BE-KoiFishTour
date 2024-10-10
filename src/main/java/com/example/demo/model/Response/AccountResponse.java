@@ -14,4 +14,5 @@ public class AccountResponse {
     String address;
     Role role;
     String token;
+    String image;
 }
