@@ -15,9 +15,13 @@ import java.util.Random;
 
 @Data
 public class KoiFishResponse {
-    private List<KoiFish> listFish;
-    private int pageNumber;
-    private long totalElements;
-    private int totalPages;
+    private long id;
+    private String koiCode;
+    private String name;
+    private String description;
+    private boolean isDeleted;
+    private String image;
+    Breed breed;
+    Farm farm;
 
 }
