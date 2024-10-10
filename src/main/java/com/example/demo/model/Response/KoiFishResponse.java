@@ -11,4 +11,5 @@ public class KoiFishResponse {
     private int pageNumber;
     private long totalElements;
     private int totalPages;
+
 }
