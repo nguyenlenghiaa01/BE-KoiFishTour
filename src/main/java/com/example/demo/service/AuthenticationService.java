@@ -59,6 +59,7 @@ public class AuthenticationService implements UserDetailsService {
                 getAccountCode = generateAccountCode(account.getRole());
             } while (accountRepository.findAccountByCode(getAccountCode) != null);
             account.setCode(getAccountCode);
+            account.setImage("");
             //save code account
             Account newAccount = accountRepository.save(account);
 //            String otp = otpService.generateOtp(); // Tạo OTP
