@@ -85,10 +85,11 @@
 			<version>3.2.1</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
-			<version>8.1.0</version> <!-- Hoặc phiên bản mới nhất -->
+			<version>9.1.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
@@ -139,6 +140,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+
+
+
 
 	</dependencies>
 

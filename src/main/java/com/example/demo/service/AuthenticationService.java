@@ -7,7 +7,10 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
 import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
+import com.example.demo.model.Response.UserResponse;
 import com.example.demo.repository.AccountRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,6 +180,32 @@ public class AuthenticationService implements UserDetailsService {
         Account account = getCurrentAccount();
         account.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         accountRepository.save(account);
+
+    }
+    public UserResponse loginGoogle(String token){
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+            String email = decodedToken.getEmail();
+            Account account = accountRepository.findAccountByEmail(email);
+            if(account == null) {
+                Account newAccount = new Account();
+                newAccount.setEmail(email);
+                newAccount.setFullName(decodedToken.getName());
+                newAccount.setImage(decodedToken.getPicture());
+                newAccount.setRole(Role.CUSTOMER);
+                account=accountRepository.save(newAccount);
+            }
+            UserResponse userResponse = new UserResponse();
+            userResponse.setToken(token);
+            userResponse.setFullName(account.getFullName());
+            userResponse.setImage(account.getImage());
+            userResponse.setRole(account.getRole());
+
+            return userResponse;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Google token verification failed", e);
+        }
 
     }
 }
