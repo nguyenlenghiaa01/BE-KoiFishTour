@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Role;
+import com.example.demo.exception.AuthException;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
@@ -182,6 +183,22 @@ public class AuthenticationService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         accountRepository.save(account);
 
+    }
+
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        Account account = getCurrentAccount();
+        String originPassword = account.getPassword();
+
+        try {
+            if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), originPassword)) {
+                throw new AuthException("Invalid current password!");
+            }
+
+            account.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+            accountRepository.save(account);
+        }catch (Exception e) {
+            throw new AuthException(e.getMessage());
+        }
     }
     public UserResponse loginGoogle(String token){
         try {

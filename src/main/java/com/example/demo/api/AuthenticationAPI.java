@@ -100,6 +100,12 @@ public class AuthenticationAPI {
         return ResponseEntity.ok("reset password successfully");
     }
 
+    @PostMapping("change-password")
+    public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+            authenticationService.changePassword(changePasswordRequest);
+            return ResponseEntity.ok("Change password successfully");
+    }
+
 }
 
 
