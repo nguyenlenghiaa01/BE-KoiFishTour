@@ -140,13 +140,6 @@ public class AuthenticationService implements UserDetailsService {
         oldAccount.setAddress(newAccount.getAddress());
         oldAccount.setImage(newAccount.getImage());
 
-        if (newAccount.getPassword() != null) {
-            oldAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
-//            // Gửi OTP qua email khi cập nhật mật khẩu
-//            String otp = otpService.generateOtp();
-//            emailService.sendOtp(newAccount.getEmail(), otp);
-        }
-
         return accountRepository.save(oldAccount);
     }
 
