@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 
 
+import com.example.demo.Enum.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,6 +41,8 @@ public class Account implements UserDetails {
 
     @Column(nullable = false)
     private boolean isDeleted=false;
+
+    float balance=0;
 
     @Email(message = "Invalid Email!")
     @Column(unique = true)
@@ -110,10 +114,6 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
-    private List<KoiFishOrder> koiFishOrders;
-
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "account")
@@ -123,5 +123,24 @@ public class Account implements UserDetails {
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     private List<OpenTour>openTours;
+
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    private Set<KoiFish> koiFish;
+
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
+    private Set<KoiFishOrder> customerOrders;
+
+    @OneToMany(mappedBy = "consulting")
+    @JsonIgnore
+    private Set<KoiFishOrder> consultingOrders;
+
+    @OneToMany(mappedBy ="from" )
+    Set<Transactions> transactionsFrom;
+
+    @OneToMany(mappedBy ="receiver" )
+    Set<Transactions> transactionsTo;
+
 }
 

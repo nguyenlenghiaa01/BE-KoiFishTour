@@ -69,7 +69,7 @@ public class AuthenticationAPI {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteAcount(@PathVariable long id){
+    public ResponseEntity<?> delete(@PathVariable long id){
         Account newAccount = authenticationService.deleteAccount(id);
         return ResponseEntity.ok(newAccount);
     }

@@ -1,6 +1,6 @@
 package com.example.demo.model.Response;
 
-import com.example.demo.entity.Role;
+import com.example.demo.Enum.Role;
 import lombok.Data;
 
 @Data

@@ -4,6 +4,7 @@ package com.example.demo.api;
 import com.example.demo.entity.KoiFishOrder;
 
 import com.example.demo.model.Request.KoiFishOrderRequest;
+import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.service.KoiFishOrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,11 +23,11 @@ public class KoiFishOrderAPI {
     @Autowired
     private KoiFishOrderService koiFishOrderService;
 
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
-            KoiFishOrder newOrder = koiFishOrderService.createNewOrder(koiFishOrderRequest);
-            return ResponseEntity.ok(newOrder);
+        KoiFishOrder koiFishOrder = koiFishOrderService.createNewOrder(koiFishOrderRequest);
+            return ResponseEntity.ok(koiFishOrder);
     }
 
     // Get danh sách đơn hàng
@@ -37,12 +38,14 @@ public class KoiFishOrderAPI {
     }
 
     // /api/order/{id} => id của đơn hàng mà mình muốn cập nhật
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
             return ResponseEntity.ok(updatedOrder);
     }
 
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable long id) {
 

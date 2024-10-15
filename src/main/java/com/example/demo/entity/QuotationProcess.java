@@ -30,7 +30,7 @@ public class QuotationProcess {
     @PrePersist
     private void prePersist() {
         this.quotationProcessId = generateFarmId();
-        this.createdAt = LocalDateTime.now(); // Gán thời gian hiện tại khi tạo mới
+        this.createdAt = LocalDateTime.now();
     }
 
     public String generateFarmId() {

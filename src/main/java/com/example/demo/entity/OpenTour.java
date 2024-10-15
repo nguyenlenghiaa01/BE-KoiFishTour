@@ -33,25 +33,25 @@ public class OpenTour {
 
     private String generateBookingId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 9999999
-        return String.format("OPT%07d", number); // Định dạng với 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("OPT%07d", number);
     }
 
     @Column(nullable = false)
-    private boolean isDeleted = false; // Mặc định là không bị xóa
+    private boolean isDeleted = false;
 
     @Min(value = 0, message = "Total price must be positive!")
-    @Column(nullable = false) // Đảm bảo totalPrice không được null
-    private BigDecimal totalPrice; // Đổi sang BigDecimal
+    @Column(nullable = false)
+    private BigDecimal totalPrice;
 
     @NotBlank(message = "Status cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
-    @Column(nullable = false) // Đảm bảo status không được null
+    @Column(nullable = false)
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "tour_id", nullable = false) // Đảm bảo liên kết với Tour không được null
+    @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
     @OneToMany(mappedBy = "openTour")
@@ -61,5 +61,6 @@ public class OpenTour {
     @ManyToOne
     @JoinColumn(name="account_id")
     private Account account;
+
 }
 

@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
+public interface ShoppingCartRepository extends JpaRepository<ShoppingCart,Long> {
     ShoppingCart findShoppingCartById(long id);
+    List<ShoppingCart> findShoppingCartByIsDeletedFalse();
 
-    List<ShoppingCart> findShoppingCartsByIsDeletedFalse();
 }

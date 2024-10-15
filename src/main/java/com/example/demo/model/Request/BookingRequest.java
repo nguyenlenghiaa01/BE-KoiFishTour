@@ -20,9 +20,7 @@ public class BookingRequest {
     private String status;
 
     @NotNull(message = "Price cannot be null")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Digits(integer = 10, fraction = 2, message = "Invalid price format, max 10 digits and 2 decimal places")
-    private BigDecimal price;
+    private float price;
 
     @NotNull(message = "End date cannot be null")
     private LocalDate endDate;

@@ -18,12 +18,6 @@ import java.util.Set;
 
 @Data
 public class KoiFishOrderRequest {
-    @Min(value = 10, message = "Quantity must be at least 10!")
-    @Max(value = 1000, message = "Quantity must not be more than 1000!")
-    private int quantity;
-
-    @Min(value = 0, message = "Total price must be positive!")
-    private BigDecimal price; // Đổi sang BigDecimal
-
-    List<ShoppingCartRequest> shoppingCarts;
+    long consulting_id;
+    long koiFish_id;
 }

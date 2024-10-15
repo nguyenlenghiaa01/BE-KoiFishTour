@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -29,12 +30,11 @@ public class KoiFishOrder {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @Min(value = 10, message = "Quantity must be at least 10!")
-    @Max(value = 1000, message = "Quantity must not be more than 1000!")
-    private int quantity;
+    Date createAt;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private BigDecimal price;
+    private float total;
+
 
     public KoiFishOrder() {
         this.koiFishOrderId = generateOrderId();
@@ -46,12 +46,23 @@ public class KoiFishOrder {
         return String.format("ORD%07d", number);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Account account;
 
-    @OneToMany
-    @JoinColumn(name="koiFishOrder_id")
+    @ManyToOne
+    @JoinColumn(name = "consulting_id")
     @JsonIgnore
+    private Account consulting;
+
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Account customer;
+
+    @OneToMany(mappedBy = "koiFishOrder", cascade = CascadeType.ALL)
     private List<ShoppingCart> shoppingCart;
+
+
+
+
+
+
+
 }

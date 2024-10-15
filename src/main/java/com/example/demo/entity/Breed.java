@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,4 +50,7 @@ public class Breed {
     @OneToMany(mappedBy = "breed")
     @JsonIgnore
     private List<KoiFish> koiFishes;
+
+    @ManyToMany(mappedBy = "breeds") // Specify the mapping back to ShoppingCart
+    private Set<ShoppingCart> shoppingCarts = new HashSet<>();
 }

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
-import com.example.demo.entity.Role;
+import com.example.demo.Enum.Role;
 import com.example.demo.exception.AuthException;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;

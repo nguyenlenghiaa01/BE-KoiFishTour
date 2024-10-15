@@ -41,6 +41,8 @@ public class Tour {
 
     private String image;
 
+    private String status;
+
     private String generateTourId() {
         Random random = new Random();
         int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999

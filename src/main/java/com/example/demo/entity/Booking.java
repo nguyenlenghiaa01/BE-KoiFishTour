@@ -10,8 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Getter
 @Setter
@@ -38,16 +37,13 @@ public class Booking {
 
     @NotNull(message = "Price cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Digits(integer = 10, fraction = 2, message = "Invalid price format, max 10 digits and 2 decimal places")
-    private BigDecimal price;
+    private float price;
 
     @NotNull(message = "End date cannot be null")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDate;
 
-    @NotNull(message = "Booking date cannot be null")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate bookingDate;
+    private Date bookingDate;
 
     @PrePersist
     private void prePersist() {
@@ -56,8 +52,8 @@ public class Booking {
 
     private String generateBookingId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 9999999
-        return String.format("BOK%07d", number); // Định dạng với 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("BOK%07d", number);
     }
 
     @OneToMany(mappedBy = "booking")
@@ -71,5 +67,10 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "openTour_id")
     private OpenTour openTour;
+
+    @OneToOne(mappedBy = "booking")
+    @JsonIgnore
+    Payment payment;
+
 
 }

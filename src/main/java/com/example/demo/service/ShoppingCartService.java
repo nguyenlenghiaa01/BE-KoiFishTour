@@ -1,81 +1,77 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Account;
-import com.example.demo.entity.KoiFish;
-import com.example.demo.entity.KoiFishOrder;
+import com.example.demo.entity.Breed;
 import com.example.demo.entity.ShoppingCart;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
-import com.example.demo.model.Response.ShoppingCartResponse;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.KoiFishOrderRepository;
-import com.example.demo.repository.KoiRepository;
+import com.example.demo.repository.BreedRepository;
 import com.example.demo.repository.ShoppingCartRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ShoppingCartService {
-    private ModelMapper modelMapper = new ModelMapper();
-    // xu ly nhung logic lien qua
+
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    BreedRepository breedRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    AuthenticationService authenticationService;
+    public ShoppingCart createShoppingCart(ShoppingCartRequest shoppingCartRequest) {
+        ShoppingCart shoppingCart = new ShoppingCart();
 
-    @Autowired
-    KoiRepository koiRepository;
+        if (shoppingCartRequest.getBreedIds() != null && !shoppingCartRequest.getBreedIds().isEmpty()) {
+            Set<Breed> breeds = new HashSet<>();
 
-    @Autowired
-    KoiFishOrderRepository koiFishOrderRepository;
-    public ShoppingCart createNewShoppingCart(ShoppingCartRequest shoppingCartRequest){
-        ShoppingCart shoppingCart = modelMapper.map(shoppingCartRequest, ShoppingCart.class);
-        KoiFish koiFish = koiRepository.findById(shoppingCartRequest.getKoiFishId()).
-                orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
-        KoiFishOrder koiFishOrder = koiFishOrderRepository.findById(shoppingCartRequest.getKoiFishId()).
-                orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
-
-        shoppingCart.setKoiFishOrder(koiFishOrder);
-        shoppingCart.setKoiFish(koiFish);
-        try {
-
-            ShoppingCart newShoppingCart = shoppingCartRepository.save(shoppingCart);
-            return newShoppingCart;
-        }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate Shopping Cart id !");
+            for (Long breedId : shoppingCartRequest.getBreedIds()) {
+                Breed breed = breedRepository.findById(breedId)
+                        .orElseThrow(() -> new NotFoundException("Giống với ID " + breedId + " không tồn tại!"));
+                breeds.add(breed);
+            }
+            shoppingCart.setBreeds(breeds);
         }
-
+        shoppingCart.setStatus(shoppingCartRequest.isStatus());
+        return shoppingCartRepository.save(shoppingCart);
     }
-    public List<ShoppingCart> getAllShoppingCart(){
-        // lay tat ca student trong DB
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findShoppingCartsByIsDeletedFalse();
-        return shoppingCarts;
-    }
-    public ShoppingCart updateShoppingCart(ShoppingCartResponse shoppingCart, long id){
 
-        ShoppingCart oldShoppingCart= shoppingCartRepository.findShoppingCartById(id);
-        if(oldShoppingCart ==null){
-            throw new NotFoundException("Shopping Cart not found !");//dung viec xu ly ngay tu day
+
+    public List<ShoppingCart> getAllShoppingCart() {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findShoppingCartByIsDeletedFalse();
+        return  shoppingCarts;
+    }
+
+    public ShoppingCart updateShoppingCart(ShoppingCartRequest shoppingCartRequest, long id) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartById(id);
+        if (shoppingCart == null) {
+            throw new NotFoundException("Shopping Cart not found!");
         }
-
-        KoiFish koiFish = koiRepository.findById(shoppingCart.getKoiFishId()).
-                orElseThrow(() -> new NotFoundException("Koi Fish not exist!"));
-
-        oldShoppingCart.setKoiFish(koiFish);
-        return shoppingCartRepository.save(oldShoppingCart);
+        Set<Breed> breeds = new HashSet<>();
+        for (Long breedId : shoppingCartRequest.getBreedIds()) {
+            Breed breed = breedRepository.findBreedById(breedId);
+            if (breed != null) {
+                breeds.add(breed);
+            }
+        }
+        shoppingCart.setBreeds(breeds);
+        shoppingCart.setStatus(shoppingCartRequest.isStatus());
+        if (shoppingCart.isStatus()) {
+            shoppingCartRepository.delete(shoppingCart);
+            return null;
+        }
+        return shoppingCartRepository.save(shoppingCart);
     }
-    public ShoppingCart deleteShoppingCart(long id){
+    public ShoppingCart deleteShoppingCart(long id) {
         ShoppingCart oldShoppingCart = shoppingCartRepository.findShoppingCartById(id);
-        if(oldShoppingCart ==null){
-            throw new NotFoundException("ShoppingCart not found !");//dung viec xu ly ngay tu day
+        if(oldShoppingCart == null) {
+            throw new NotFoundException("Shopping Cart not found!");
         }
         oldShoppingCart.setDeleted(true);
         return shoppingCartRepository.save(oldShoppingCart);
     }
-
 }

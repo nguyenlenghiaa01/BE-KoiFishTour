@@ -35,7 +35,6 @@ public class KoiFish {
     private boolean isDeleted = false;
 
     private String image;
-
     public KoiFish() {
         this.koiId = generateKoiId();
     }
@@ -55,8 +54,9 @@ public class KoiFish {
     @JoinColumn(name = "farm_id")
     Farm farm;
 
-    @OneToMany
-    @JoinColumn(name="koiFish_id")
-    @JsonIgnore
-    List<ShoppingCart> shoppingCart;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Account account;
+
+
 }

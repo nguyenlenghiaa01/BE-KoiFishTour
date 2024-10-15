@@ -1,23 +1,17 @@
 package com.example.demo.service;
 
-
-import com.example.demo.entity.Account;
-import com.example.demo.entity.KoiFishOrder;
-import com.example.demo.exception.DuplicateEntity;
+import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Response.OrderResponse;
-import com.example.demo.repository.KoiRepository;
-import com.example.demo.repository.KoiFishOrderRepository;
+import com.example.demo.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class KoiFishOrderService {
@@ -29,20 +23,39 @@ public class KoiFishOrderService {
     private KoiRepository koiRepository;
 
     @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
+    PaymentRepository paymentRepository;
+
+    @Autowired
+    BreedRepository breedRepository;
+
+    @Autowired
+    TransactionsRepository transactionsRepository;
+
+    @Autowired
     private AuthenticationService authenticationService;
     private final ModelMapper modelMapper = new ModelMapper();
 
     public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder orders = modelMapper.map(koiFishOrderRequest, KoiFishOrder.class);
         Account currentAccount = authenticationService.getCurrentAccount();
-        orders.setAccount(currentAccount);
-        try {
-            return koiFishOrderRepository.save(orders);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEntity("Duplicate Order id!");
+        if (currentAccount == null) {
+            throw new RuntimeException("Customer account not found.");
         }
-
+        float total = 0;
+//        orders.setCustomer(currentAccount);
+        orders.setCreateAt(new Date());
+        KoiFish koi = koiRepository.findKoiById(koiFishOrderRequest.getKoiFish_id());
+//            orders.set;
+            orders.setTotal(orders.getTotal());
+        return koiFishOrderRepository.save(orders);
     }
+
+
+
+
     public OrderResponse getAllOrder(int page, int size){
         Page orderPage = koiFishOrderRepository.findAll(PageRequest.of(page, size));
         List<KoiFishOrder> koiFishOrders = orderPage.getContent();
@@ -63,40 +76,18 @@ public class KoiFishOrderService {
         return  orderResponse;
     }
 
-    public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
+    public KoiFishOrder updateOrder(KoiFishOrderRequest shoppingCartRequest, long id) {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-        oldKoiFishOrder.setPrice(koiFishOrderRequest.getPrice());
-        oldKoiFishOrder.setQuantity(koiFishOrderRequest.getQuantity());
+        KoiFish koi = koiRepository.findKoiById(shoppingCartRequest.getKoiFish_id());
+
+        // Update quantity
+        oldKoiFishOrder.setTotal(oldKoiFishOrder.getTotal());
 
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }
-//    public OrderCart updateCart(Long orderId, Long fishId, int quantity) {
-//        // Tìm đơn hàng theo orderId
-//        OrderCart order = orderRepository.findOrderById(orderId);
-//        if (order == null) {
-//            throw new RuntimeException("Order not found");
-//        }
-//
-//        KoiFish koiFish = koiRepository.findKoiById(fishId);
-//        if (koiFish == null) {
-//            throw new RuntimeException("Fish not found");
-//        }
-//
-//        // Kiểm tra xem cá koi đã có trong giỏ hàng chưa
-//        if (order.getKoiFishes().stream().anyMatch(fish -> fish.getId().contains(koiFish.getId()))) {
-//            throw new DuplicateEntity("Fish already exists in the cart!");
-//        } else {
-//            // Thêm cá koi vào giỏ hàng
-//            order.getKoiFishes().add(koiFish);
-//        }
-//
-//        // Lưu thay đổi
-//        orderRepository.save(order);
-//
-//        return order;
-//    }
+
 
 
 
@@ -107,6 +98,7 @@ public class KoiFishOrderService {
         oldKoiFishOrder.setDeleted(true);
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }
+
 
 }
 

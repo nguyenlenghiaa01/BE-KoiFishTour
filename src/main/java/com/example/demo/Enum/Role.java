@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.Enum;
 
 public enum Role {
 
@@ -6,6 +6,6 @@ public enum Role {
     ADMIN,
     MANAGER,
     CONSULTING,
-    DELIVERING,
-    CUSTOMER
+    CUSTOMER,
+
 }

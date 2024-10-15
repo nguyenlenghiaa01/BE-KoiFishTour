@@ -1,11 +1,15 @@
 package com.example.demo.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,13 +19,13 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Code can not be blank!")
+    @NotBlank(message = "Code cannot be blank!")
     @Pattern(regexp = "CAR\\d{7}", message = "Invalid code!")
     @Column(unique = true)
     private String cartId;
 
-    @Column(nullable = false)
     private boolean isDeleted = false;
+    private boolean status = false;
 
     @PrePersist
     private void prePersist() {
@@ -34,12 +38,17 @@ public class ShoppingCart {
         return String.format("CAR%07d", number);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "koiFish_id")
-    private KoiFish koiFish;
+    @ManyToMany
+    @JoinTable(
+            name = "shopping_cart_breed",
+            joinColumns = @JoinColumn(name = "shopping_cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "breed_id")
+    )
+    @JsonIgnore
+    private Set<Breed> breeds = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "koiFishOrder_id")
+    @JsonIgnore
     private KoiFishOrder koiFishOrder;
-
 }
