@@ -44,17 +44,32 @@ public class KoiFishOrderService {
         if (currentAccount == null) {
             throw new RuntimeException("Customer account not found.");
         }
-        float total = 0;
-//        orders.setCustomer(currentAccount);
+        orders.setCustomer(currentAccount);
         orders.setCreateAt(new Date());
-        KoiFish koi = koiRepository.findKoiById(koiFishOrderRequest.getKoiFish_id());
-//            orders.set;
+        orders.setId(koiFishOrderRequest.getId());
+        KoiFish koi = koiRepository.findKoiById(koiFishOrderRequest.getId());
             orders.setTotal(orders.getTotal());
         return koiFishOrderRepository.save(orders);
     }
 
+    public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
+        return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
+    }
+    public Double getCalculateTotalOrderAmountForMonthAndYear(int month, int year) {
+        Double totalAmount = koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
+        if (totalAmount == null) {
+            return 0.0;
+        }
+        return totalAmount * 0.10;
+    }
 
+    public Long getTotalOrdersByMonthAndYear(int month,int year){
+        return koiFishOrderRepository.countOrdersByMonthAndYear(month,year);
+    }
 
+    public Long getTotalDeletedOrdersByMonthAndYear(int month,int year){
+        return koiFishOrderRepository.countDeletedOrdersByMonthAndYear(month,year);
+    }
 
     public OrderResponse getAllOrder(int page, int size){
         Page orderPage = koiFishOrderRepository.findAll(PageRequest.of(page, size));
@@ -80,10 +95,11 @@ public class KoiFishOrderService {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-        KoiFish koi = koiRepository.findKoiById(shoppingCartRequest.getKoiFish_id());
+        KoiFish koi = koiRepository.findKoiById(shoppingCartRequest.getId());
 
-        // Update quantity
-        oldKoiFishOrder.setTotal(oldKoiFishOrder.getTotal());
+        // Update
+        oldKoiFishOrder.setId(shoppingCartRequest.getId());
+        oldKoiFishOrder.setTotal(shoppingCartRequest.getTotal());
 
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }

@@ -10,4 +10,5 @@ import java.util.Set;
 public class ShoppingCartRequest {
     private boolean status;
     private Set<Long> breedIds;
+    private long customerId;
 }

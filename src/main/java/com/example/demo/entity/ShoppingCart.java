@@ -51,4 +51,8 @@ public class ShoppingCart {
     @JoinColumn(name = "koiFishOrder_id")
     @JsonIgnore
     private KoiFishOrder koiFishOrder;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Account customer;
 }

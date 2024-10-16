@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class BookingRequest {
 
     @NotNull(message = "Start date cannot be null")
+
     private LocalDate startDate; // Sử dụng LocalDate thay vì Date
 
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot have numbers!")
@@ -28,7 +29,10 @@ public class BookingRequest {
     @NotNull(message = "Booking date cannot be null")
     private LocalDate bookingDate;
 
+    @NotNull(message = "Open tour ID cannot be null")
     private long openTourId;
-    private long accountId;
+
+    @NotNull(message = "Sale ID cannot be null")
+    private long saleId;
 }
 

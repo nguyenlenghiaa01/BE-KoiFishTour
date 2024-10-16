@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.Breed;
+import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.entity.ShoppingCart;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.repository.BreedRepository;
 import com.example.demo.repository.ShoppingCartRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +24,23 @@ public class ShoppingCartService {
     @Autowired
     BreedRepository breedRepository;
 
+    private final ModelMapper modelMapper = new ModelMapper();
     @Autowired
     AuthenticationService authenticationService;
     public ShoppingCart createShoppingCart(ShoppingCartRequest shoppingCartRequest) {
-        ShoppingCart shoppingCart = new ShoppingCart();
+        ShoppingCart shoppingCart = modelMapper.map(shoppingCartRequest, ShoppingCart.class);
+        Account currentAccount = authenticationService.getCurrentAccount();
+        if (currentAccount == null) {
+            throw new RuntimeException("Customer account not found.");
+        }
+        shoppingCart.setCustomer(currentAccount);
 
         if (shoppingCartRequest.getBreedIds() != null && !shoppingCartRequest.getBreedIds().isEmpty()) {
             Set<Breed> breeds = new HashSet<>();
 
             for (Long breedId : shoppingCartRequest.getBreedIds()) {
                 Breed breed = breedRepository.findById(breedId)
-                        .orElseThrow(() -> new NotFoundException("Giống với ID " + breedId + " không tồn tại!"));
+                        .orElseThrow(() -> new NotFoundException("ID " + breedId + " not exist"));
                 breeds.add(breed);
             }
             shoppingCart.setBreeds(breeds);

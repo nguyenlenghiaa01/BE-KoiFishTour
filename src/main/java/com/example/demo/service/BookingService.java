@@ -69,6 +69,10 @@ public class BookingService {
         booking.setPrice(booking.getPrice());
         booking.setOpenTour(openTour);
         booking.setAccount(currentAccount);
+        //set sale id
+        Account saleAccount = accountRepository.findById(bookingRequest.getSaleId())
+                .orElseThrow(() -> new NotFoundException("Sale account not found"));
+        booking.setSale(saleAccount);
         try {
             return bookingRepository.save(booking);
         } catch (Exception e) {
@@ -95,6 +99,27 @@ public class BookingService {
 
         return bookingResponse;
     }
+    public Long getTotalBookingsByMonthAndYear(int month, int year) {
+        return bookingRepository.countBookingsByMonthAndYear(month, year);
+    }
+    public Long getTotalPriceByMonthAndYear(int month, int year) {
+        return bookingRepository.sumPriceByMonthAndYear(month, year);
+    }
+
+    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
+        return bookingRepository.countDeletedBookingsByMonthAndYear(month, year);
+    }
+
+    public float getTotalBookingPayments() {
+        List<Booking> bookings = bookingRepository.findAll();
+        float totalPayments = 0;
+        for (Booking booking : bookings) {
+            if (!booking.isDeleted()) {
+                totalPayments += booking.getPrice();
+            }
+        }
+        return totalPayments;
+    }
 
     public Booking updateBooking(BookingRequest bookingRequest, long id) {
 
@@ -102,11 +127,13 @@ public class BookingService {
         if (oldBooking == null) {
             throw new NotFoundException("Booking not found !");//dung viec xu ly ngay tu day
         }
+        OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId())
+                .orElseThrow(() -> new NotFoundException("Open-Tour not found"));
         oldBooking.setStatus(bookingRequest.getStatus());
         oldBooking.setEndDate(bookingRequest.getEndDate());
         oldBooking.setStartDate(bookingRequest.getStartDate());
-        oldBooking.setPrice(oldBooking.getPrice());
-        oldBooking.setOpenTour(oldBooking.getOpenTour());
+        oldBooking.setPrice(bookingRequest.getPrice());
+        oldBooking.setOpenTour(openTour);
         return bookingRepository.save(oldBooking);
     }
 

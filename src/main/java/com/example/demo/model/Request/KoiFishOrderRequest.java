@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,6 +19,12 @@ import java.util.Set;
 
 @Data
 public class KoiFishOrderRequest {
-    long consulting_id;
-    long koiFish_id;
+    @NotNull(message = "Consulting ID cannot be null")
+    private long consulting_id;
+
+    @NotNull(message = "Koi Fish ID cannot be null")
+    private long id;
+
+    @NotNull(message = "Total cannot be null")
+    private float total;
 }

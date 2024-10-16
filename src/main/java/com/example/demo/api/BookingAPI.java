@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
 import com.example.demo.model.Request.BookingRequest;
+import com.example.demo.model.Request.BookingTotalRequest;
 import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/booking")
 @CrossOrigin("*")
 @SecurityRequirement(name="api")
-@PreAuthorize("hasAuthority('SALE')")
 public class BookingAPI {
     @Autowired
     BookingService bookingService;
@@ -27,6 +27,28 @@ public class BookingAPI {
         Booking newBooking = bookingService.createNewBooking(bookingRequest);
         return ResponseEntity.ok(newBooking);
     }
+    @PostMapping("/total")
+    public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
+        int month = bookingTotalRequest.getMonth();
+        int year = bookingTotalRequest.getYear();
+        Long totalBookings = bookingService.getTotalBookingsByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalBookings);
+    }
+    @PostMapping("/total-price")
+    public ResponseEntity<Long> getTotalPrice(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
+        int month = bookingTotalRequest.getMonth();
+        int year = bookingTotalRequest.getYear();
+        Long totalPrice = bookingService.getTotalPriceByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalPrice);
+    }
+    @PostMapping("/total/deleted")
+    public ResponseEntity<Long> getTotalDeletedBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
+        int month = bookingTotalRequest.getMonth();
+        int year = bookingTotalRequest.getYear();
+        Long totalDeletedBookings = bookingService.getTotalDeletedBookingsByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalDeletedBookings);
+    }
+
 
     // Get danh sách breed
     @GetMapping

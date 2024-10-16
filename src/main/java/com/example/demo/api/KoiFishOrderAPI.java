@@ -4,6 +4,7 @@ package com.example.demo.api;
 import com.example.demo.entity.KoiFishOrder;
 
 import com.example.demo.model.Request.KoiFishOrderRequest;
+import com.example.demo.model.Request.KoiFishOrderTotalRequest;
 import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.service.KoiFishOrderService;
@@ -28,6 +29,38 @@ public class KoiFishOrderAPI {
     public ResponseEntity<?> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder koiFishOrder = koiFishOrderService.createNewOrder(koiFishOrderRequest);
             return ResponseEntity.ok(koiFishOrder);
+    }
+
+    @PostMapping("/total")
+    public ResponseEntity<Double> getTotalOrderAmount(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
+        Integer month = orderTotalRequest.getMonth();
+        Integer year = orderTotalRequest.getYear();
+        Double totalAmount = koiFishOrderService.getTotalOrderAmountByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalAmount);
+    }
+
+    public ResponseEntity<Double> calculateTotalOrderAmountForMonthAndYear(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest){
+        Integer month = orderTotalRequest.getMonth();
+        Integer year = orderTotalRequest.getYear();
+        Double totalAmount = koiFishOrderService.getCalculateTotalOrderAmountForMonthAndYear(month, year);
+        return ResponseEntity.ok(totalAmount);
+    }
+
+
+    @PostMapping("/count")
+    public ResponseEntity<Long> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
+        int month = orderTotalRequest.getMonth();
+        int year = orderTotalRequest.getYear();
+        Long totalOrders = koiFishOrderService.getTotalOrdersByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalOrders);
+    }
+
+    @PostMapping("/count/deleted")
+    public ResponseEntity<Long> getTotalDeletedOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
+        int month = orderTotalRequest.getMonth();
+        int year = orderTotalRequest.getYear();
+        Long totalDeletedOrders = koiFishOrderService.getTotalDeletedOrdersByMonthAndYear(month, year);
+        return ResponseEntity.ok(totalDeletedOrders);
     }
 
     // Get danh sách đơn hàng

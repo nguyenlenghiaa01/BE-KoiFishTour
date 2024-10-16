@@ -63,6 +63,9 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+    @ManyToOne
+    @JoinColumn(name = "sale")
+    private Account sale;
 
     @ManyToOne
     @JoinColumn(name = "openTour_id")
