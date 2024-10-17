@@ -112,7 +112,7 @@ public class Account implements UserDetails {
     @JsonIgnore
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<Feedback> feedbacks;
 

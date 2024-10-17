@@ -33,9 +33,9 @@ public class BreedService {
         List<Breed> breeds = breedRepository.findBreedsByIsDeletedFalse();
         return breeds;
     }
-    public Breed updateBreed(BreedRequest breedRequest, long BreedId){
+    public Breed updateBreed(BreedRequest breedRequest, String BreedId){
 
-        Breed oldBreed = breedRepository.findBreedById(BreedId);
+        Breed oldBreed = breedRepository.findBreedByBreedId(BreedId);
         if(oldBreed ==null){
             throw new NotFoundException("Breed not found !");//dung viec xu ly ngay tu day
         }
@@ -44,8 +44,8 @@ public class BreedService {
         oldBreed.setDescription(breedRequest.getDescription());
         return breedRepository.save(oldBreed);
     }
-    public Breed deleteBreed(long BreedId){
-        Breed oldBreed = breedRepository.findBreedById(BreedId);
+    public Breed deleteBreed(String BreedId){
+        Breed oldBreed = breedRepository.findBreedByBreedId(BreedId);
         if(oldBreed ==null){
             throw new NotFoundException("Breed not found !");//dung viec xu ly ngay tu day
         }

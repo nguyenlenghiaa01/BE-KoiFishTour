@@ -17,7 +17,7 @@ public class KoiFishRequest {
 
     private String image;
 
-    long breedId;
+    String breedId;
     long farmId;
 
 }

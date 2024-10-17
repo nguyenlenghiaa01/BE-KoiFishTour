@@ -48,7 +48,7 @@ public class KoiFishOrderService {
         orders.setCreateAt(new Date());
         orders.setId(koiFishOrderRequest.getId());
         KoiFish koi = koiRepository.findKoiById(koiFishOrderRequest.getId());
-            orders.setTotal(orders.getTotal());
+        orders.setTotal(orders.getTotal());
         return koiFishOrderRepository.save(orders);
     }
 
@@ -103,8 +103,6 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }
-
-
 
 
     public KoiFishOrder deleteOrderCart(long id) {

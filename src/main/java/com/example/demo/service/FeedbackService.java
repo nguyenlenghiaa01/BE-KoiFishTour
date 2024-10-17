@@ -1,11 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FeedbackRequest;
 import com.example.demo.repository.AccountRepository;
+import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.FeedbackRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +26,22 @@ public class FeedbackService {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    AuthenticationService authenticationService;
+    @Autowired
+    BookingRepository bookingRepository;
+
     public Feedback createNewFeedback(FeedbackRequest feedbackRequest) {
         // create feedback
         Feedback feedback = new Feedback();
-
-        // Lấy Account từ repository
-        Account account = accountRepository.findById(feedbackRequest.getAccountId())
-                .orElseThrow(() -> new NotFoundException("Account not exist!"));
+        Booking booking = bookingRepository.findById(feedbackRequest.getBookingId())
+                .orElseThrow(() -> new NotFoundException("Booking Id not exist!"));
 
         feedback.setComment(feedbackRequest.getComment());
         feedback.setRating(feedbackRequest.getRating());
-        feedback.setAccount(account);
-
-        if (feedback.getComment() == null || feedback.getComment().isEmpty()) {
-            throw new IllegalArgumentException("Comment cannot be empty!");
-        }
-        if (feedback.getRating() < 1 || feedback.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5!");
-        }
-
+        feedback.setCustomer(authenticationService.getCurrentAccount());
+        feedback.setBooking(booking);
         try {
-            // Lưu và trả về Feedback mới
             return feedbackRepository.save(feedback);
         } catch (Exception e) {
             throw new DuplicateEntity("Duplicate Feedback id!");

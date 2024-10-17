@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BreedRepository extends JpaRepository<Breed,Long> {
-    Breed findBreedById(long BreedId);
+public interface BreedRepository extends JpaRepository<Breed,String> {
+    Breed findBreedByBreedId(String BreedId);
 
     List<Breed> findBreedsByIsDeletedFalse();
 }

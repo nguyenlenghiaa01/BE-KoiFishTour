@@ -17,8 +17,8 @@ import java.util.Set;
 @Entity
 public class Breed {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Thêm chiến lược tự động tăng cho khóa chính
-    private long id; // Thêm trường id làm khóa chính
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @NotBlank(message = "Code can not be blank!")
     @Pattern(regexp = "BRE\\d{7}", message = "Invalid code!")
@@ -43,14 +43,14 @@ public class Breed {
 
     private String generateBreedId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 999999
-        return String.format("BRE%07d", number); // Định dạng với 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("BRE%07d", number);
     }
 
     @OneToMany(mappedBy = "breed")
     @JsonIgnore
     private List<KoiFish> koiFishes;
 
-    @ManyToMany(mappedBy = "breeds") // Specify the mapping back to ShoppingCart
+    @ManyToMany(mappedBy = "breeds")
     private Set<ShoppingCart> shoppingCarts = new HashSet<>();
 }

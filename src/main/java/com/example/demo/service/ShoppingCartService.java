@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Breed;
-import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.entity.ShoppingCart;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
@@ -38,7 +37,7 @@ public class ShoppingCartService {
         if (shoppingCartRequest.getBreedIds() != null && !shoppingCartRequest.getBreedIds().isEmpty()) {
             Set<Breed> breeds = new HashSet<>();
 
-            for (Long breedId : shoppingCartRequest.getBreedIds()) {
+            for (String breedId : shoppingCartRequest.getBreedIds()) {
                 Breed breed = breedRepository.findById(breedId)
                         .orElseThrow(() -> new NotFoundException("ID " + breedId + " not exist"));
                 breeds.add(breed);
@@ -61,8 +60,8 @@ public class ShoppingCartService {
             throw new NotFoundException("Shopping Cart not found!");
         }
         Set<Breed> breeds = new HashSet<>();
-        for (Long breedId : shoppingCartRequest.getBreedIds()) {
-            Breed breed = breedRepository.findBreedById(breedId);
+        for (String breedId : shoppingCartRequest.getBreedIds()) {
+            Breed breed = breedRepository.findBreedByBreedId(breedId);
             if (breed != null) {
                 breeds.add(breed);
             }
