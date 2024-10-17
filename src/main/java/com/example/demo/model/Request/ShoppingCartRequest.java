@@ -9,6 +9,6 @@ import java.util.Set;
 @Data
 public class ShoppingCartRequest {
     private boolean status;
-    private Set<String> breedIds;
+    private Set<Long> breedIds;
     private long customerId;
 }

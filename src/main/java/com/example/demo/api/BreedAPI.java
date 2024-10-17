@@ -39,7 +39,7 @@ public class BreedAPI {
     // Cập nhật breed
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity<?> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable String id) {
+    public ResponseEntity<?> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable long id) {
             Breed updatedBreed = breedService.updateBreed(breedRequest, id);
             return ResponseEntity.ok(updatedBreed);
     }
@@ -47,7 +47,7 @@ public class BreedAPI {
     // Xóa breed
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteBreed(@PathVariable String id) {
+    public ResponseEntity<?> deleteBreed(@PathVariable long id) {
             Breed deletedBreed = breedService.deleteBreed(id);
             return ResponseEntity.ok(deletedBreed);
     }

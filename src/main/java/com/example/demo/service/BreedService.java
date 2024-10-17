@@ -33,22 +33,18 @@ public class BreedService {
         List<Breed> breeds = breedRepository.findBreedsByIsDeletedFalse();
         return breeds;
     }
-    public Breed updateBreed(BreedRequest breedRequest, String BreedId){
+    public Breed updateBreed(BreedRequest breedRequest, long BreedId){
 
-        Breed oldBreed = breedRepository.findBreedByBreedId(BreedId);
-        if(oldBreed ==null){
-            throw new NotFoundException("Breed not found !");//dung viec xu ly ngay tu day
-        }
+        Breed oldBreed = breedRepository.findById(BreedId).orElseThrow(() -> new NotFoundException("Breed not found!"));
+
         //=> co breed co ton tai;
         oldBreed.setBreedName(breedRequest.getBreedName());
         oldBreed.setDescription(breedRequest.getDescription());
         return breedRepository.save(oldBreed);
     }
-    public Breed deleteBreed(String BreedId){
-        Breed oldBreed = breedRepository.findBreedByBreedId(BreedId);
-        if(oldBreed ==null){
-            throw new NotFoundException("Breed not found !");//dung viec xu ly ngay tu day
-        }
+    public Breed deleteBreed(long BreedId){
+        Breed oldBreed = breedRepository.findById(BreedId).orElseThrow(() -> new NotFoundException("Breed not found!"));
+
         oldBreed.setDeleted(true);
         return breedRepository.save(oldBreed);
     }
