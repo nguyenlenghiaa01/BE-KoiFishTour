@@ -43,15 +43,10 @@ public class FarmService {
     public FarmResponse getAllFarm(int page, int size) {
         Page farmPage = farmRepository.findAll(PageRequest.of(page, size));
         List<Farm> farms = farmPage.getContent();
-        List<Farm> activeFarm = new ArrayList<>();
-        for (Farm farm : farms) {
-            if (!farm.isDeleted()) {
-                activeFarm.add(farm);
-            }
-        }
+
 
         FarmResponse farmResponse = new FarmResponse();
-        farmResponse.setFarms(activeFarm);
+        farmResponse.setFarms(farms);
         farmResponse.setPageNumber(farmPage.getNumber());
         farmResponse.setTotalElements(farmPage.getTotalElements());
         farmResponse.setTotalPages(farmPage.getTotalPages());

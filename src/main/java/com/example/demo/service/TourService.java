@@ -64,17 +64,10 @@ public class TourService {
     public TourResponse getAllTour(int page, int size) {
         Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
-        List<Tour> activeTours = new ArrayList<>();
-
-        for (Tour tour : tours) {
-            if(!tour.isDeleted()) {
-                activeTours.add(tour);
-            }
-        }
 
         TourResponse tourResponse = new TourResponse();
 
-        tourResponse.setListTour(activeTours);
+        tourResponse.setListTour(tours);
         tourResponse.setPageNumber(tourPage.getNumber());
         tourResponse.setTotalElements(tourPage.getTotalElements());
         tourResponse.setTotalPages(tourPage.getTotalPages());
