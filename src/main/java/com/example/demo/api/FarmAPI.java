@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Farm;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.service.FarmService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,8 +36,8 @@ public class FarmAPI {
     // Lấy farm
     @GetMapping("/guest/get")
     public ResponseEntity get(@RequestParam int page, @RequestParam int size){
-        FarmResponse farmResponse = farmService.getAllFarm(page, size);
-        return ResponseEntity.ok(farmResponse);
+        DataResponse dataResponse = farmService.getAllFarm(page, size);
+        return ResponseEntity.ok(dataResponse);
     }
 
     // Cập nhật farm

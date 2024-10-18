@@ -5,6 +5,8 @@ import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
+import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.TourRepository;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,18 +64,33 @@ public class TourService {
     }
 
 
-    public TourResponse getAllTour(int page, int size) {
+    public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
         Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
+        List<TourResponse> tourResponses = new ArrayList<>();
 
-        TourResponse tourResponse = new TourResponse();
+        for(Tour tour: tours) {
+            TourResponse tourResponse = new TourResponse();
+            tourResponse.setId(tour.getId());
+            tourResponse.setTourId(tour.getTourId());
+            tourResponse.setDeleted(tour.isDeleted());
+            tourResponse.setTourName(tour.getTourName());
+            tourResponse.setStartDate(tour.getStartDate());
+            tourResponse.setDuration(tour.getDuration());
+            tourResponse.setImage(tour.getImage());
+            tourResponse.setStatus(tour.getStatus());
 
-        tourResponse.setListTour(tours);
-        tourResponse.setPageNumber(tourPage.getNumber());
-        tourResponse.setTotalElements(tourPage.getTotalElements());
-        tourResponse.setTotalPages(tourPage.getTotalPages());
+            tourResponse.setFarms(tour.getFarms());
 
-        return tourResponse;
+            tourResponses.add(tourResponse);
+        }
+
+        DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        return dataResponse;
     }
 
     public Tour updateTour(TourRequest tour, long TourId) {

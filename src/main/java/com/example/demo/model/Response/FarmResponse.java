@@ -16,8 +16,12 @@ import java.util.Set;
 
 @Data
 public class FarmResponse {
-    private List<Farm> farms;
-    private int pageNumber;
-    private long totalElements;
-    private int totalPages;
+    private long id;
+    private String farmId;
+    private boolean isDeleted;
+    private String farmName;
+    private String location;
+    private String owner;
+    private String image;
+
 }

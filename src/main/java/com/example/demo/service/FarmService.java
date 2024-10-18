@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +41,30 @@ public class FarmService {
 
     }
 
-    public FarmResponse getAllFarm(int page, int size) {
+    public DataResponse<FarmResponse> getAllFarm(@RequestParam int page, @RequestParam int size) {
         Page farmPage = farmRepository.findAll(PageRequest.of(page, size));
         List<Farm> farms = farmPage.getContent();
+        List<FarmResponse> farmResponses = new ArrayList<>();
+        for(Farm farm: farms) {
+            FarmResponse farmResponse = new FarmResponse();
+            farmResponse.setId(farm.getId());
+            farmResponse.setFarmId(farm.getFarmId());
+            farmResponse.setDeleted(farm.isDeleted());
+            farmResponse.setFarmName(farm.getFarmName());
+            farmResponse.setLocation(farm.getLocation());
+            farmResponse.setOwner(farm.getOwner());
+            farmResponse.setImage(farm.getImage());
 
+            farmResponses.add(farmResponse);
+        }
 
-        FarmResponse farmResponse = new FarmResponse();
-        farmResponse.setFarms(farms);
-        farmResponse.setPageNumber(farmPage.getNumber());
-        farmResponse.setTotalElements(farmPage.getTotalElements());
-        farmResponse.setTotalPages(farmPage.getTotalPages());
-        return farmResponse;
+        DataResponse<FarmResponse> dataResponse = new DataResponse<FarmResponse>();
+        dataResponse.setListData(farmResponses);
+        dataResponse.setTotalElements(farmPage.getTotalElements());
+        dataResponse.setPageNumber(farmPage.getNumber());
+        dataResponse.setPageNumber(farmPage.getNumber());
+        return dataResponse;
+
     }
 
     public Farm updateFarm(FarmRequest farm, long id){

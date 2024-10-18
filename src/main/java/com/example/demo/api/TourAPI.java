@@ -4,6 +4,7 @@ import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -33,8 +34,8 @@ public class TourAPI {
 
     @GetMapping("/guest/get")
     public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        TourResponse tourResponse = tourService.getAllTour(page, size);
-        return ResponseEntity.ok(tourResponse);
+        DataResponse dataResponse = tourService.getAllTour(page, size);
+        return ResponseEntity.ok(dataResponse);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
