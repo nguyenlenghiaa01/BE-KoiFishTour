@@ -89,7 +89,7 @@ public class TourService {
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourPage.getTotalElements());
         dataResponse.setPageNumber(tourPage.getNumber());
-        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
 
