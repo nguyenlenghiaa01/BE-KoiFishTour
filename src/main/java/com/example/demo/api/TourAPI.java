@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -63,15 +64,21 @@ public class TourAPI {
         return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
     }
 
+    @PutMapping("{tourId}")
+    public ResponseEntity<?> openTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long tourId) {
+        Tour updatedTour = tourService.opentour(openTourRequest, tourId);
+        return ResponseEntity.ok(updatedTour);
+    }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("{id}")
+
+
+    @PutMapping("{id}/updateTour")
     public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTour(@PathVariable long id) {
             Tour deletedTour = tourService.deleteTour(id);

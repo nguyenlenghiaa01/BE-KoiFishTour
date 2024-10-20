@@ -27,48 +27,51 @@ public class OpenTourService {
     private TourRepository tourRepository;
 
 
-    public OpenTour createNewOpenTour(OpenTourRequest openTourRequest) {
-        Tour tour = tourRepository.findById(openTourRequest.getTourId())
-                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
-
-        OpenTour newOpenTour = modelMapper.map(openTourRequest, OpenTour.class);
-        newOpenTour.setTour(tour);
-        try {
-            return openTourRepository.save(newOpenTour);
-        } catch (Exception e) {
-            throw new DuplicateEntity("Duplicate Open Tour ID !");
-        }
-    }
+//    public OpenTour createNewOpenTour(OpenTourRequest openTourRequest) {
+//        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+//                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
+//
+//        OpenTour newOpenTour = modelMapper.map(openTourRequest, OpenTour.class);
+//        newOpenTour.setTour(tour);
+//        try {
+//            return openTourRepository.save(newOpenTour);
+//        } catch (Exception e) {
+//            throw new DuplicateEntity("Duplicate Open Tour ID !");
+//        }
+//    }
 
     public List<OpenTour> getAllOpenTour(){
         return openTourRepository.findOpenToursByIsDeletedFalse();
     }
 
-    public OpenTour updateOpenTour(OpenTourRequest openTourRequest, long id){
-        OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
-        if (oldOpenTour == null) {
-            throw new NotFoundException("Open Tour not found !");
-        }
+//    public OpenTour updateOpenTour(OpenTourRequest openTourRequest, long id){
+//        OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);
+//        if (oldOpenTour == null) {
+//            throw new NotFoundException("Open Tour not found !");
+//        }
+//
+//        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+//                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
+//
+//        modelMapper.map(openTourRequest, oldOpenTour);
+//        oldOpenTour.setTour(tour);
+//        return openTourRepository.save(oldOpenTour);
+//    }
+//    public OpenTour update(OpenTourRequest openTourRequest, long id) {
+//        OpenTour openTour = openTourRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException("OpenTour not exist!"));
+//
+//        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+//                .orElseThrow(() -> new NotFoundException("Tour not exist!"));
+//
+//        tour.setPrice(openTourRequest.getPrice());
+//        tour.setStatus(openTourRequest.getStatus());
+//
+//        tourRepository.save(tour);
+//
+//        return openTour;
+//    }
 
-        Tour tour = tourRepository.findById(openTourRequest.getTourId())
-                .orElseThrow(() -> new NotFoundException("Tour does not exist"));
-
-        modelMapper.map(openTourRequest, oldOpenTour);
-        oldOpenTour.setTour(tour);
-        return openTourRepository.save(oldOpenTour);
-    }
-    public OpenTour update(OpenTourRequest openTourRequest, long id) {
-        OpenTour openTour = openTourRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("OpenTour not exist!"));
-        Tour tour = tourRepository.findById(openTourRequest.getTourId())
-                .orElseThrow(() -> new NotFoundException("Tour not exist!"));
-        tour.setPrice(openTourRequest.getPrice());
-        tour.setStatus(openTourRequest.getStatus());
-
-        tourRepository.save(tour);
-
-        return openTour;
-    }
 
 
     public OpenTour deleteOpenTour(long id){

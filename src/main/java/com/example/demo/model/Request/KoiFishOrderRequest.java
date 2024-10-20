@@ -19,12 +19,9 @@ import java.util.Set;
 
 @Data
 public class KoiFishOrderRequest {
-    @NotNull(message = "Consulting ID cannot be null")
-    private long consulting_id;
 
-    @NotNull(message = "Koi Fish ID cannot be null")
-    private long id;
-
-    @NotNull(message = "Total cannot be null")
-    private float total;
+    private long koiFishId;
+    private double quantity;
+    private float price;
+    private long customerId;
 }

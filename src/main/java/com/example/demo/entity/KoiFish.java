@@ -23,18 +23,14 @@ public class KoiFish {
     @Column(unique = true)
     private String koiId;
 
-    @NotBlank(message = "Name can not be blank")
-    @Pattern(regexp = "^[^\\d\\s].*", message = "Name must not have numbers and the first character must not be a space!")
-    private String name;
-
     @NotBlank(message = "Description can not be blank")
     @Pattern(regexp = "^[^\\d\\s].*", message = "Description must not have numbers and the first character must not be a space!")
     private String description;
 
-    @Column(nullable = false)
     private boolean isDeleted = false;
 
     private String image;
+
     public KoiFish() {
         this.koiId = generateKoiId();
     }
@@ -58,5 +54,7 @@ public class KoiFish {
     @JoinColumn(name = "owner_id")
     private Account account;
 
-
+    @ManyToMany(mappedBy = "koiFishes")
+    @JsonIgnore
+    private List<KoiFishOrder> koiFishOrders;
 }

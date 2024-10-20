@@ -16,7 +16,5 @@ public class OpenTourRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String status;
-
-    private Long tourId;
 }
 

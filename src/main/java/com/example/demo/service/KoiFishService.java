@@ -36,17 +36,13 @@ public class KoiFishService {
         KoiFish koiFish = new KoiFish();
         koiFish.setBreed(breedRepository.findById(koiFishRequest.getBreedId())
                 .orElseThrow(() -> new NotFoundException("Breed not exist")));
-
         koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId())
                 .orElseThrow(() -> new NotFoundException("Farm not exist")));
-         koiFish.setName(koiFishRequest.getName());
-         koiFish.setImage(koiFishRequest.getImage());
-         koiFish.setDescription(koiFishRequest.getDescription());
-        try {
-            return koiRepository.save(koiFish);
-        } catch (Exception e) {
-            throw new DuplicateEntity("Duplicate Koi id !");
-        }
+        koiFish.setImage(koiFishRequest.getImage());
+        koiFish.setDescription(koiFishRequest.getDescription());
+
+        return koiRepository.save(koiFish);
+
     }
 
 
@@ -55,15 +51,16 @@ public class KoiFishService {
         List<KoiFish> koiFishes = fishPage.getContent();
         List<KoiFishResponse> koiFishResponses = new ArrayList<>();
         for(KoiFish koiFish: koiFishes) {
-            KoiFishResponse koiFishResponse = new KoiFishResponse();
-            koiFishResponse.setKoiCode(koiFish.getKoiId());
-            koiFishResponse.setFarm(koiFish.getFarm());
-            koiFishResponse.setName(koiFish.getName());
-            koiFishResponse.setDescription(koiFish.getDescription());
-            koiFishResponse.setBreed(koiFish.getBreed());
-            koiFishResponse.setImage(koiFish.getImage());
-            koiFishResponse.setId(koiFish.getId());
-            koiFishResponses.add(koiFishResponse);
+                KoiFishResponse koiFishResponse = new KoiFishResponse();
+                koiFishResponse.setKoiCode(koiFish.getKoiId());
+                koiFishResponse.setFarm(koiFish.getFarm());
+                koiFishResponse.setDescription(koiFish.getDescription());
+                koiFishResponse.setDeleted(koiFish.isDeleted());
+                koiFishResponse.setBreed(koiFish.getBreed());
+                koiFishResponse.setImage(koiFish.getImage());
+                koiFishResponse.setId(koiFish.getId());
+                koiFishResponses.add(koiFishResponse);
+
         }
 
         DataResponse<KoiFishResponse> dataResponse = new DataResponse<KoiFishResponse>();
@@ -82,7 +79,6 @@ public class KoiFishService {
         //=> co farm co ton tai
         oldKoi.setFarm(farmRepository.findById(koi.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
         oldKoi.setBreed(breedRepository.findById(koi.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
-        oldKoi.setName(koi.getName());
         oldKoi.setImage(koi.getImage());
         return koiRepository.save(oldKoi);
     }

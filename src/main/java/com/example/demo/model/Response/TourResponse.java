@@ -20,6 +20,6 @@ public class TourResponse {
     private String image;
     private String status;
     private double price;
-    private LocalDate time;
+    private String time;
     private Set<Farm> farms;
 }

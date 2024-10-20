@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
@@ -52,6 +53,7 @@ public class TourService {
         newTour.setDuration(tourRequest.getDuration());
         newTour.setPrice(tourRequest.getPrice());
         newTour.setStatus("Not open");
+        newTour.setTime(tourRequest.getTime());
         newTour.setImage(tourRequest.getImage());
 
         Set<Farm> farms = new HashSet<>();
@@ -79,7 +81,6 @@ public class TourService {
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
-            if ("open".equals(tour.getStatus())) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -92,7 +93,7 @@ public class TourService {
                 tourResponse.setFarms(tour.getFarms());
 
                 tourResponses.add(tourResponse);
-            }
+
         }
 
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
@@ -122,15 +123,34 @@ public class TourService {
                 farmSet.add(farm.trim());
             }
         }
-        Specification<Tour> specification = Specification.where(
-                TourSpecification.hasStartDate(startDate)
-                        .and(TourSpecification.hasDuration(duration))
-                        .and(TourSpecification.hasFarms(farmSet))
-                        .and(TourSpecification.hasStatus("open"))
-        );
+        Specification<Tour> specification = Specification.where(null);
 
-        Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
+        boolean hasCriteria = false;
+
+        if (startDate != null) {
+            specification = specification.or(TourSpecification.hasStartDate(startDate));
+            hasCriteria = true;
+        }
+        if (duration != null && !duration.isEmpty()) {
+            specification = specification.or(TourSpecification.hasDuration(duration));
+            hasCriteria = true;
+        }
+        if (!farmSet.isEmpty()) {
+            specification = specification.or(TourSpecification.hasFarms(farmSet));
+            hasCriteria = true;
+        }
+        specification = specification.and(TourSpecification.hasStatus("open"));
+
+        Page<Tour> tourPage;
+        if (hasCriteria) {
+            // Nếu có thông tin tìm kiếm, chỉ tìm các tour theo điều kiện
+            tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
+        } else {
+            tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        }
+
         List<TourResponse> tourResponses = new ArrayList<>();
+
         for (Tour tour : tourPage.getContent()) {
             TourResponse tourResponse = new TourResponse();
             tourResponse.setId(tour.getId());
@@ -142,9 +162,11 @@ public class TourService {
             tourResponse.setImage(tour.getImage());
             tourResponse.setStatus(tour.getStatus());
             tourResponse.setFarms(tour.getFarms());
+            tourResponse.setPrice(tour.getPrice());
 
             tourResponses.add(tourResponse);
         }
+
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourPage.getTotalElements());
@@ -152,6 +174,7 @@ public class TourService {
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
+
     public DataResponse<TourResponse> getAllTourPrice(
             @RequestParam int page,
             @RequestParam int size,
@@ -159,6 +182,7 @@ public class TourService {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String time) {
 
+        // Lấy trang các tour
         Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
@@ -166,27 +190,16 @@ public class TourService {
         for (Tour tour : tours) {
             boolean matchesCriteria = true;
 
-            if (minPrice != null && tour.getPrice() < minPrice) {
+            if (minPrice != null && tour.getPrice() > minPrice) {
                 matchesCriteria = false;
             }
-
-            if (maxPrice != null && tour.getPrice() > maxPrice) {
+            if (maxPrice != null && tour.getPrice() < maxPrice) {
                 matchesCriteria = false;
             }
-
-            if (time != null && !time.isEmpty()) {
-                try {
-                    LocalTime localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("h:mm a"));
-                    if (!isTimeInRange(localTime)) {
-                        matchesCriteria = false;
-                    }
-                } catch (DateTimeParseException e) {
-                    matchesCriteria = false;
-                }
+            if (!"open".equals(tour.getStatus())) {
+                matchesCriteria = false;
             }
-
-            // Nếu tour thỏa mãn tất cả các điều kiện, thêm vào danh sách kết quả
-            if (matchesCriteria && "open".equals(tour.getStatus())) {
+            if (matchesCriteria) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -204,13 +217,19 @@ public class TourService {
             }
         }
 
+        int totalFilteredElements = tourResponses.size();
+        int totalPages = (int) Math.ceil((double) totalFilteredElements / size);
+
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourPage.getTotalElements());
-        dataResponse.setPageNumber(tourPage.getNumber());
-        dataResponse.setTotalPages(tourPage.getTotalPages());
+        dataResponse.setTotalElements(totalFilteredElements);
+        dataResponse.setPageNumber(page);
+        dataResponse.setTotalPages(totalPages);
         return dataResponse;
     }
+
+
+
     private boolean isTimeInRange(LocalTime time) {
         LocalTime morningStart = LocalTime.of(6, 0); // 6:00 AM
         LocalTime morningEnd = LocalTime.of(12, 0); // 12:00 PM
@@ -241,6 +260,17 @@ public class TourService {
         oldTour.setImage(tour.getImage());
         return tourRepository.save(oldTour);
     }
+
+    public Tour opentour(OpenTourRequest openTourRequest, long tourId) {
+        Tour oldTour = tourRepository.findTourById(tourId);
+        if (oldTour == null) {
+            throw new NotFoundException("Tour not found !");
+        }
+        oldTour.setStatus(openTourRequest.getStatus());
+        oldTour.setPrice(openTourRequest.getPrice());
+        return tourRepository.save(oldTour);
+    }
+
 
     public Tour deleteTour(long TourId) {
         Tour oldTour = tourRepository.findTourById(TourId);

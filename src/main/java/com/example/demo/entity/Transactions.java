@@ -32,9 +32,5 @@ public class Transactions {
     @JoinColumn(name="payment_id")
     Payment payment;
 
-
-
-
-
 }
 

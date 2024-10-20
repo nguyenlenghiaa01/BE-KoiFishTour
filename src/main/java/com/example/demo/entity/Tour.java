@@ -47,7 +47,7 @@ public class Tour {
     private double price;
 
 
-    private LocalDate time;
+    private String time;
 
     private String generateTourId() {
         Random random = new Random();

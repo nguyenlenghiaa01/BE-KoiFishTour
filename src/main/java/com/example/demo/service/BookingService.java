@@ -70,9 +70,9 @@ public class BookingService {
         booking.setOpenTour(openTour);
         booking.setAccount(currentAccount);
         //set sale id
-        Account saleAccount = accountRepository.findById(bookingRequest.getSaleId())
-                .orElseThrow(() -> new NotFoundException("Sale account not found"));
-        booking.setSale(saleAccount);
+        Account consultingAccount = accountRepository.findById(bookingRequest.getConsultingId())
+                .orElseThrow(() -> new NotFoundException("Consulting account not found"));
+        booking.setConsulting(consultingAccount);
         try {
             return bookingRepository.save(booking);
         } catch (Exception e) {

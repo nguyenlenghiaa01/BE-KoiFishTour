@@ -35,22 +35,44 @@ public class KoiFishOrderService {
     TransactionsRepository transactionsRepository;
 
     @Autowired
+    KoiRepository getKoiRepository;
+
+    @Autowired
     private AuthenticationService authenticationService;
     private final ModelMapper modelMapper = new ModelMapper();
 
     public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
-        KoiFishOrder orders = modelMapper.map(koiFishOrderRequest, KoiFishOrder.class);
+        KoiFishOrder newOrder = new KoiFishOrder();
         Account currentAccount = authenticationService.getCurrentAccount();
         if (currentAccount == null) {
             throw new RuntimeException("Customer account not found.");
         }
-        orders.setCustomer(currentAccount);
-        orders.setCreateAt(new Date());
-        orders.setId(koiFishOrderRequest.getId());
-        KoiFish koi = koiRepository.findKoiById(koiFishOrderRequest.getId());
-        orders.setTotal(orders.getTotal());
-        return koiFishOrderRepository.save(orders);
+        Account account = modelMapper.map(koiFishOrderRequest, Account.class);
+
+        newOrder.setConsulting(currentAccount);
+        newOrder.setCreateAt(new Date());
+
+        // Set the customer ID from the request
+        Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Not found account"));
+        newOrder.setCustomer(customer);
+
+        // Retrieve KoiFish by ID
+        KoiFish koiFish = getKoiRepository.findById(koiFishOrderRequest.getKoiFishId())
+                .orElseThrow(() -> new RuntimeException("KoiFish not found."));
+
+        double quantity = koiFishOrderRequest.getQuantity();
+        double price = koiFishOrderRequest.getPrice();
+        double totalAmount = price * quantity;
+
+        newOrder.setKoiFishes(List.of(koiFish));
+        newOrder.setTotal(totalAmount);
+
+        return koiFishOrderRepository.save(newOrder);
     }
+
+
+
 
     public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
         return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
@@ -91,19 +113,27 @@ public class KoiFishOrderService {
         return  orderResponse;
     }
 
-    public KoiFishOrder updateOrder(KoiFishOrderRequest shoppingCartRequest, long id) {
+    public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Order not found!"));
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng!"));
+        Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản khách hàng."));
+        oldKoiFishOrder.setCustomer(customer);
+        KoiFish koiFish = getKoiRepository.findById(koiFishOrderRequest.getKoiFishId())
+                .orElseThrow(() -> new RuntimeException("KoiFish không được tìm thấy."));
 
-        KoiFish koi = koiRepository.findKoiById(shoppingCartRequest.getId());
+        double quantity = koiFishOrderRequest.getQuantity();
+        float price = koiFishOrderRequest.getPrice();
 
-        // Update
-        oldKoiFishOrder.setId(shoppingCartRequest.getId());
-        oldKoiFishOrder.setTotal(shoppingCartRequest.getTotal());
+        if (quantity <= 0 || price < 0) {
+            throw new RuntimeException("Số lượng phải lớn hơn 0 và giá không được âm.");
+        }
 
+        oldKoiFishOrder.setKoiFishes(List.of(koiFish));
+        double totalAmount = price * quantity;
+        oldKoiFishOrder.setTotal(totalAmount);
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }
-
 
     public KoiFishOrder deleteOrderCart(long id) {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
@@ -112,7 +142,6 @@ public class KoiFishOrderService {
         oldKoiFishOrder.setDeleted(true);
         return koiFishOrderRepository.save(oldKoiFishOrder);
     }
-
 
 }
 

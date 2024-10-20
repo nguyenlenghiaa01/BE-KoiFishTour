@@ -33,6 +33,6 @@ public class BookingRequest {
     private long openTourId;
 
     @NotNull(message = "Sale ID cannot be null")
-    private long saleId;
+    private long consultingId;
 }
 

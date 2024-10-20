@@ -33,8 +33,11 @@ public class KoiFishOrder {
     Date createAt;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private float total;
+    private float price;
 
+    private double quantity;
+
+    private double total;
 
     public KoiFishOrder() {
         this.koiFishOrderId = generateOrderId();
@@ -59,10 +62,12 @@ public class KoiFishOrder {
     @OneToMany(mappedBy = "koiFishOrder", cascade = CascadeType.ALL)
     private List<ShoppingCart> shoppingCart;
 
-
-
-
-
-
+    @ManyToMany
+    @JoinTable(
+            name = "order_koi_fish",
+            joinColumns = @JoinColumn(name = "koi_fish_order_id"),
+            inverseJoinColumns = @JoinColumn(name = "koi_fish_id")
+    )
+    private List<KoiFish> koiFishes;
 
 }

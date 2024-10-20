@@ -23,12 +23,12 @@ public class OpenTourAPI {
     @Autowired
     private OpenTourService openTourService;
 
-    @PreAuthorize("hasAuthority('MANAGER')")
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody OpenTourRequest openTourRequest) {
-            OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
-            return ResponseEntity.ok(newOpenTour);
-    }
+//    @PreAuthorize("hasAuthority('MANAGER')")
+//    @PostMapping
+//    public ResponseEntity<?> create(@Valid @RequestBody OpenTourRequest openTourRequest) {
+//            OpenTour newOpenTour = openTourService.createNewOpenTour(openTourRequest);
+//            return ResponseEntity.ok(newOpenTour);
+//    }
 
     // Get danh sách tour mở
     @GetMapping
@@ -37,13 +37,13 @@ public class OpenTourAPI {
         return ResponseEntity.ok(openTours);
     }
 
-    // Cập nhật tour mở
-    @PreAuthorize("hasAuthority('MANAGER')")
-    @PutMapping("{id}")
-    public ResponseEntity<?> updateOpenTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long id) {
-            OpenTour updatedOpenTour = openTourService.updateOpenTour(openTourRequest, id);
-            return ResponseEntity.ok(updatedOpenTour);
-    }
+//    // Cập nhật tour mở
+//    @PreAuthorize("hasAuthority('MANAGER')")
+//    @PutMapping("/open/{tourId}")
+//    public ResponseEntity<?> updateOpenTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long id) {
+//            OpenTour updatedOpenTour = openTourService.updateOpenTour(openTourRequest, id);
+//            return ResponseEntity.ok(updatedOpenTour);
+//    }
 
     // Xóa tour mở
     @PreAuthorize("hasAuthority('MANAGER')")
