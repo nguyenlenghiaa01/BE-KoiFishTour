@@ -62,7 +62,7 @@ public class FarmService {
         dataResponse.setListData(farmResponses);
         dataResponse.setTotalElements(farmPage.getTotalElements());
         dataResponse.setPageNumber(farmPage.getNumber());
-        dataResponse.setPageNumber(farmPage.getNumber());
+        dataResponse.setTotalPages(farmPage.getTotalPages());
         return dataResponse;
 
     }

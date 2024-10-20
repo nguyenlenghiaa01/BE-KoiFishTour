@@ -70,7 +70,7 @@ public class KoiFishService {
         dataResponse.setListData(koiFishResponses);
         dataResponse.setTotalElements(fishPage.getTotalElements());
         dataResponse.setPageNumber(fishPage.getNumber());
-        dataResponse.setPageNumber(fishPage.getNumber());
+        dataResponse.setTotalPages(fishPage.getTotalPages());
         return dataResponse;
     }
     public KoiFish updateKoiFish(KoiFishRequest koi, long id){
