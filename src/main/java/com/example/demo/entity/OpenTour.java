@@ -40,9 +40,6 @@ public class OpenTour {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @Min(value = 0, message = "Total price must be positive!")
-    @Column(nullable = false)
-    private BigDecimal totalPrice;
 
     @NotBlank(message = "Status cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot contain numbers!")

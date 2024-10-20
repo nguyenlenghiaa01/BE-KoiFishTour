@@ -33,22 +33,16 @@ public class KoiFishService {
     FarmRepository farmRepository;
 
     public KoiFish createNewKoi(KoiFishRequest koiFishRequest) {
-        // Tạo đối tượng KoiFish mới
         KoiFish koiFish = new KoiFish();
-
-        // Thiết lập thuộc tính breed và farm
         koiFish.setBreed(breedRepository.findById(koiFishRequest.getBreedId())
                 .orElseThrow(() -> new NotFoundException("Breed not exist")));
 
         koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId())
                 .orElseThrow(() -> new NotFoundException("Farm not exist")));
-
          koiFish.setName(koiFishRequest.getName());
          koiFish.setImage(koiFishRequest.getImage());
          koiFish.setDescription(koiFishRequest.getDescription());
-
         try {
-            // Lưu và trả về KoiFish mới
             return koiRepository.save(koiFish);
         } catch (Exception e) {
             throw new DuplicateEntity("Duplicate Koi id !");

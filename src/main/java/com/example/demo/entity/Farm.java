@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -51,9 +52,10 @@ public class Farm {
         this.farmId = generateFarmId();
     }
 
+
     @ManyToMany(mappedBy = "farms")
     @JsonIgnore
-    Set<Tour> tours;
+    private Set<Tour> tours = new HashSet<>();
 
     @OneToMany(mappedBy = "farm")
     @JsonIgnore

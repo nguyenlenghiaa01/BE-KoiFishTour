@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Farm;
-import com.example.demo.entity.Tour;
+import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
@@ -9,6 +8,7 @@ import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.repository.FarmRepository;
+import com.example.demo.repository.SearchHistoryRepository;
 import com.example.demo.repository.TourRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
@@ -16,9 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +33,6 @@ import java.util.Set;
 
 @Service
 public class TourService {
-    // xu ly nhung logic lien qua
     private ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
@@ -34,21 +40,25 @@ public class TourService {
 
     @Autowired
     FarmRepository farmRepository;
+    @Autowired
+    AuthenticationService authenticationService;
+    @Autowired
+    SearchHistoryRepository searchHistoryRepository;
 
     public Tour createNewTour(TourRequest tourRequest) {
-        // Tạo đối tượng Tour mới
         Tour newTour = new Tour();
         newTour.setTourName(tourRequest.getTourName());
         newTour.setStartDate(tourRequest.getStartDate());
         newTour.setDuration(tourRequest.getDuration());
+        newTour.setPrice(tourRequest.getPrice());
+        newTour.setStatus("Not open");
         newTour.setImage(tourRequest.getImage());
 
         Set<Farm> farms = new HashSet<>();
 
-        // Lấy danh sách farm
         for (Long farmId : tourRequest.getFarmId()) {
             Farm farm = farmRepository.findById(farmId)
-                    .orElseThrow(() -> new NotFoundException("Farm không tồn tại với ID: " + farmId));
+                    .orElseThrow(() -> new NotFoundException("Farm not exist ID: " + farmId));
             farms.add(farm);
         }
         newTour.setFarms(farms);
@@ -56,10 +66,9 @@ public class TourService {
         try {
             return tourRepository.save(newTour);
         } catch (ConstraintViolationException e) {
-            // Xử lý lỗi vi phạm ràng buộc
-            throw new IllegalArgumentException("Dữ liệu không hợp lệ: " + e.getMessage());
+            throw new IllegalArgumentException("Duplicate: " + e.getMessage());
         } catch (Exception e) {
-            throw new DuplicateEntity("Tour đã tồn tại với ID: " + newTour.getId());
+            throw new DuplicateEntity("Tour exist ID: " + newTour.getId());
         }
     }
 
@@ -69,20 +78,21 @@ public class TourService {
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
-        for(Tour tour: tours) {
-            TourResponse tourResponse = new TourResponse();
-            tourResponse.setId(tour.getId());
-            tourResponse.setTourId(tour.getTourId());
-            tourResponse.setDeleted(tour.isDeleted());
-            tourResponse.setTourName(tour.getTourName());
-            tourResponse.setStartDate(tour.getStartDate());
-            tourResponse.setDuration(tour.getDuration());
-            tourResponse.setImage(tour.getImage());
-            tourResponse.setStatus(tour.getStatus());
+        for (Tour tour : tours) {
+            if ("open".equals(tour.getStatus())) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setDeleted(tour.isDeleted());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setFarms(tour.getFarms());
 
-            tourResponse.setFarms(tour.getFarms());
-
-            tourResponses.add(tourResponse);
+                tourResponses.add(tourResponse);
+            }
         }
 
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
@@ -93,15 +103,133 @@ public class TourService {
         return dataResponse;
     }
 
+
+    public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
+        Account currentAccount = authenticationService.getCurrentAccount();
+
+        HistoryTourSearch searchHistory = new HistoryTourSearch();
+        searchHistory.setStartDate(startDate);
+        searchHistory.setDuration(duration);
+        searchHistory.setFarm(farms);
+        searchHistory.setSearchTime(LocalDateTime.now());
+        searchHistory.setAccount(currentAccount);
+        searchHistoryRepository.save(searchHistory);
+
+        Set<String> farmSet = new HashSet<>();
+        if (farms != null && !farms.isEmpty()) {
+            String[] farmArray = farms.split(",");
+            for (String farm : farmArray) {
+                farmSet.add(farm.trim());
+            }
+        }
+        Specification<Tour> specification = Specification.where(
+                TourSpecification.hasStartDate(startDate)
+                        .and(TourSpecification.hasDuration(duration))
+                        .and(TourSpecification.hasFarms(farmSet))
+                        .and(TourSpecification.hasStatus("open"))
+        );
+
+        Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
+        List<TourResponse> tourResponses = new ArrayList<>();
+        for (Tour tour : tourPage.getContent()) {
+            TourResponse tourResponse = new TourResponse();
+            tourResponse.setId(tour.getId());
+            tourResponse.setTourId(tour.getTourId());
+            tourResponse.setDeleted(tour.isDeleted());
+            tourResponse.setTourName(tour.getTourName());
+            tourResponse.setStartDate(tour.getStartDate());
+            tourResponse.setDuration(tour.getDuration());
+            tourResponse.setImage(tour.getImage());
+            tourResponse.setStatus(tour.getStatus());
+            tourResponse.setFarms(tour.getFarms());
+
+            tourResponses.add(tourResponse);
+        }
+        DataResponse<TourResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
+        return dataResponse;
+    }
+    public DataResponse<TourResponse> getAllTourPrice(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String time) {
+
+        Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        List<Tour> tours = tourPage.getContent();
+        List<TourResponse> tourResponses = new ArrayList<>();
+
+        for (Tour tour : tours) {
+            boolean matchesCriteria = true;
+
+            if (minPrice != null && tour.getPrice() < minPrice) {
+                matchesCriteria = false;
+            }
+
+            if (maxPrice != null && tour.getPrice() > maxPrice) {
+                matchesCriteria = false;
+            }
+
+            if (time != null && !time.isEmpty()) {
+                try {
+                    LocalTime localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("h:mm a"));
+                    if (!isTimeInRange(localTime)) {
+                        matchesCriteria = false;
+                    }
+                } catch (DateTimeParseException e) {
+                    matchesCriteria = false;
+                }
+            }
+
+            // Nếu tour thỏa mãn tất cả các điều kiện, thêm vào danh sách kết quả
+            if (matchesCriteria && "open".equals(tour.getStatus())) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setDeleted(tour.isDeleted());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setFarms(tour.getFarms());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setTime(tour.getTime());
+
+                tourResponses.add(tourResponse);
+            }
+        }
+
+        DataResponse<TourResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
+        return dataResponse;
+    }
+    private boolean isTimeInRange(LocalTime time) {
+        LocalTime morningStart = LocalTime.of(6, 0); // 6:00 AM
+        LocalTime morningEnd = LocalTime.of(12, 0); // 12:00 PM
+        LocalTime afternoonStart = LocalTime.of(15, 0); // 3:00 PM
+        LocalTime afternoonEnd = LocalTime.of(22, 0); // 10:00 PM
+
+        return (time.isAfter(morningStart) && time.isBefore(morningEnd)) ||
+                (time.isAfter(afternoonStart) && time.isBefore(afternoonEnd));
+    }
+
+
+
+
     public Tour updateTour(TourRequest tour, long TourId) {
-        // buoc 1: tim toi thang Tour co id nhu la FE cung cap
         Tour oldTour = tourRepository.findTourById(TourId);
         if (oldTour == null) {
-            throw new NotFoundException("Tour not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Tour not found !");
         }
-        //=> co tour co ton tai;
         Set<Farm> farms = new HashSet<>();
-
         for (Long farmId : tour.getFarmId()) {
             Farm farm = farmRepository.findById(farmId).orElseThrow(() -> new NotFoundException("Farm not exist"));
             farms.add(farm);

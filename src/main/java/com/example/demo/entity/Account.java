@@ -141,6 +141,8 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy ="receiver" )
     Set<Transactions> transactionsTo;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<HistoryTourSearch> searchHistories;
 
 }
 

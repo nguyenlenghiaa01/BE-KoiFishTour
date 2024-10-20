@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class Tour {
     private String tourName;
 
     @NotNull(message = "Start date cannot be null")
-    private LocalDate startDate; // Sử dụng LocalDate thay vì Date
+    private LocalDate startDate;
 
     @NotBlank(message = "Duration can not be blank")
     @Pattern(regexp = "^[2-5] days$", message = "Enter the correct format!")
@@ -42,6 +43,11 @@ public class Tour {
     private String image;
 
     private String status;
+
+    private double price;
+
+
+    private LocalDate time;
 
     private String generateTourId() {
         Random random = new Random();
@@ -63,5 +69,5 @@ public class Tour {
             joinColumns = @JoinColumn(name = "tour_id"),
             inverseJoinColumns = @JoinColumn(name = "farm_id")
     )
-    private Set<Farm> farms;
+    private Set<Farm> farms = new HashSet<>();
 }

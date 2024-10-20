@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.OpenTour;
+import com.example.demo.entity.Quotation;
 import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
+import com.example.demo.model.Request.QuotationRequest;
 import com.example.demo.repository.OpenTourRepository;
 import com.example.demo.repository.TourRepository;
 import org.modelmapper.ModelMapper;
@@ -23,14 +26,13 @@ public class OpenTourService {
     @Autowired
     private TourRepository tourRepository;
 
+
     public OpenTour createNewOpenTour(OpenTourRequest openTourRequest) {
-        // Lấy Tour từ repository
         Tour tour = tourRepository.findById(openTourRequest.getTourId())
                 .orElseThrow(() -> new NotFoundException("Tour does not exist"));
 
         OpenTour newOpenTour = modelMapper.map(openTourRequest, OpenTour.class);
-        newOpenTour.setTour(tour); // Thiết lập Tour cho OpenTour
-
+        newOpenTour.setTour(tour);
         try {
             return openTourRepository.save(newOpenTour);
         } catch (Exception e) {
@@ -39,7 +41,6 @@ public class OpenTourService {
     }
 
     public List<OpenTour> getAllOpenTour(){
-        // Lấy tất cả Open Tours không bị xóa
         return openTourRepository.findOpenToursByIsDeletedFalse();
     }
 
@@ -53,10 +54,22 @@ public class OpenTourService {
                 .orElseThrow(() -> new NotFoundException("Tour does not exist"));
 
         modelMapper.map(openTourRequest, oldOpenTour);
-        oldOpenTour.setTour(tour); // Cập nhật Tour cho OpenTour
-
+        oldOpenTour.setTour(tour);
         return openTourRepository.save(oldOpenTour);
     }
+    public OpenTour update(OpenTourRequest openTourRequest, long id) {
+        OpenTour openTour = openTourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("OpenTour not exist!"));
+        Tour tour = tourRepository.findById(openTourRequest.getTourId())
+                .orElseThrow(() -> new NotFoundException("Tour not exist!"));
+        tour.setPrice(openTourRequest.getPrice());
+        tour.setStatus(openTourRequest.getStatus());
+
+        tourRepository.save(tour);
+
+        return openTour;
+    }
+
 
     public OpenTour deleteOpenTour(long id){
         OpenTour oldOpenTour = openTourRepository.findOpenTourById(id);

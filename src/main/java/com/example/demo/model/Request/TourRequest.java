@@ -28,6 +28,11 @@ public class TourRequest {
     private String duration; // Chuyển sang String để dễ dàng kiểm tra định dạng
 
     private String image;
+    private double price;
+
+    @NotBlank(message = "Time cannot be blank")
+    @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "Invalid time format! Must be in HH:mm format.")
+    private String time;
 
     Set<Long> farmId;
 }

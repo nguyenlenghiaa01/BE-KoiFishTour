@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,6 +39,30 @@ public class TourAPI {
         DataResponse dataResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(dataResponse);
     }
+
+
+    @GetMapping("/search/first")
+    public DataResponse<TourResponse> searchTours(
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) String duration,
+            @RequestParam(required = false) String farm,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        return tourService.searchTours(startDate, duration, farm, page, size);
+    }
+
+    @GetMapping("/search/second")
+    public DataResponse<TourResponse> getAllTourPrice(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String time) {
+
+        return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
+    }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
