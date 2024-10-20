@@ -47,7 +47,7 @@ public class KoiFishService {
 
 
     public DataResponse<KoiFishResponse> getAllKoi(@RequestParam int page, @RequestParam int size){
-        Page fishPage = koiRepository.findAll(PageRequest.of(page, size));
+        Page fishPage = koiRepository.findByIsDeletedFalse(PageRequest.of(page, size));
         List<KoiFish> koiFishes = fishPage.getContent();
         List<KoiFishResponse> koiFishResponses = new ArrayList<>();
         for(KoiFish koiFish: koiFishes) {

@@ -51,7 +51,7 @@ public class KoiFish {
     Farm farm;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @ManyToMany(mappedBy = "koiFishes")
