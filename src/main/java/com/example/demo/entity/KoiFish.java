@@ -50,10 +50,6 @@ public class KoiFish {
     @JoinColumn(name = "farm_id")
     Farm farm;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
     @ManyToMany(mappedBy = "koiFishes")
     @JsonIgnore
     private List<KoiFishOrder> koiFishOrders;

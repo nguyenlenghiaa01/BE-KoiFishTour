@@ -124,10 +124,6 @@ public class Account implements UserDetails {
     @JsonIgnore
     private List<OpenTour>openTours;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore
-    private Set<KoiFish> koiFish;
-
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private Set<KoiFishOrder> customerOrders;
