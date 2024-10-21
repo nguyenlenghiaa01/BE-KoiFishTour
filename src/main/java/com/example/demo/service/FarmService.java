@@ -71,9 +71,8 @@ public class FarmService {
 
         Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){
-            throw new NotFoundException("Farm not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Farm not found !");
         }
-        //=> co farm co ton tai;
         oldFarm.setOwner(farm.getOwner());
         oldFarm.setFarmName(farm.getFarmName());
         oldFarm.setLocation(farm.getLocation());
@@ -84,7 +83,7 @@ public class FarmService {
     public Farm deleteFarm(long id){
         Farm oldFarm = farmRepository.findFarmById(id);
         if(oldFarm ==null){
-            throw new NotFoundException("Farm not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Farm not found !");
         }
         oldFarm.setDeleted(true);
         return farmRepository.save(oldFarm);

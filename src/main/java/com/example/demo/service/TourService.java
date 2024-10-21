@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TourService {
@@ -123,31 +125,42 @@ public class TourService {
         }
         Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open"));
         if (startDate != null) {
-            specification = specification.or(TourSpecification.hasStartDate(startDate));
+            specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
         if (duration != null && !duration.isEmpty()) {
-            specification = specification.or(TourSpecification.hasDuration(duration));
+            // Tách số lượng ngày ra khỏi chuỗi duration, ví dụ: "3 days"
+            Pattern pattern = Pattern.compile("(\\d+)\\s*days");
+            Matcher matcher = pattern.matcher(duration.trim());
+
+            if (matcher.matches()) {
+                int inputDays = Integer.parseInt(matcher.group(1)); // Số lượng ngày bạn nhập vào
+                specification = specification.and(TourSpecification.hasDurationDays(inputDays));
+            } else {
+                return null;
+            }
         }
         if (!farmSet.isEmpty()) {
-            specification = specification.or(TourSpecification.hasFarms(farmSet));
+            specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
             if(tour.getStatus().equals("open")) {
-                TourResponse tourResponse = new TourResponse();
-                tourResponse.setId(tour.getId());
-                tourResponse.setTourId(tour.getTourId());
-                tourResponse.setDeleted(tour.isDeleted());
-                tourResponse.setTourName(tour.getTourName());
-                tourResponse.setStartDate(tour.getStartDate());
-                tourResponse.setDuration(tour.getDuration());
-                tourResponse.setImage(tour.getImage());
-                tourResponse.setStatus(tour.getStatus());
-                tourResponse.setPrice(tour.getPrice());
-                tourResponse.setTime(tour.getTime());
-                tourResponse.setFarms(tour.getFarms());
-                tourResponses.add(tourResponse);
+//                if(tour.getDuration().) {
+                    TourResponse tourResponse = new TourResponse();
+                    tourResponse.setId(tour.getId());
+                    tourResponse.setTourId(tour.getTourId());
+                    tourResponse.setDeleted(tour.isDeleted());
+                    tourResponse.setTourName(tour.getTourName());
+                    tourResponse.setStartDate(tour.getStartDate());
+                    tourResponse.setDuration(tour.getDuration());
+                    tourResponse.setImage(tour.getImage());
+                    tourResponse.setStatus(tour.getStatus());
+                    tourResponse.setPrice(tour.getPrice());
+                    tourResponse.setTime(tour.getTime());
+                    tourResponse.setFarms(tour.getFarms());
+                    tourResponses.add(tourResponse);
+//                }
             }
         }
         DataResponse<TourResponse> dataResponse = new DataResponse<>();

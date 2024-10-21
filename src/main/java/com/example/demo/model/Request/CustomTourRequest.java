@@ -1,19 +1,14 @@
-package com.example.demo.entity;
+package com.example.demo.model.Request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-@Entity
-public class CustomerTour {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+public class CustomTourRequest {
     @NotNull(message = "Start date cannot be null")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
@@ -34,8 +29,4 @@ public class CustomerTour {
     @NotNull(message = "Price cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double budget;
-
-    @ManyToOne
-    @JoinColumn(name = "sale_id")
-    private Account account;
 }

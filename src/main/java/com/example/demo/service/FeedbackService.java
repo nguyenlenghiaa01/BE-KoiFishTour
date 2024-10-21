@@ -32,7 +32,6 @@ public class FeedbackService {
     BookingRepository bookingRepository;
 
     public Feedback createNewFeedback(FeedbackRequest feedbackRequest) {
-        // create feedback
         Feedback feedback = new Feedback();
         Booking booking = bookingRepository.findById(feedbackRequest.getBookingId())
                 .orElseThrow(() -> new NotFoundException("Booking Id not exist!"));
@@ -49,7 +48,6 @@ public class FeedbackService {
     }
 
     public List<Feedback> getAllFeedback(){
-        // lay tat ca feedback trong DB
         List<Feedback> feedbacks = feedbackRepository.findFeedbacksByIsDeletedFalse();
         return feedbacks;
     }
@@ -57,9 +55,8 @@ public class FeedbackService {
 
         Feedback oldFeedback = feedbackRepository.findFeedbackById(id);
         if(oldFeedback ==null){
-            throw new NotFoundException("FeedBack not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("FeedBack not found !");
         }
-        //=> co feedback co ton tai;
         oldFeedback.setRating(feedback.getRating());
         oldFeedback.setComment(feedback.getComment());
         return feedbackRepository.save(oldFeedback);
@@ -67,7 +64,7 @@ public class FeedbackService {
     public Feedback deleteFeedback(long id){
         Feedback oldFeedback = feedbackRepository.findFeedbackById(id);
         if(oldFeedback ==null){
-            throw new NotFoundException("FeedBack not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("FeedBack not found !");
         }
         oldFeedback.setDeleted(true);
         return feedbackRepository.save(oldFeedback);
