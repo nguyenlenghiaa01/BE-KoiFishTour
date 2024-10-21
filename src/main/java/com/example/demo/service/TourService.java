@@ -142,6 +142,9 @@ public class TourService {
         if (!farmSet.isEmpty()) {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
+        if(farmSet.isEmpty() && duration.isEmpty() && startDate == null){
+            return null;
+        }
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
