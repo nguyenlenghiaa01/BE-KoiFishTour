@@ -128,28 +128,26 @@ public class TourService {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
         if (duration != null && !duration.isEmpty()) {
-            // Tách số lượng ngày ra khỏi chuỗi duration, ví dụ: "3 days"
             Pattern pattern = Pattern.compile("(\\d+)\\s*days");
             Matcher matcher = pattern.matcher(duration.trim());
 
             if (matcher.matches()) {
-                int inputDays = Integer.parseInt(matcher.group(1)); // Số lượng ngày bạn nhập vào
+                int inputDays = Integer.parseInt(matcher.group(1));
                 specification = specification.and(TourSpecification.hasDurationDays(inputDays));
             } else {
-                return null;
+                return new DataResponse<>();
             }
         }
         if (!farmSet.isEmpty()) {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
-        if(farmSet.isEmpty() && duration.isEmpty() && startDate == null){
-            return null;
+        if(farmSet.isEmpty() || duration.isEmpty() || startDate == null){
+            return new DataResponse<>();
         }
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
             if(tour.getStatus().equals("open")) {
-//                if(tour.getDuration().) {
                     TourResponse tourResponse = new TourResponse();
                     tourResponse.setId(tour.getId());
                     tourResponse.setTourId(tour.getTourId());
@@ -163,7 +161,6 @@ public class TourService {
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setFarms(tour.getFarms());
                     tourResponses.add(tourResponse);
-//                }
             }
         }
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
