@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Breed;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.BreedRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BreedService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -31,9 +32,9 @@ public class BreedAPI {
 
     // Lấy danh sách breed
     @GetMapping("/guest/get")
-    public ResponseEntity<List<Breed>> get() {
-        List<Breed> breeds = breedService.getAllBreed();
-        return ResponseEntity.ok(breeds);
+    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
+        DataResponse dataResponse = breedService.getAllBreed(page, size);
+        return ResponseEntity.ok(dataResponse);
     }
 
     // Cập nhật breed
