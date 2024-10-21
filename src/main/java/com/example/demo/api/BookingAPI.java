@@ -8,9 +8,7 @@ import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +22,13 @@ public class BookingAPI {
     BookingService bookingService;
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody BookingRequest bookingRequest) {
-        Booking newBooking = bookingService.createNewBooking(bookingRequest);
-        return ResponseEntity.ok(newBooking);
+        String vnPayUrl = null;
+        try {
+            vnPayUrl = bookingService.createUrl(bookingRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResponseEntity.ok(vnPayUrl);
     }
 //    @PostMapping("/total")
 //    public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {

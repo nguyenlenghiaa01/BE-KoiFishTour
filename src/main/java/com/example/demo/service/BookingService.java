@@ -55,8 +55,6 @@ public class BookingService {
     public Booking createNewBooking(BookingRequest bookingRequest) {
         //  create booking
         Booking booking = new Booking();
-        OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId())
-                .orElseThrow(() -> new NotFoundException("Open-Tour not exist"));
         Account account = modelMapper.map(bookingRequest, Account.class);
         Account currentAccount = authenticationService.getCurrentAccount();
         if (currentAccount == null) {
@@ -66,8 +64,7 @@ public class BookingService {
         booking.setStatus(bookingRequest.getStatus());
         booking.setEndDate(bookingRequest.getEndDate());
         booking.setStartDate(bookingRequest.getStartDate());
-        booking.setPrice(booking.getPrice());
-        booking.setOpenTour(openTour);
+        booking.setPrice(bookingRequest.getPrice());
         booking.setAccount(currentAccount);
         //set sale id
         Account consultingAccount = accountRepository.findById(bookingRequest.getConsultingId())
@@ -127,13 +124,10 @@ public class BookingService {
         if (oldBooking == null) {
             throw new NotFoundException("Booking not found !");//dung viec xu ly ngay tu day
         }
-        OpenTour openTour = openTourRepository.findById(bookingRequest.getOpenTourId())
-                .orElseThrow(() -> new NotFoundException("Open-Tour not found"));
         oldBooking.setStatus(bookingRequest.getStatus());
         oldBooking.setEndDate(bookingRequest.getEndDate());
         oldBooking.setStartDate(bookingRequest.getStartDate());
         oldBooking.setPrice(bookingRequest.getPrice());
-        oldBooking.setOpenTour(openTour);
         return bookingRepository.save(oldBooking);
     }
 

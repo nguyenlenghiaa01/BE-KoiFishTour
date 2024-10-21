@@ -28,7 +28,6 @@ public class BreedService {
     public Breed createNewBreed(BreedRequest breedRequest){
         Breed breed = modelMapper.map(breedRequest, Breed.class);
         try {
-
             Breed newBreed = breedRepository.save(breed);
             return newBreed;
         }catch (Exception  e){

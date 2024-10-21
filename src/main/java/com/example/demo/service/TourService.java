@@ -258,6 +258,7 @@ public class TourService {
         oldTour.setDuration(tour.getDuration());
         oldTour.setStartDate(tour.getStartDate());
         oldTour.setImage(tour.getImage());
+        oldTour.setDeleted(tour.isDeleted());
         return tourRepository.save(oldTour);
     }
 

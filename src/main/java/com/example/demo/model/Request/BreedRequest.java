@@ -16,7 +16,6 @@ public class BreedRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String breedName;
-
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String description;
     private boolean isDeleted;

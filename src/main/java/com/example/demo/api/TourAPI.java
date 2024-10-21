@@ -41,7 +41,6 @@ public class TourAPI {
         return ResponseEntity.ok(dataResponse);
     }
 
-
     @GetMapping("/search/first")
     public DataResponse<TourResponse> searchTours(
             @RequestParam(required = false) LocalDate startDate,
@@ -70,14 +69,11 @@ public class TourAPI {
         return ResponseEntity.ok(updatedTour);
     }
 
-
-
     @PutMapping("{id}/updateTour")
     public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
     }
-
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTour(@PathVariable long id) {

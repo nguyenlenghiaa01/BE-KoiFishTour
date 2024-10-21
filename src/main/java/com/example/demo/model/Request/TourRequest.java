@@ -29,7 +29,7 @@ public class TourRequest {
 
     private String image;
     private double price;
-
+    private boolean isDeleted;
     @NotBlank(message = "Time cannot be blank")
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "Invalid time format! Must be in HH:mm format.")
     private String time;

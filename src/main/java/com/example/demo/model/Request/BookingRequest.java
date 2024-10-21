@@ -29,9 +29,6 @@ public class BookingRequest {
     @NotNull(message = "Booking date cannot be null")
     private LocalDate bookingDate;
 
-    @NotNull(message = "Open tour ID cannot be null")
-    private long openTourId;
-
     @NotNull(message = "Sale ID cannot be null")
     private long consultingId;
 }

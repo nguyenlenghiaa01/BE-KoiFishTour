@@ -78,6 +78,7 @@ public class FarmService {
         oldFarm.setFarmName(farm.getFarmName());
         oldFarm.setLocation(farm.getLocation());
         oldFarm.setImage(farm.getImage());
+        oldFarm.setDeleted(farm.isDeleted());
         return farmRepository.save(oldFarm);
     }
     public Farm deleteFarm(long id){

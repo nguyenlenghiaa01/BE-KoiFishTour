@@ -28,5 +28,6 @@ public class FarmRequest {
     private String owner;
 
     private String image;
+    private boolean isDeleted;
 
 }

@@ -80,6 +80,7 @@ public class KoiFishService {
         oldKoi.setFarm(farmRepository.findById(koi.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
         oldKoi.setBreed(breedRepository.findById(koi.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
         oldKoi.setImage(koi.getImage());
+        oldKoi.setDeleted(koi.isDeleted());
         return koiRepository.save(oldKoi);
     }
     public KoiFish deleteKoi(long id){
