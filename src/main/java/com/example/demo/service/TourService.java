@@ -139,10 +139,11 @@ public class TourService {
             }
         }
         if (!farmSet.isEmpty()) {
-            specification = specification.and(TourSpecification.hasFarms(farmSet));
+            specification = specification.or(TourSpecification.hasFarms(farmSet));
         }
-        if(farmSet.isEmpty() || duration.isEmpty() || startDate == null){
-            return new DataResponse<>();
+
+        if(farmSet.isEmpty() && duration == null && startDate == null){
+              return new DataResponse<>();
         }
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
@@ -161,6 +162,7 @@ public class TourService {
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setFarms(tour.getFarms());
                     tourResponses.add(tourResponse);
+
             }
         }
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
