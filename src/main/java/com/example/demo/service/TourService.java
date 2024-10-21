@@ -106,7 +106,6 @@ public class TourService {
 
 
     public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
-        // Lưu lịch sử tìm kiếm
         Account currentAccount = authenticationService.getCurrentAccount();
         HistoryTourSearch searchHistory = new HistoryTourSearch();
         searchHistory.setStartDate(startDate);
@@ -115,8 +114,6 @@ public class TourService {
         searchHistory.setSearchTime(LocalDateTime.now());
         searchHistory.setAccount(currentAccount);
         searchHistoryRepository.save(searchHistory);
-
-        // Tạo tập hợp các farm từ chuỗi farms
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             String[] farmArray = farms.split(",");
@@ -124,11 +121,7 @@ public class TourService {
                 farmSet.add(farm.trim());
             }
         }
-
-        // Tạo Specification cho tìm kiếm
-        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open")); // Bắt buộc phải có trạng thái 'open'.
-
-        // Thêm các tiêu chí tìm kiếm
+        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open"));
         if (startDate != null) {
             specification = specification.or(TourSpecification.hasStartDate(startDate));
         }
@@ -138,27 +131,28 @@ public class TourService {
         if (!farmSet.isEmpty()) {
             specification = specification.or(TourSpecification.hasFarms(farmSet));
         }
-
-        // Tìm kiếm tour dựa trên tiêu chí
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
-
-        // Tạo danh sách TourResponse từ kết quả tìm kiếm
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
-            TourResponse tourResponse = new TourResponse();
-            tourResponse.setId(tour.getId());
-            tourResponse.setImage(tour.getImage());
-            tourResponse.setStatus(tour.getStatus());
-            tourResponse.setFarms(tour.getFarms());
-            tourResponse.setPrice(tour.getPrice());
-
-            tourResponses.add(tourResponse);
+            if(tour.getStatus().equals("open")) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setDeleted(tour.isDeleted());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setTime(tour.getTime());
+                tourResponse.setFarms(tour.getFarms());
+                tourResponses.add(tourResponse);
+            }
         }
-
-        // Tạo phản hồi dữ liệu
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setTotalElements(tourResponses.size());
         dataResponse.setPageNumber(tourPage.getNumber());
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
@@ -194,14 +188,14 @@ public class TourService {
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
                 tourResponse.setDeleted(tour.isDeleted());
-                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setTourName(tour.getTourName()); // Kiểm tra phương thức getter
                 tourResponse.setStartDate(tour.getStartDate());
-                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setDuration(tour.getDuration()); // Kiểm tra phương thức getter
                 tourResponse.setImage(tour.getImage());
                 tourResponse.setStatus(tour.getStatus());
-                tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
+                tourResponse.setFarms(tour.getFarms());
 
                 tourResponses.add(tourResponse);
             }

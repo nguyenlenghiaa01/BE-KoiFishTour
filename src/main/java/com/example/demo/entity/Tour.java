@@ -13,8 +13,6 @@ import java.util.Random;
 import java.util.Set;
 
 @Data
-@Getter
-@Setter
 @Entity
 public class Tour {
     @Id

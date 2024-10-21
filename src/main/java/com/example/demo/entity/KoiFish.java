@@ -43,7 +43,6 @@ public class KoiFish {
 
     @ManyToOne
     @JoinColumn(name = "breed_id")
-    @JsonIgnore
     Breed breed;
 
     @ManyToOne
