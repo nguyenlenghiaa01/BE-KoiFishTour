@@ -116,6 +116,7 @@ public class TourService {
         searchHistory.setSearchTime(LocalDateTime.now());
         searchHistory.setAccount(currentAccount);
         searchHistoryRepository.save(searchHistory);
+
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             String[] farmArray = farms.split(",");
@@ -123,27 +124,27 @@ public class TourService {
                 farmSet.add(farm.trim());
             }
         }
+        if (farmSet.isEmpty() && (duration == null || duration.isEmpty()) && startDate == null) {
+            return new DataResponse<>();
+        }
+
         Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open"));
         if (startDate != null) {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
         if (duration != null && !duration.isEmpty()) {
-            Pattern pattern = Pattern.compile("(\\d+)\\s*days");
+            Pattern pattern = Pattern.compile("^(\\d+)\\s*days$");  // Kiểm tra định dạng "x days"
             Matcher matcher = pattern.matcher(duration.trim());
 
             if (matcher.matches()) {
                 int inputDays = Integer.parseInt(matcher.group(1));
                 specification = specification.and(TourSpecification.hasDurationDays(inputDays));
             } else {
-                return new DataResponse<>();
+                return new DataResponse<>(); // Trả về danh sách rỗng nếu định dạng không hợp lệ
             }
         }
         if (!farmSet.isEmpty()) {
-            specification = specification.or(TourSpecification.hasFarms(farmSet));
-        }
-
-        if(farmSet.isEmpty() && duration == null && startDate == null){
-              return new DataResponse<>();
+            specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
