@@ -65,6 +65,7 @@ public class BreedService {
         //=> co breed co ton tai;
         oldBreed.setBreedName(breedRequest.getBreedName());
         oldBreed.setDescription(breedRequest.getDescription());
+        oldBreed.setDeleted(breedRequest.isDeleted());
         return breedRepository.save(oldBreed);
     }
     public Breed deleteBreed(long BreedId){
