@@ -21,6 +21,5 @@ public class HistoryTourSearch {
         private String farm;
         @ManyToOne
         @JoinColumn(name = "account_id", nullable = false)
-        @JsonIgnore
         private Account account;
 }

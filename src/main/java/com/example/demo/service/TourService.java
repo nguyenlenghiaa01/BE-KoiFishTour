@@ -106,8 +106,8 @@ public class TourService {
 
 
     public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
+        // Lưu lịch sử tìm kiếm
         Account currentAccount = authenticationService.getCurrentAccount();
-
         HistoryTourSearch searchHistory = new HistoryTourSearch();
         searchHistory.setStartDate(startDate);
         searchHistory.setDuration(duration);
@@ -116,6 +116,7 @@ public class TourService {
         searchHistory.setAccount(currentAccount);
         searchHistoryRepository.save(searchHistory);
 
+        // Tạo tập hợp các farm từ chuỗi farms
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             String[] farmArray = farms.split(",");
@@ -123,42 +124,29 @@ public class TourService {
                 farmSet.add(farm.trim());
             }
         }
-        Specification<Tour> specification = Specification.where(null);
 
-        boolean hasCriteria = false;
+        // Tạo Specification cho tìm kiếm
+        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open")); // Bắt buộc phải có trạng thái 'open'.
 
+        // Thêm các tiêu chí tìm kiếm
         if (startDate != null) {
             specification = specification.or(TourSpecification.hasStartDate(startDate));
-            hasCriteria = true;
         }
         if (duration != null && !duration.isEmpty()) {
             specification = specification.or(TourSpecification.hasDuration(duration));
-            hasCriteria = true;
         }
         if (!farmSet.isEmpty()) {
             specification = specification.or(TourSpecification.hasFarms(farmSet));
-            hasCriteria = true;
-        }
-        specification = specification.and(TourSpecification.hasStatus("open"));
-
-        Page<Tour> tourPage;
-        if (hasCriteria) {
-            // Nếu có thông tin tìm kiếm, chỉ tìm các tour theo điều kiện
-            tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
-        } else {
-            tourPage = tourRepository.findAll(PageRequest.of(page, size));
         }
 
+        // Tìm kiếm tour dựa trên tiêu chí
+        Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
+
+        // Tạo danh sách TourResponse từ kết quả tìm kiếm
         List<TourResponse> tourResponses = new ArrayList<>();
-
         for (Tour tour : tourPage.getContent()) {
             TourResponse tourResponse = new TourResponse();
             tourResponse.setId(tour.getId());
-            tourResponse.setTourId(tour.getTourId());
-            tourResponse.setDeleted(tour.isDeleted());
-            tourResponse.setTourName(tour.getTourName());
-            tourResponse.setStartDate(tour.getStartDate());
-            tourResponse.setDuration(tour.getDuration());
             tourResponse.setImage(tour.getImage());
             tourResponse.setStatus(tour.getStatus());
             tourResponse.setFarms(tour.getFarms());
@@ -167,6 +155,7 @@ public class TourService {
             tourResponses.add(tourResponse);
         }
 
+        // Tạo phản hồi dữ liệu
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourPage.getTotalElements());
@@ -174,6 +163,7 @@ public class TourService {
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
+
 
     public DataResponse<TourResponse> getAllTourPrice(
             @RequestParam int page,
@@ -258,7 +248,8 @@ public class TourService {
         oldTour.setDuration(tour.getDuration());
         oldTour.setStartDate(tour.getStartDate());
         oldTour.setImage(tour.getImage());
-        oldTour.setDeleted(tour.isDeleted());
+        oldTour.setPrice(tour.getPrice());
+        oldTour.setTime(tour.getTime());
         return tourRepository.save(oldTour);
     }
 

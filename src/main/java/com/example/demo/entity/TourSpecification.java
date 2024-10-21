@@ -29,13 +29,15 @@ public class TourSpecification {
         };
     }
 
-
     public static Specification<Tour> hasFarms(Set<String> farmNames) {
         return (root, query, criteriaBuilder) -> {
-            if (farmNames == null || farmNames.isEmpty()) return criteriaBuilder.conjunction();
-            return root.join("farms").get("name").in(farmNames);
+            if (farmNames == null || farmNames.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return root.join("farms").get("farmName").in(farmNames);
         };
     }
+
     public static Specification<Tour> hasStatus(String status) {
         return (root, query, criteriaBuilder) -> {
             return criteriaBuilder.equal(root.get("status"), status);

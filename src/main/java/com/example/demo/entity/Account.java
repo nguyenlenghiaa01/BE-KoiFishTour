@@ -133,12 +133,19 @@ public class Account implements UserDetails {
     private Set<KoiFishOrder> consultingOrders;
 
     @OneToMany(mappedBy ="from" )
+    @JsonIgnore
     Set<Transactions> transactionsFrom;
 
     @OneToMany(mappedBy ="receiver" )
+    @JsonIgnore
     Set<Transactions> transactionsTo;
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<HistoryTourSearch> searchHistories;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<CustomerTour> customerTours;
 
 }
 
