@@ -19,6 +19,7 @@ public class BreedRequest {
 
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
     private String description;
+    private boolean isDeleted;
 
 
 }
