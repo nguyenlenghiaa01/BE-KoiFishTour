@@ -4,6 +4,7 @@ import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
+import com.example.demo.model.Request.TourIdRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -39,6 +40,12 @@ public class TourAPI {
     public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
         DataResponse dataResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(dataResponse);
+    }
+
+    @GetMapping("/tour/{id}")
+    public ResponseEntity<?>get(@Valid @RequestBody TourIdRequest tour,long id){
+        Tour newTour = tourService.getTourId(id);
+        return ResponseEntity.ok(newTour);
     }
 
     @GetMapping("/search/first")
