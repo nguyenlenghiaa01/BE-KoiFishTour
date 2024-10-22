@@ -1,10 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
-import com.example.demo.exception.DuplicateEntity;
-import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
-import com.example.demo.model.Request.TourIdRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -16,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tour")
@@ -42,8 +37,8 @@ public class TourAPI {
         return ResponseEntity.ok(dataResponse);
     }
 
-    @GetMapping("/tour/{id}")
-    public ResponseEntity<?>get(@Valid @RequestBody TourIdRequest tour,long id){
+    @GetMapping("{id}")
+    public ResponseEntity<?>getTourById(String id){
         Tour newTour = tourService.getTourId(id);
         return ResponseEntity.ok(newTour);
     }

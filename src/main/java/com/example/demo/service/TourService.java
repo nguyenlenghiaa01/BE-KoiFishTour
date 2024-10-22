@@ -4,10 +4,8 @@ import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
-import com.example.demo.model.Request.TourIdRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
-import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.SearchHistoryRepository;
@@ -17,17 +15,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -77,8 +71,8 @@ public class TourService {
         }
     }
 
-    public Tour getTourId(long id){
-        Tour tour1 = tourRepository.findTourById(id);
+    public Tour getTourId(String id){
+        Tour tour1 = tourRepository.findTourByTourId(id);
         return tour1;
     }
 
