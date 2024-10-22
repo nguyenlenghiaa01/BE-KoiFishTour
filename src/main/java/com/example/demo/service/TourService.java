@@ -93,6 +93,8 @@ public class TourService {
                 tourResponse.setImage(tour.getImage());
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setTime(tour.getTime());
 
                 tourResponses.add(tourResponse);
 

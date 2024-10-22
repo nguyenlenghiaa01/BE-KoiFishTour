@@ -37,7 +37,7 @@ public class TourAPI {
         return ResponseEntity.ok(dataResponse);
     }
 
-    @GetMapping("{id}")
+    @GetMapping
     public ResponseEntity<?>getTourById(String id){
         Tour newTour = tourService.getTourId(id);
         return ResponseEntity.ok(newTour);
