@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
+import com.example.demo.model.Request.TourIdRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
@@ -74,6 +75,11 @@ public class TourService {
         } catch (Exception e) {
             throw new DuplicateEntity("Tour exist ID: " + newTour.getId());
         }
+    }
+
+    public Tour getTourId(long id){
+        Tour tour1 = tourRepository.findTourById(id);
+        return tour1;
     }
 
 
