@@ -78,12 +78,12 @@ public class TourService {
 
 
     public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
-        Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("open", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
-            if(tour.getStatus().equals("open")) {
+
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -99,23 +99,22 @@ public class TourService {
 
                 tourResponses.add(tourResponse);
             }
-        }
+
 
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
         dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourResponses.size());
+        dataResponse.setTotalElements(tourPage.getTotalElements());
         dataResponse.setPageNumber(tourPage.getNumber());
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
 
     public DataResponse<TourResponse> getAllTourNotOpen(@RequestParam int page, @RequestParam int size) {
-        Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("Not open", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
-            if(tour.getStatus().equals("Not open")) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -131,11 +130,11 @@ public class TourService {
 
                 tourResponses.add(tourResponse);
             }
-        }
+
 
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
         dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourResponses.size());
+        dataResponse.setTotalElements(tourPage.getTotalElements());
         dataResponse.setPageNumber(tourPage.getNumber());
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
