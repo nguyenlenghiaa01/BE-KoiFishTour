@@ -18,6 +18,7 @@ public interface TourRepository extends JpaRepository<Tour,Long> , JpaSpecificat
     List<Tour> findToursByIsDeletedFalse();
 
     Page<Tour> findByStatusIgnoreCase(String status, Pageable pageable);
+    Page<Tour>findAll(Pageable pageable);
 
 
 }

@@ -35,13 +35,19 @@ public class TourAPI {
 
     @GetMapping("/guest/get")
     public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = tourService.getAllTour(page, size);
+        DataResponse dataResponse = tourService.getAll(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @GetMapping("/manager/get/notOpen")
     public ResponseEntity<?> getTour(@RequestParam int page, @RequestParam int size){
         DataResponse dataResponse = tourService.getAllTourNotOpen(page, size);
+        return ResponseEntity.ok(dataResponse);
+    }
+
+    @GetMapping("/get/all")
+    public ResponseEntity<?> getAll(@RequestParam int page, @RequestParam int size){
+        DataResponse dataResponse = tourService.getAll(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 

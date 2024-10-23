@@ -297,6 +297,7 @@ public class TourService {
         oldTour.setPrice(tour.getPrice());
         oldTour.setTime(tour.getTime());
         oldTour.setDescription(tour.getDescription());
+        oldTour.setDeleted(tour.isDeleted());
         return tourRepository.save(oldTour);
     }
 
@@ -338,6 +339,38 @@ public class TourService {
         scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
 
         return "Tour scheduling success!";
+    }
+
+    public DataResponse<TourResponse> getAll(@RequestParam int page, @RequestParam int size) {
+        Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        List<Tour> tours = tourPage.getContent();
+        List<TourResponse> tourResponses = new ArrayList<>();
+
+        for (Tour tour : tours) {
+            TourResponse tourResponse = new TourResponse();
+            tourResponse.setId(tour.getId());
+            tourResponse.setTourId(tour.getTourId());
+            tourResponse.setDeleted(tour.isDeleted());
+            tourResponse.setTourName(tour.getTourName());
+            tourResponse.setStartDate(tour.getStartDate());
+            tourResponse.setDuration(tour.getDuration());
+            tourResponse.setImage(tour.getImage());
+            tourResponse.setStatus(tour.getStatus());
+            tourResponse.setFarms(tour.getFarms());
+            tourResponse.setPrice(tour.getPrice());
+            tourResponse.setTime(tour.getTime());
+            tourResponse.setDescription(tour.getDescription());
+
+            tourResponses.add(tourResponse);
+        }
+
+
+        DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
+        return dataResponse;
     }
 
 }
