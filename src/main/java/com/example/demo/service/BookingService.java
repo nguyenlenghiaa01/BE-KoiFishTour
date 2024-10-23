@@ -60,11 +60,10 @@ public class BookingService {
         }
         booking.setBookingDate(new Date());
         booking.setStatus(bookingRequest.getStatus());
-        booking.setEndDate(bookingRequest.getEndDate());
+        booking.setDuration(bookingRequest.getDuration());
         booking.setStartDate(bookingRequest.getStartDate());
         booking.setPrice(bookingRequest.getPrice());
         booking.setAccount(currentAccount);
-        //set sale id
         Account consultingAccount = accountRepository.findById(bookingRequest.getConsultingId())
                 .orElseThrow(() -> new NotFoundException("Consulting account not found"));
         booking.setConsulting(consultingAccount);
@@ -120,10 +119,10 @@ public class BookingService {
 
         Booking oldBooking = bookingRepository.findBookingById(id);
         if (oldBooking == null) {
-            throw new NotFoundException("Booking not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Booking not found !");
         }
         oldBooking.setStatus(bookingRequest.getStatus());
-        oldBooking.setEndDate(bookingRequest.getEndDate());
+        oldBooking.setDuration(bookingRequest.getDuration());
         oldBooking.setStartDate(bookingRequest.getStartDate());
         oldBooking.setPrice(bookingRequest.getPrice());
         return bookingRepository.save(oldBooking);
@@ -132,7 +131,7 @@ public class BookingService {
     public Booking deleteBooking(long Id) {
         Booking oldBooking = bookingRepository.findBookingById(Id);
         if (oldBooking == null) {
-            throw new NotFoundException("Booking not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Booking not found !");
         }
         oldBooking.setDeleted(true);
         return bookingRepository.save(oldBooking);

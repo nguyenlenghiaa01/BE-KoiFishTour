@@ -1,5 +1,6 @@
 package com.example.demo.model.Response;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.Farm;
 import lombok.Data;
 
@@ -21,5 +22,6 @@ public class TourResponse {
     private String time;
     private String description;
     private boolean isDelete;
+    private long consultingId;
     private Set<Farm> farms;
 }

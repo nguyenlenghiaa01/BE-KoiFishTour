@@ -141,5 +141,10 @@ public class Account implements UserDetails {
     @JsonIgnore
     private Set<CustomTour> customerTours;
 
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Tour tour;
+
+
 }
 

@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.SearchHistoryRepository;
 import com.example.demo.repository.TourRepository;
@@ -42,8 +43,11 @@ public class TourService {
 
     @Autowired
     ScheduleJob scheduleJob;
+    @Autowired
+    AccountRepository accountRepository;
 
     public Tour createNewTour(TourRequest tourRequest) {
+        Account account = modelMapper.map(tourRequest, Account.class);
         Tour newTour = new Tour();
         newTour.setTourName(tourRequest.getTourName());
         newTour.setStartDate(tourRequest.getStartDate());
@@ -53,6 +57,10 @@ public class TourService {
         newTour.setTime(tourRequest.getTime());
         newTour.setDescription(tourRequest.getDescription());
         newTour.setImage(tourRequest.getImage());
+        Account consultingAccount = accountRepository.findById(tourRequest.getConsultingId())
+                .orElseThrow(() -> new NotFoundException("Account not found ID: " + tourRequest.getConsultingId()));
+        newTour.setAccount(consultingAccount);
+
 
         Set<Farm> farms = new HashSet<>();
 
@@ -98,6 +106,7 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setDescription(tour.getDescription());
+                tourResponse.getConsultingId();
 
                 tourResponses.add(tourResponse);
             }
@@ -130,8 +139,10 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setDescription(tour.getDescription());
+                tourResponse.setConsultingId(tour.getAccount().getId());
 
-                tourResponses.add(tourResponse);
+
+            tourResponses.add(tourResponse);
             }
 
 
@@ -198,6 +209,7 @@ public class TourService {
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setFarms(tour.getFarms());
                     tourResponse.setDescription(tour.getDescription());
+                    tourResponse.setConsultingId(tour.getAccount().getId());
                     tourResponses.add(tourResponse);
 
             }
@@ -249,6 +261,7 @@ public class TourService {
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setDescription(tour.getDescription());
+                tourResponse.setConsultingId(tour.getAccount().getId());
                 tourResponses.add(tourResponse);
             }
         }
@@ -280,6 +293,9 @@ public class TourService {
 
 
     public Tour updateTour(TourRequest tour, long TourId) {
+        Account account = modelMapper.map(tour, Account.class);
+        Account consultingAccount = accountRepository.findById(tour.getConsultingId())
+                .orElseThrow(() -> new NotFoundException("Account not found ID: " + tour.getConsultingId()));
         Tour oldTour = tourRepository.findTourById(TourId);
         if (oldTour == null) {
             throw new NotFoundException("Tour not found !");
@@ -297,6 +313,7 @@ public class TourService {
         oldTour.setPrice(tour.getPrice());
         oldTour.setTime(tour.getTime());
         oldTour.setDescription(tour.getDescription());
+        oldTour.setAccount(consultingAccount);
         oldTour.setDeleted(tour.isDeleted());
         return tourRepository.save(oldTour);
     }
@@ -360,7 +377,7 @@ public class TourService {
             tourResponse.setPrice(tour.getPrice());
             tourResponse.setTime(tour.getTime());
             tourResponse.setDescription(tour.getDescription());
-
+            tourResponse.setConsultingId(tour.getAccount().getId());
             tourResponses.add(tourResponse);
         }
 

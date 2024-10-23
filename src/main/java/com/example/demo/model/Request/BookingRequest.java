@@ -1,5 +1,6 @@
 package com.example.demo.model.Request;
 
+import com.example.demo.entity.Account;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -23,13 +24,13 @@ public class BookingRequest {
     @NotNull(message = "Price cannot be null")
     private float price;
 
-    @NotNull(message = "End date cannot be null")
-    private LocalDate endDate;
+
+    private String duration;
 
     @NotNull(message = "Booking date cannot be null")
     private LocalDate bookingDate;
 
-    @NotNull(message = "Sale ID cannot be null")
+    @NotNull(message = "Consulting ID cannot be null")
     private long consultingId;
 }
 

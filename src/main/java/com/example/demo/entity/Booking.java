@@ -39,9 +39,7 @@ public class Booking {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private float price;
 
-    @NotNull(message = "End date cannot be null")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate endDate;
+    private String  duration;
 
     private Date bookingDate;
 

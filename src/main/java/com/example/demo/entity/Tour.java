@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -67,4 +68,9 @@ public class Tour {
             inverseJoinColumns = @JoinColumn(name = "farm_id")
     )
     private Set<Farm> farms = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
 }
