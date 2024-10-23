@@ -145,6 +145,10 @@ public class Account implements UserDetails {
     @JsonIgnore
     private Tour tour;
 
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
+    private List<ShoppingCart> shoppingCarts;
+
 
 }
 

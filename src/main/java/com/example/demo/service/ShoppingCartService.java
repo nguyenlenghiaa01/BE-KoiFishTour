@@ -2,10 +2,12 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Breed;
+import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.ShoppingCart;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.repository.BreedRepository;
+import com.example.demo.repository.KoiRepository;
 import com.example.demo.repository.ShoppingCartRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class ShoppingCartService {
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
     @Autowired
-    BreedRepository breedRepository;
+    KoiRepository koiRepository;
 
     private final ModelMapper modelMapper = new ModelMapper();
     @Autowired
@@ -30,23 +32,27 @@ public class ShoppingCartService {
         ShoppingCart shoppingCart = modelMapper.map(shoppingCartRequest, ShoppingCart.class);
         Account currentAccount = authenticationService.getCurrentAccount();
         if (currentAccount == null) {
-            throw new RuntimeException("Customer account not found.");
+            throw new NotFoundException("Customer account not found.");
         }
+
         shoppingCart.setCustomer(currentAccount);
 
-        if (shoppingCartRequest.getBreedIds() != null && !shoppingCartRequest.getBreedIds().isEmpty()) {
-            Set<Breed> breeds = new HashSet<>();
+        if (shoppingCartRequest.getKoiFishId() != null && !shoppingCartRequest.getKoiFishId().isEmpty()) {
+            Set<KoiFish> koiFishSet = new HashSet<>();
 
-            for (Long breedId : shoppingCartRequest.getBreedIds()) {
-                Breed breed = breedRepository.findById(breedId)
-                        .orElseThrow(() -> new NotFoundException("ID " + breedId + " not exist"));
-                breeds.add(breed);
+            for (Long koiFishId : shoppingCartRequest.getKoiFishId()) {
+                KoiFish koiFish = koiRepository.findById(koiFishId)
+                        .orElseThrow(() -> new NotFoundException("ID " + koiFishId + " not exist"));
+                koiFishSet.add(koiFish);
             }
-            shoppingCart.setBreeds(breeds);
+            shoppingCart.setKoiFishes(koiFishSet);
         }
-        shoppingCart.setStatus(shoppingCartRequest.isStatus());
+
+        shoppingCart.setStatus(shoppingCartRequest.getStatus());
         return shoppingCartRepository.save(shoppingCart);
     }
+
+
 
 
     public List<ShoppingCart> getAllShoppingCart() {
@@ -59,19 +65,15 @@ public class ShoppingCartService {
         if (shoppingCart == null) {
             throw new NotFoundException("Shopping Cart not found!");
         }
-        Set<Breed> breeds = new HashSet<>();
-        for (Long breedId : shoppingCartRequest.getBreedIds()) {
-            Breed breed = breedRepository.findBreedById(breedId);
-            if (breed != null) {
-                breeds.add(breed);
+        Set<KoiFish> koiFish = new HashSet<>();
+        for (Long koiFishId : shoppingCartRequest.getKoiFishId()) {
+            KoiFish koiFish1 = koiRepository.findKoiById(koiFishId);
+            if (koiFish1 != null) {
+                koiFish.add(koiFish1);
             }
         }
-        shoppingCart.setBreeds(breeds);
-        shoppingCart.setStatus(shoppingCartRequest.isStatus());
-        if (shoppingCart.isStatus()) {
-            shoppingCartRepository.delete(shoppingCart);
-            return null;
-        }
+        shoppingCart.setKoiFishes(koiFish);
+        shoppingCart.setStatus(shoppingCartRequest.getStatus());
         return shoppingCartRepository.save(shoppingCart);
     }
     public ShoppingCart deleteShoppingCart(long id) {

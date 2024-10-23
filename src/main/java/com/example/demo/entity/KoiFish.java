@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -52,4 +53,8 @@ public class KoiFish {
     @ManyToMany(mappedBy = "koiFishes")
     @JsonIgnore
     private List<KoiFishOrder> koiFishOrders;
+
+    @ManyToMany(mappedBy = "koiFishes")
+    @JsonIgnore
+    private Set<ShoppingCart> shoppingCarts;
 }

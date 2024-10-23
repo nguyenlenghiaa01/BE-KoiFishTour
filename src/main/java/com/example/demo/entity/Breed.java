@@ -51,6 +51,4 @@ public class Breed {
     @JsonIgnore
     private List<KoiFish> koiFishes;
 
-    @ManyToMany(mappedBy = "breeds")
-    private Set<ShoppingCart> shoppingCarts = new HashSet<>();
 }

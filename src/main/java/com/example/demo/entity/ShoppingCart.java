@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class ShoppingCart {
     private String cartId;
 
     private boolean isDeleted = false;
-    private boolean status = false;
+    private String status;
 
     @PrePersist
     private void prePersist() {
@@ -40,12 +41,11 @@ public class ShoppingCart {
 
     @ManyToMany
     @JoinTable(
-            name = "shopping_cart_breed",
-            joinColumns = @JoinColumn(name = "shopping_cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "breed_id")
+            name = "order_koi_fish",
+            joinColumns = @JoinColumn(name = "koi_fish_order_id"),
+            inverseJoinColumns = @JoinColumn(name = "koi_fish_id")
     )
-    @JsonIgnore
-    private Set<Breed> breeds = new HashSet<>();
+    private Set<KoiFish> koiFishes;
 
     @ManyToOne
     @JoinColumn(name = "koiFishOrder_id")
