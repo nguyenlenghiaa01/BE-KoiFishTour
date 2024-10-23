@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -19,13 +18,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +39,9 @@ public class TourService {
     AuthenticationService authenticationService;
     @Autowired
     SearchHistoryRepository searchHistoryRepository;
+
+    @Autowired
+    ScheduleJob scheduleJob;
 
     public Tour createNewTour(TourRequest tourRequest) {
         Tour newTour = new Tour();
@@ -83,6 +83,7 @@ public class TourService {
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
+            if(tour.getStatus().equals("open")) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -97,12 +98,44 @@ public class TourService {
                 tourResponse.setTime(tour.getTime());
 
                 tourResponses.add(tourResponse);
-
+            }
         }
 
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
         dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setTotalElements(tourResponses.size());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
+        return dataResponse;
+    }
+
+    public DataResponse<TourResponse> getAllTourNotOpen(@RequestParam int page, @RequestParam int size) {
+        Page tourPage = tourRepository.findAll(PageRequest.of(page, size));
+        List<Tour> tours = tourPage.getContent();
+        List<TourResponse> tourResponses = new ArrayList<>();
+
+        for (Tour tour : tours) {
+            if(tour.getStatus().equals("Not open")) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setDeleted(tour.isDeleted());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setFarms(tour.getFarms());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setTime(tour.getTime());
+
+                tourResponses.add(tourResponse);
+            }
+        }
+
+        DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourResponses.size());
         dataResponse.setPageNumber(tourPage.getNumber());
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
@@ -135,14 +168,14 @@ public class TourService {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
         if (duration != null && !duration.isEmpty()) {
-            Pattern pattern = Pattern.compile("^(\\d+)\\s*days$");  // Kiểm tra định dạng "x days"
+            Pattern pattern = Pattern.compile("^(\\d+)\\s*days$");
             Matcher matcher = pattern.matcher(duration.trim());
 
             if (matcher.matches()) {
                 int inputDays = Integer.parseInt(matcher.group(1));
                 specification = specification.and(TourSpecification.hasDurationDays(inputDays));
             } else {
-                return new DataResponse<>(); // Trả về danh sách rỗng nếu định dạng không hợp lệ
+                return new DataResponse<>();
             }
         }
         if (!farmSet.isEmpty()) {
@@ -206,9 +239,9 @@ public class TourService {
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
                 tourResponse.setDeleted(tour.isDeleted());
-                tourResponse.setTourName(tour.getTourName()); // Kiểm tra phương thức getter
+                tourResponse.setTourName(tour.getTourName());
                 tourResponse.setStartDate(tour.getStartDate());
-                tourResponse.setDuration(tour.getDuration()); // Kiểm tra phương thức getter
+                tourResponse.setDuration(tour.getDuration());
                 tourResponse.setImage(tour.getImage());
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setPrice(tour.getPrice());
@@ -235,8 +268,8 @@ public class TourService {
     private boolean isTimeInRange(LocalTime time) {
         LocalTime morningStart = LocalTime.of(6, 0); // 6:00 AM
         LocalTime morningEnd = LocalTime.of(12, 0); // 12:00 PM
-        LocalTime afternoonStart = LocalTime.of(15, 0); // 3:00 PM
-        LocalTime afternoonEnd = LocalTime.of(22, 0); // 10:00 PM
+        LocalTime afternoonStart = LocalTime.of(15, 0);
+        LocalTime afternoonEnd = LocalTime.of(22, 0);
 
         return (time.isAfter(morningStart) && time.isBefore(morningEnd)) ||
                 (time.isAfter(afternoonStart) && time.isBefore(afternoonEnd));
@@ -265,23 +298,30 @@ public class TourService {
         return tourRepository.save(oldTour);
     }
 
-    public Tour opentour(OpenTourRequest openTourRequest, long tourId) {
-        Tour oldTour = tourRepository.findTourById(tourId);
-        if (oldTour == null) {
-            throw new NotFoundException("Tour not found !");
-        }
-        oldTour.setStatus(openTourRequest.getStatus());
-        oldTour.setPrice(openTourRequest.getPrice());
-        return tourRepository.save(oldTour);
-    }
 
 
     public Tour deleteTour(long TourId) {
         Tour oldTour = tourRepository.findTourById(TourId);
         if (oldTour == null) {
-            throw new NotFoundException("Tour not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Tour not found !");
         }
         oldTour.setDeleted(true);
         return tourRepository.save(oldTour);
+    }
+
+    public String scheduleTour(Long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
+        Optional<Tour> tourOpt = tourRepository.findById(id);
+        if (!tourOpt.isPresent()) {
+            throw new Exception("Tour not exist!");
+        }
+
+        Tour tour = tourOpt.get();
+        tour.setPrice(price);
+        tourRepository.save(tour);
+
+        scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
+        scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
+
+        return "Tour scheduling success!";
     }
 }

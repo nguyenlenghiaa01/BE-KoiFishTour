@@ -1,7 +1,6 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
-import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -9,11 +8,13 @@ import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/tour")
@@ -23,6 +24,7 @@ public class TourAPI {
 
     @Autowired
     private TourService tourService;
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
@@ -34,6 +36,12 @@ public class TourAPI {
     @GetMapping("/guest/get")
     public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
         DataResponse dataResponse = tourService.getAllTour(page, size);
+        return ResponseEntity.ok(dataResponse);
+    }
+
+    @GetMapping("/manager/get/notOpen")
+    public ResponseEntity<?> getTour(@RequestParam int page, @RequestParam int size){
+        DataResponse dataResponse = tourService.getAllTourNotOpen(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
@@ -65,11 +73,6 @@ public class TourAPI {
         return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
     }
 
-    @PutMapping("/open/{tourId}")
-    public ResponseEntity<?> openTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long tourId) {
-        Tour updatedTour = tourService.opentour(openTourRequest, tourId);
-        return ResponseEntity.ok(updatedTour);
-    }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
@@ -81,6 +84,19 @@ public class TourAPI {
     public ResponseEntity<?> deleteTour(@PathVariable long id) {
             Tour deletedTour = tourService.deleteTour(id);
             return ResponseEntity.ok(deletedTour);
+    }
+
+
+    @PostMapping("/schedule")
+    public String scheduleTour(@RequestParam Long id,
+                               @RequestParam double price,
+                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime startTime,
+                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime endTime) {
+        try {
+            return tourService.scheduleTour(id, price, startTime, endTime);
+        } catch (Exception e) {
+            return "Error during scheduling: " + e.getMessage();
+        }
     }
 }
 

@@ -1,12 +1,9 @@
 package com.example.demo.model.Response;
 
 import com.example.demo.entity.Farm;
-import com.example.demo.entity.OpenTour;
-import com.example.demo.entity.Tour;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data

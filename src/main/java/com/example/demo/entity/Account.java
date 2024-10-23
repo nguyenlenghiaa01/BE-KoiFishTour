@@ -120,9 +120,6 @@ public class Account implements UserDetails {
     @JsonIgnore
     private List<QuotationProcess> quotationProcesses;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore
-    private List<OpenTour>openTours;
 
     @OneToMany(mappedBy = "customer")
     @JsonIgnore

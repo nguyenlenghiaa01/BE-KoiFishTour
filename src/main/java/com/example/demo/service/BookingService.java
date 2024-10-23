@@ -6,18 +6,16 @@ import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
-import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
-import com.example.demo.repository.OpenTourRepository;
 import com.example.demo.repository.PaymentRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -38,9 +36,6 @@ public class BookingService {
     BookingRepository bookingRepository;
 
     @Autowired
-    OpenTourRepository openTourRepository;
-
-    @Autowired
     AccountRepository accountRepository;
 
     @Autowired
@@ -48,6 +43,9 @@ public class BookingService {
 
     @Autowired
     PaymentRepository paymentRepository;
+
+    @Autowired
+    EmailService emailService;
 
 
     @Autowired
@@ -210,7 +208,7 @@ public class BookingService {
         return result.toString();
     }
 
-    public void createTransactionId(long id) {
+    public String createTransactionId(long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking Not Found"));
 
@@ -232,7 +230,6 @@ public class BookingService {
         transactions.setDescription("NAP TIEN TO CUSTOMER");
         transactionsSet.add(transactions);
 
-        // Tạo giao dịch từ khách hàng đến admin
         Transactions transactions1 = new Transactions();
         Account admin = accountRepository.findAccountByRole(Role.ADMIN);
         transactions1.setFrom(customer); // Người gửi là khách hàng
@@ -242,7 +239,6 @@ public class BookingService {
         transactions1.setDescription("CUSTOMER TO ADMIN");
         transactionsSet.add(transactions1);
 
-        // Cập nhật số dư admin
         float newBalance = admin.getBalance() + booking.getPrice();
         admin.setBalance(newBalance);
 
@@ -252,5 +248,13 @@ public class BookingService {
         // save all
         paymentRepository.save(payment); // save payment transactions
         accountRepository.save(admin);   // update admin
+
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setReceiver(customer);
+        emailDetail.setSubject("Payment success");
+        emailDetail.setLink("https://www.ansovatravel.com/send-an-inquiry/");
+        emailService.sendEmail(emailDetail);
+
+        return "Payment transaction created successfully for booking ID: " + id;
     }
 }

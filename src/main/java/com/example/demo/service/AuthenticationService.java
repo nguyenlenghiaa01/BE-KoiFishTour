@@ -63,8 +63,8 @@ public class AuthenticationService implements UserDetailsService {
             account.setImage("");
             //save code account
             Account newAccount = accountRepository.save(account);
-//            String otp = otpService.generateOtp(); // Tạo OTP
-//            emailService.sendOtp(account.getEmail(), otp); // Gửi OTP đến email
+//            String otp = otpService.generateOtp();
+//            emailService.sendOtp(account.getEmail(), otp);
 //            // gui mail
             EmailDetail emailDetail = new EmailDetail();
             emailDetail.setReceiver(newAccount);
@@ -133,7 +133,6 @@ public class AuthenticationService implements UserDetailsService {
         Account oldAccount = accountRepository.findById(Id)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        // Cập nhật thông tin tài khoản
         oldAccount.setEmail(newAccount.getEmail());
         oldAccount.setPhone(newAccount.getPhone());
         oldAccount.setFullName(newAccount.getFullName());

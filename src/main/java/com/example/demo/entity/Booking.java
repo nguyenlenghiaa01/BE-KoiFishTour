@@ -67,9 +67,6 @@ public class Booking {
     @JoinColumn(name = "consulting")
     private Account consulting;
 
-    @ManyToOne
-    @JoinColumn(name = "openTour_id")
-    private OpenTour openTour;
 
     @OneToOne(mappedBy = "booking")
     @JsonIgnore

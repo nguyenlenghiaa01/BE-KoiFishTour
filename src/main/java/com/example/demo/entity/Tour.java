@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,6 +39,7 @@ public class Tour {
 
     private String image;
 
+
     private String status;
 
     private double price;
@@ -57,9 +57,6 @@ public class Tour {
         this.tourId = generateTourId();
     }
 
-    @OneToMany(mappedBy = "tour")
-    @JsonIgnore
-    private Set<OpenTour> openTours;
 
     @ManyToMany
     @JoinTable(
