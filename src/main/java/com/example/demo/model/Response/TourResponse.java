@@ -16,7 +16,7 @@ public class TourResponse {
     private String tourName;
     private LocalDate startDate;
     private String duration;
-    private List<String> image;
+    private String image;
     private String status;
     private double price;
     private String time;

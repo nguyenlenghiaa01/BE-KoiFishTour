@@ -39,7 +39,7 @@ public class Tour {
     @Pattern(regexp = "^[2-5] days$", message = "Enter the correct format!")
     private String duration; // Chuyển sang String để dễ dàng kiểm tra định dạng
 
-    private List<String> image;
+    private String image;
 
     private String description;
 

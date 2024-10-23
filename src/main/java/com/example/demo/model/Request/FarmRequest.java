@@ -27,7 +27,7 @@ public class FarmRequest {
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
 
-    private List<String> image;
+    private String image;
     private boolean isDeleted;
 
 }

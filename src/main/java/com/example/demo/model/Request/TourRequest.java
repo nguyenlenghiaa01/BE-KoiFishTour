@@ -24,7 +24,7 @@ public class TourRequest {
     @Pattern(regexp = "^[2-5] days$", message = "Duration correct format!")
     private String duration;
 
-    private List<String> image;
+    private String image;
     private String description;
     private double price;
     private boolean isDeleted;

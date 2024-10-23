@@ -45,7 +45,7 @@ public class Farm {
     @Pattern(regexp = "^[^\\s].*", message = "First character must not be a space!")
     private String owner;
 
-    private List<String> image;
+    private String image;
 
     @PrePersist
     private void prePersist() {
