@@ -36,8 +36,8 @@ public class Account implements UserDetails {
     String code;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false) // Đảm bảo không null
-    private Role role; //Role để front-end nhập
+    @Column(nullable = false)
+    private Role role;
 
     @Column(nullable = false)
     private boolean isDeleted=false;
@@ -144,10 +144,6 @@ public class Account implements UserDetails {
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
     private Tour tour;
-
-    @OneToMany(mappedBy = "customer")
-    @JsonIgnore
-    private List<ShoppingCart> shoppingCarts;
 
 
 }

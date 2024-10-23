@@ -91,7 +91,7 @@ public class TourService {
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
-
+            if(!tour.isDeleted()) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -105,11 +105,11 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setDescription(tour.getDescription());
-                tourResponse.setConsultingId(tour.getAccount().getId());
-
-
-
-            tourResponses.add(tourResponse);
+                if (tour.getAccount() != null) {
+                    tourResponse.setConsultingId(tour.getAccount().getId());
+                }
+                tourResponses.add(tourResponse);
+            }
             }
 
 
@@ -127,6 +127,7 @@ public class TourService {
         List<TourResponse> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
+            if(!tour.isDeleted()) {
                 TourResponse tourResponse = new TourResponse();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourId(tour.getTourId());
@@ -140,10 +141,12 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setDescription(tour.getDescription());
-                tourResponse.setConsultingId(tour.getAccount().getId());
+                if (tour.getAccount() != null) {
+                    tourResponse.setConsultingId(tour.getAccount().getId());
+                }
 
-
-            tourResponses.add(tourResponse);
+                tourResponses.add(tourResponse);
+            }
             }
 
 
@@ -197,6 +200,7 @@ public class TourService {
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
             if(tour.getStatus().equals("open")) {
+                if(!tour.isDeleted()) {
                     TourResponse tourResponse = new TourResponse();
                     tourResponse.setId(tour.getId());
                     tourResponse.setTourId(tour.getTourId());
@@ -210,9 +214,11 @@ public class TourService {
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setFarms(tour.getFarms());
                     tourResponse.setDescription(tour.getDescription());
-                    tourResponse.setConsultingId(tour.getAccount().getId());
+                    if (tour.getAccount() != null) {
+                        tourResponse.setConsultingId(tour.getAccount().getId());
+                    }
                     tourResponses.add(tourResponse);
-
+                }
             }
         }
         DataResponse<TourResponse> dataResponse = new DataResponse<>();

@@ -4,8 +4,6 @@ package com.example.demo.api;
 import com.example.demo.entity.KoiFishOrder;
 
 import com.example.demo.model.Request.KoiFishOrderRequest;
-import com.example.demo.model.Request.KoiFishOrderTotalRequest;
-import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.service.KoiFishOrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

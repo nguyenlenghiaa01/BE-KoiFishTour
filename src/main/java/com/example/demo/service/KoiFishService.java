@@ -38,7 +38,7 @@ public class KoiFishService {
                 .orElseThrow(() -> new NotFoundException("Breed not exist")));
         koiFish.setFarm(farmRepository.findById(koiFishRequest.getFarmId())
                 .orElseThrow(() -> new NotFoundException("Farm not exist")));
-        koiFish.setImage(koiFishRequest.getImage());
+        koiFish.setImages(koiFishRequest.getImage());
         koiFish.setDescription(koiFishRequest.getDescription());
 
         return koiRepository.save(koiFish);
@@ -57,7 +57,7 @@ public class KoiFishService {
                 koiFishResponse.setDescription(koiFish.getDescription());
                 koiFishResponse.setDeleted(koiFish.isDeleted());
                 koiFishResponse.setBreed(koiFish.getBreed());
-                koiFishResponse.setImage(koiFish.getImage());
+                koiFishResponse.setImage(koiFish.getImages());
                 koiFishResponse.setId(koiFish.getId());
                 koiFishResponses.add(koiFishResponse);
 
@@ -79,7 +79,7 @@ public class KoiFishService {
         //=> co farm co ton tai
         oldKoi.setFarm(farmRepository.findById(koi.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
         oldKoi.setBreed(breedRepository.findById(koi.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
-        oldKoi.setImage(koi.getImage());
+        oldKoi.setImages(koi.getImage());
         oldKoi.setDeleted(koi.isDeleted());
         return koiRepository.save(oldKoi);
     }

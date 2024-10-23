@@ -30,7 +30,8 @@ public class KoiFish {
 
     private boolean isDeleted = false;
 
-    private String image;
+    @Column(length = 1000)
+    private String images;
 
     public KoiFish() {
         this.koiId = generateKoiId();
@@ -54,7 +55,4 @@ public class KoiFish {
     @JsonIgnore
     private List<KoiFishOrder> koiFishOrders;
 
-    @ManyToMany(mappedBy = "koiFishes")
-    @JsonIgnore
-    private Set<ShoppingCart> shoppingCarts;
 }

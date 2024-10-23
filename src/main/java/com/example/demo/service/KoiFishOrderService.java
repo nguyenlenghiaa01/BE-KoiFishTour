@@ -43,33 +43,41 @@ public class KoiFishOrderService {
 
     public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder newOrder = new KoiFishOrder();
+
+        // Lấy tài khoản hiện tại
         Account currentAccount = authenticationService.getCurrentAccount();
         if (currentAccount == null) {
             throw new RuntimeException("Customer account not found.");
         }
-        Account account = modelMapper.map(koiFishOrderRequest, Account.class);
-
-        newOrder.setConsulting(currentAccount);
+        newOrder.setCustomer(currentAccount);
         newOrder.setCreateAt(new Date());
 
-        // Set the customer ID from the request
-        Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Not found account"));
-        newOrder.setCustomer(customer);
+        Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
+                .orElseThrow(() -> new RuntimeException("Consulting account not found."));
+        newOrder.setConsulting(consulting);
 
-        // Retrieve KoiFish by ID
-        KoiFish koiFish = getKoiRepository.findById(koiFishOrderRequest.getKoiFishId())
+        KoiFish koiFish = koiRepository.findById(koiFishOrderRequest.getKoiFishId())
                 .orElseThrow(() -> new RuntimeException("KoiFish not found."));
 
         double quantity = koiFishOrderRequest.getQuantity();
+        if (quantity <= 0) {
+            throw new RuntimeException("Quantity must be greater than 0.");
+        }
+
         double price = koiFishOrderRequest.getPrice();
+        if (price < 0) {
+            throw new RuntimeException("Price cannot be negative.");
+        }
+
         double totalAmount = price * quantity;
 
         newOrder.setKoiFishes(List.of(koiFish));
         newOrder.setTotal(totalAmount);
+        newOrder.setQuantity(quantity);
 
         return koiFishOrderRepository.save(newOrder);
     }
+
 
 
 
@@ -114,26 +122,34 @@ public class KoiFishOrderService {
     }
 
     public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
-        KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng!"));
+        KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản khách hàng."));
-        oldKoiFishOrder.setCustomer(customer);
+                .orElseThrow(() -> new RuntimeException("Customer not found."));
+        existingOrder.setCustomer(customer);
         KoiFish koiFish = getKoiRepository.findById(koiFishOrderRequest.getKoiFishId())
-                .orElseThrow(() -> new RuntimeException("KoiFish không được tìm thấy."));
-
+                .orElseThrow(() -> new RuntimeException("KoiFish not found."));
         double quantity = koiFishOrderRequest.getQuantity();
         float price = koiFishOrderRequest.getPrice();
 
-        if (quantity <= 0 || price < 0) {
-            throw new RuntimeException("Số lượng phải lớn hơn 0 và giá không được âm.");
+        if (quantity <= 0) {
+            throw new RuntimeException("Quantity must be greater than 0.");
         }
 
-        oldKoiFishOrder.setKoiFishes(List.of(koiFish));
+        if (price < 0) {
+            throw new RuntimeException("Price must not be negative.");
+        }
+
+        existingOrder.setKoiFishes(List.of(koiFish));
+        existingOrder.setQuantity(quantity);
+        existingOrder.setPrice(price);
+
         double totalAmount = price * quantity;
-        oldKoiFishOrder.setTotal(totalAmount);
-        return koiFishOrderRepository.save(oldKoiFishOrder);
+        existingOrder.setTotal(totalAmount);
+
+        return koiFishOrderRepository.save(existingOrder);
     }
+
 
     public KoiFishOrder deleteOrderCart(long id) {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)

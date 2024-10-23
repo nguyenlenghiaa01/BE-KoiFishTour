@@ -59,8 +59,6 @@ public class KoiFishOrder {
     @JoinColumn(name="customer_id")
     private Account customer;
 
-    @OneToMany(mappedBy = "koiFishOrder", cascade = CascadeType.ALL)
-    private List<ShoppingCart> shoppingCart;
 
     @ManyToMany
     @JoinTable(
