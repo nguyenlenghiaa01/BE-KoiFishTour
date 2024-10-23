@@ -105,9 +105,12 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setDescription(tour.getDescription());
-                tourResponse.getConsultingId();
+                if (tour.getAccount() != null) {
+                    tourResponse.setConsultingId(tour.getAccount().getId());
+                }
 
-                tourResponses.add(tourResponse);
+
+            tourResponses.add(tourResponse);
             }
 
 
