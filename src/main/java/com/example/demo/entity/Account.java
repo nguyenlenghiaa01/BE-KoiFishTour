@@ -136,9 +136,6 @@ public class Account implements UserDetails {
     @OneToMany(mappedBy ="receiver" )
     @JsonIgnore
     Set<Transactions> transactionsTo;
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<HistoryTourSearch> searchHistories;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

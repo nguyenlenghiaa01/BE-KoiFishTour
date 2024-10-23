@@ -19,7 +19,4 @@ public class HistoryTourSearch {
         private BigDecimal maxPrice;
         private LocalDateTime searchTime;
         private String farm;
-        @ManyToOne
-        @JoinColumn(name = "account_id", nullable = false)
-        private Account account;
 }

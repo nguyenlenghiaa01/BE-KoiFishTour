@@ -143,14 +143,12 @@ public class TourService {
 
 
     public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
-        Account currentAccount = authenticationService.getCurrentAccount();
-        HistoryTourSearch searchHistory = new HistoryTourSearch();
-        searchHistory.setStartDate(startDate);
-        searchHistory.setDuration(duration);
-        searchHistory.setFarm(farms);
-        searchHistory.setSearchTime(LocalDateTime.now());
-        searchHistory.setAccount(currentAccount);
-        searchHistoryRepository.save(searchHistory);
+//        HistoryTourSearch searchHistory = new HistoryTourSearch();
+//        searchHistory.setStartDate(startDate);
+//        searchHistory.setDuration(duration);
+//        searchHistory.setFarm(farms);
+//        searchHistory.setSearchTime(LocalDateTime.now());
+//        searchHistoryRepository.save(searchHistory);
 
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
