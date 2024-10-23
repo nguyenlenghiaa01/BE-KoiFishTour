@@ -4,6 +4,7 @@ import com.example.demo.entity.Farm;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,9 +15,11 @@ public class TourResponse {
     private String tourName;
     private LocalDate startDate;
     private String duration;
-    private String image;
+    private List<String> image;
     private String status;
     private double price;
     private String time;
+    private String description;
+    private boolean isDelete;
     private Set<Farm> farms;
 }

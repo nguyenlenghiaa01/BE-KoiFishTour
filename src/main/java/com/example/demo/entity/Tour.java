@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -37,8 +38,9 @@ public class Tour {
     @Pattern(regexp = "^[2-5] days$", message = "Enter the correct format!")
     private String duration; // Chuyển sang String để dễ dàng kiểm tra định dạng
 
-    private String image;
+    private List<String> image;
 
+    private String description;
 
     private String status;
 

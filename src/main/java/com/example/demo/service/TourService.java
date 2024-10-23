@@ -51,6 +51,7 @@ public class TourService {
         newTour.setPrice(tourRequest.getPrice());
         newTour.setStatus("Not open");
         newTour.setTime(tourRequest.getTime());
+        newTour.setDescription(tourRequest.getDescription());
         newTour.setImage(tourRequest.getImage());
 
         Set<Farm> farms = new HashSet<>();
@@ -96,6 +97,7 @@ public class TourService {
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
+                tourResponse.setDescription(tour.getDescription());
 
                 tourResponses.add(tourResponse);
             }
@@ -127,6 +129,7 @@ public class TourService {
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
+                tourResponse.setDescription(tour.getDescription());
 
                 tourResponses.add(tourResponse);
             }
@@ -194,6 +197,7 @@ public class TourService {
                     tourResponse.setPrice(tour.getPrice());
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setFarms(tour.getFarms());
+                    tourResponse.setDescription(tour.getDescription());
                     tourResponses.add(tourResponse);
 
             }
@@ -244,7 +248,7 @@ public class TourService {
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setFarms(tour.getFarms());
-
+                tourResponse.setDescription(tour.getDescription());
                 tourResponses.add(tourResponse);
             }
         }
@@ -292,6 +296,7 @@ public class TourService {
         oldTour.setImage(tour.getImage());
         oldTour.setPrice(tour.getPrice());
         oldTour.setTime(tour.getTime());
+        oldTour.setDescription(tour.getDescription());
         return tourRepository.save(oldTour);
     }
 
@@ -307,18 +312,32 @@ public class TourService {
     }
 
     public String scheduleTour(Long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (startTime.isBefore(now)) {
+            throw new Exception("Start time cannot be in the past!");
+        }
+
+        if (endTime.isBefore(now)) {
+            throw new Exception("End time cannot be in the past!");
+        }
+
+        if (endTime.isBefore(startTime)) {
+            throw new Exception("End time cannot be before start time!");
+        }
+
         Optional<Tour> tourOpt = tourRepository.findById(id);
         if (!tourOpt.isPresent()) {
-            throw new Exception("Tour not exist!");
+            throw new Exception("Tour does not exist!");
         }
 
         Tour tour = tourOpt.get();
         tour.setPrice(price);
         tourRepository.save(tour);
-
         scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
         scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
 
         return "Tour scheduling success!";
     }
+
 }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,7 +23,8 @@ public class TourRequest {
     @Pattern(regexp = "^[2-5] days$", message = "Duration correct format!")
     private String duration;
 
-    private String image;
+    private List<String> image;
+    private String description;
     private double price;
     private boolean isDeleted;
     @NotBlank(message = "Time cannot be blank")
