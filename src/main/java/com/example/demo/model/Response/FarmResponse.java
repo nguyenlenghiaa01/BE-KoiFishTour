@@ -22,6 +22,6 @@ public class FarmResponse {
     private String farmName;
     private String location;
     private String owner;
-    private String image;
+    private List<String> image;
 
 }
