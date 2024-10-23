@@ -26,7 +26,7 @@ public class TourAPI {
     private TourService tourService;
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody TourRequest tourRequest) {
             Tour newTour = tourService.createNewTour(tourRequest);

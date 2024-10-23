@@ -47,7 +47,9 @@ public class TourService {
     AccountRepository accountRepository;
 
     public Tour createNewTour(TourRequest tourRequest) {
-        Account account = modelMapper.map(tourRequest, Account.class);
+        Account consultingAccount = accountRepository.findById(tourRequest.getConsultingId())
+                .orElseThrow(() -> new NotFoundException("Account not found ID: " + tourRequest.getConsultingId()));
+
         Tour newTour = new Tour();
         newTour.setTourName(tourRequest.getTourName());
         newTour.setStartDate(tourRequest.getStartDate());
@@ -57,13 +59,9 @@ public class TourService {
         newTour.setTime(tourRequest.getTime());
         newTour.setDescription(tourRequest.getDescription());
         newTour.setImage(tourRequest.getImage());
-        Account consultingAccount = accountRepository.findById(tourRequest.getConsultingId())
-                .orElseThrow(() -> new NotFoundException("Account not found ID: " + tourRequest.getConsultingId()));
         newTour.setAccount(consultingAccount);
 
-
         Set<Farm> farms = new HashSet<>();
-
         for (Long farmId : tourRequest.getFarmId()) {
             Farm farm = farmRepository.findById(farmId)
                     .orElseThrow(() -> new NotFoundException("Farm not exist ID: " + farmId));
@@ -76,9 +74,10 @@ public class TourService {
         } catch (ConstraintViolationException e) {
             throw new IllegalArgumentException("Duplicate: " + e.getMessage());
         } catch (Exception e) {
-            throw new DuplicateEntity("Tour exist ID: " + newTour.getId());
+            throw new DuplicateEntity("Tour exists ID: " + newTour.getId());
         }
     }
+
 
     public Tour getTourId(String id){
         Tour tour1 = tourRepository.findTourByTourId(id);
