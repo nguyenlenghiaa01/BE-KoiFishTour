@@ -65,13 +65,13 @@ public class TourAPI {
         return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
     }
 
-    @PutMapping("{tourId}")
+    @PutMapping("/open/{tourId}")
     public ResponseEntity<?> openTour(@Valid @RequestBody OpenTourRequest openTourRequest, @PathVariable long tourId) {
         Tour updatedTour = tourService.opentour(openTourRequest, tourId);
         return ResponseEntity.ok(updatedTour);
     }
 
-    @PutMapping("{id}/updateTour")
+    @PutMapping("{id}")
     public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
