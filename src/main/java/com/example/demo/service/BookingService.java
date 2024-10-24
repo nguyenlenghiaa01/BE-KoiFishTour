@@ -72,7 +72,7 @@ public class BookingService {
         booking.setAdult(booking.getAdult());
         booking.setInfant(booking.getInfant());
         booking.setTour(booking.getTour());
-        booking.setAddress(bookingRequest.getAddress());
+//        booking.setAddress(bookingRequest.getAddress());
         Tour tour = tourRepository.findById(bookingRequest.getTourId())
                 .orElseThrow(() -> new NotFoundException("Customer account not found"));
         booking.setTour(tour);
@@ -96,7 +96,7 @@ public class BookingService {
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setEmail(booking.getEmail());
 //            bookingResponse.setDuration(booking.getDuration());
-            bookingResponse.setAddress(booking.getAddress());
+//            bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
 //            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
@@ -130,7 +130,7 @@ public class BookingService {
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setEmail(booking.getEmail());
 //            bookingResponse.setDuration(booking.getDuration());
-            bookingResponse.setAddress(booking.getAddress());
+//            bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
 //            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
@@ -167,7 +167,7 @@ public class BookingService {
                 BookingResponse bookingResponse = new BookingResponse();
                 bookingResponse.setEmail(booking.getEmail());
 //                bookingResponse.setDuration(booking.getDuration());
-                bookingResponse.setAddress(booking.getAddress());
+//                bookingResponse.setAddress(booking.getAddress());
                 bookingResponse.setFullName(booking.getFullName());
 //                bookingResponse.setStartDate(booking.getStartDate());
                 bookingResponse.setStatus(booking.getStatus());
@@ -229,7 +229,7 @@ public class BookingService {
         oldBooking.setFullName(bookingRequest.getFullName());
         oldBooking.setEmail(bookingRequest.getEmail());
         oldBooking.setPhone(bookingRequest.getPhone());
-        oldBooking.setAddress(bookingRequest.getAddress());
+//        oldBooking.setAddress(bookingRequest.getAddress());
         oldBooking.setAdult(bookingRequest.getAdult());
         oldBooking.setInfant(bookingRequest.getInfant());
         oldBooking.setChild(bookingRequest.getChild());

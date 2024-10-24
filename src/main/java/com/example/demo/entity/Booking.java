@@ -46,8 +46,8 @@ public class Booking {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
-    @NotBlank(message = "Address cannot be blank")
-    private String address;
+//    @NotBlank(message = "Address cannot be blank")
+//    private String address;
     @Email(message = "Invalid Email!")
     @Column(unique = true)
     private String email;

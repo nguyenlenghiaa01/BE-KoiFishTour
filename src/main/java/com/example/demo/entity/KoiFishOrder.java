@@ -60,6 +60,7 @@ public class KoiFishOrder {
     private Account customer;
 
     @OneToMany(mappedBy = "koiFishOrder",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ShoppingCart> shoppingCarts;
 
 

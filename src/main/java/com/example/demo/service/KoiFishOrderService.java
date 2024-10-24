@@ -51,6 +51,7 @@ public class KoiFishOrderService {
         KoiFishOrder order = new KoiFishOrder();
         order.setCreateAt(new Date());
         order.setCustomer(customer);
+        order.setConsulting(consulting);
 
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
         double total = 0;
@@ -186,6 +187,11 @@ public class KoiFishOrderService {
 //
 //        return new ArrayList<>(koiFishes);
 //    }
+
+//    public List<KoiFishOrder> getKoiFishesFromOrders() {
+//      Account currentAccount = authenticationService.getCurrentAccount();
+//       Long customerId = currentAccount.getId();
+//       }
 
 
 
