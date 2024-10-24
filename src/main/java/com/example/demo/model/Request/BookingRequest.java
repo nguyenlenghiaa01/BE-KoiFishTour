@@ -43,7 +43,7 @@ public class BookingRequest {
 
 
 //    private LocalDate bookingDate;
-    private long customerId;
+    private String customerId;
     private long tourId;
 }
 

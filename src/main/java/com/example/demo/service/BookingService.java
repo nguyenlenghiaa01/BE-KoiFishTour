@@ -76,8 +76,10 @@ public class BookingService {
         Tour tour = tourRepository.findById(bookingRequest.getTourId())
                 .orElseThrow(() -> new NotFoundException("Customer account not found"));
         booking.setTour(tour);
-        Account customer = accountRepository.findById(bookingRequest.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("Consulting account not found"));
+        Account customer = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
+              if(customer ==null){
+                 throw  new NotFoundException("Not found customer");
+              }
         booking.setAccount(customer);
         try {
             return bookingRepository.save(booking);
