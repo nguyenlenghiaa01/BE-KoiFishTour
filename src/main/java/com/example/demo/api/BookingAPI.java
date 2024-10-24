@@ -1,9 +1,10 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
+import com.example.demo.entity.Breed;
 import com.example.demo.model.Request.BookingRequest;
-import com.example.demo.model.Request.BookingTotalRequest;
 import com.example.demo.model.Response.BookingResponse;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -20,15 +21,21 @@ import java.util.List;
 public class BookingAPI {
     @Autowired
     BookingService bookingService;
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody BookingRequest bookingRequest) {
+    @PostMapping("/VNPay")
+    public ResponseEntity<?> createVNPay(long id) {
         String vnPayUrl = null;
         try {
-            vnPayUrl = bookingService.createUrl(bookingRequest);
+            vnPayUrl = bookingService.createUrl(id);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
         return ResponseEntity.ok(vnPayUrl);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody BookingRequest bookingRequest) {
+        Booking newBooking =bookingService.createNewBooking(bookingRequest);
+        return ResponseEntity.ok(newBooking);
     }
 //    @PostMapping("/total")
 //    public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
@@ -55,16 +62,34 @@ public class BookingAPI {
 
     // Get danh sách breed
     @GetMapping
-    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        BookingResponse bookingResponse = bookingService.getAllBooking(page, size);
+    public ResponseEntity<DataResponse<BookingResponse>> get(@RequestParam int page,
+                                                             @RequestParam int size) {
+        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
     }
-    // /api/booking/{id} => id cua thang booking minh muon update
+
+    @GetMapping("/history")
+    public ResponseEntity<DataResponse<BookingResponse>> getHistory(@RequestParam int page,
+                                                                    @RequestParam int size,
+                                                                    @RequestParam long id) {
+        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBookingCustomer(page, size, id);
+        return ResponseEntity.ok(bookingResponse);
+    }
+    @GetMapping("/booking/Consulting")
+    public ResponseEntity<DataResponse<BookingResponse>> getBooking(@RequestParam int page,
+                                                                    @RequestParam int size,
+                                                                    @RequestParam long id) {
+        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
+        return ResponseEntity.ok(bookingResponse);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<?> updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
         Booking newBooking = bookingService.updateBooking(booking,id);
         return ResponseEntity.ok(newBooking);
     }
+
+
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable long id){
         Booking newBooking = bookingService.deleteBooking(id);

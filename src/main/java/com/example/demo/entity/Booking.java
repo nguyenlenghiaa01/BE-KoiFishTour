@@ -56,6 +56,10 @@ public class Booking {
     @Column(unique = true)
     private String phone;
 
+    private int adult;
+    private int child;
+    private int infant;
+
 
     @PrePersist
     private void prePersist() {
@@ -75,10 +79,6 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-    @ManyToOne
-    @JoinColumn(name = "consulting")
-    private Account consulting;
-
 
     @OneToOne(mappedBy = "booking")
     @JsonIgnore

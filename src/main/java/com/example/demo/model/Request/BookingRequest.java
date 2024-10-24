@@ -37,11 +37,13 @@ public class BookingRequest {
 
     @NotBlank(message = "Address cannot be blank")
     private String address;
+    private int adult;
+    private int child;
+    private int infant;
 
-    @NotNull(message = "Booking date cannot be null")
+
     private LocalDate bookingDate;
-
-    @NotNull(message = "Consulting ID cannot be null")
-    private long consultingId;
+    private long customerId;
+    private long tourId;
 }
 
