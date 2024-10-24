@@ -68,6 +68,14 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
 
+    @GetMapping("/customerId")
+    public ResponseEntity<DataResponse<BookingResponse>> getCustomerBooking(@RequestParam int page,
+                                                                            @RequestParam int size,
+                                                                            @RequestParam String id) {
+        DataResponse<BookingResponse> bookingResponse = bookingService.getBookingByCustomer(page, size,id);
+        return ResponseEntity.ok(bookingResponse);
+    }
+
     @GetMapping("/history")
     public ResponseEntity<DataResponse<BookingResponse>> getHistory(@RequestParam int page,
                                                                     @RequestParam int size,

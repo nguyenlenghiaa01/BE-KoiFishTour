@@ -122,6 +122,41 @@ public class BookingService {
 
         return dataResponse;
     }
+    public DataResponse<BookingResponse> getBookingByCustomer(@RequestParam int page,
+                                                                   @RequestParam int size,
+                                                                   @RequestParam String  id) {
+        Account customer = accountRepository.findAccountByCode(id);
+        Page<Booking> bookingPage = bookingRepository.findByAccountCode(id, PageRequest.of(page, size));
+        List<Booking> bookings = bookingPage.getContent();
+
+        List<BookingResponse> activeBookings = new ArrayList<>();
+        for (Booking booking : bookings) {
+            BookingResponse bookingResponse = new BookingResponse();
+            bookingResponse.setEmail(booking.getEmail());
+//            bookingResponse.setDuration(booking.getDuration());
+//            bookingResponse.setAddress(booking.getAddress());
+            bookingResponse.setFullName(booking.getFullName());
+//            bookingResponse.setStartDate(booking.getStartDate());
+            bookingResponse.setStatus(booking.getStatus());
+            bookingResponse.setAdult(booking.getAdult());
+            bookingResponse.setInfant(booking.getInfant());
+            bookingResponse.setPrice(booking.getPrice());
+            bookingResponse.setPhone(booking.getPhone());
+            bookingResponse.setTourId(booking.getTour().getId());
+            bookingResponse.setCustomerId(booking.getAccount().getId());
+
+            activeBookings.add(bookingResponse);
+        }
+
+        DataResponse<BookingResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(activeBookings);
+        dataResponse.setPageNumber(bookingPage.getNumber());
+        dataResponse.setTotalElements(bookingPage.getTotalElements());
+        dataResponse.setTotalPages(bookingPage.getTotalPages());
+
+        return dataResponse;
+    }
+
 
     public DataResponse<BookingResponse> getAllBookingByConsulting(@RequestParam int page,
                                                                    @RequestParam int size,
