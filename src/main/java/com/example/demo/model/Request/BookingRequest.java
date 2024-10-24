@@ -44,6 +44,6 @@ public class BookingRequest {
 
 //    private LocalDate bookingDate;
     private String customerId;
-    private long tourId;
+    private String tourId;
 }
 

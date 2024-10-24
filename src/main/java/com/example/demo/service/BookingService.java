@@ -68,13 +68,15 @@ public class BookingService {
         booking.setFullName(bookingRequest.getFullName());
         booking.setEmail(bookingRequest.getEmail());
         booking.setPhone(bookingRequest.getPhone());
-        booking.setChild(booking.getChild());
-        booking.setAdult(booking.getAdult());
-        booking.setInfant(booking.getInfant());
+        booking.setChild(bookingRequest.getChild());
+        booking.setAdult(bookingRequest.getAdult());
+        booking.setInfant(bookingRequest.getInfant());
         booking.setTour(booking.getTour());
 //        booking.setAddress(bookingRequest.getAddress());
-        Tour tour = tourRepository.findById(bookingRequest.getTourId())
-                .orElseThrow(() -> new NotFoundException("Customer account not found"));
+        Tour tour = tourRepository.findTourByTourId(bookingRequest.getTourId());
+            if(tour==null){
+                throw  new NotFoundException("Not found tour");
+            }
         booking.setTour(tour);
         Account customer = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
               if(customer ==null){
