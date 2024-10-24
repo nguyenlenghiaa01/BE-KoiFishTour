@@ -58,7 +58,7 @@ public class BookingService {
     public Booking createNewBooking(BookingRequest bookingRequest) {
         //  create booking
         Booking booking = new Booking();
-        Account account = modelMapper.map(bookingRequest, Account.class);
+        Account account = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
 
         booking.setBookingDate(new Date());
         booking.setStatus("PENDING");
