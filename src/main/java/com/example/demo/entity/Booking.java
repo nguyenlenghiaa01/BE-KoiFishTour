@@ -42,6 +42,20 @@ public class Booking {
     private String  duration;
 
     private Date bookingDate;
+    @NotBlank(message = "Name cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
+    private String fullName;
+
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
+    @Email(message = "Invalid Email!")
+    @Column(unique = true)
+    private String email;
+
+    @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
+    @Column(unique = true)
+    private String phone;
+
 
     @PrePersist
     private void prePersist() {
@@ -70,5 +84,8 @@ public class Booking {
     @JsonIgnore
     Payment payment;
 
+    @ManyToOne
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
 }

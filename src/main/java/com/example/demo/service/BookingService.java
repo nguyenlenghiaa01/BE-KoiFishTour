@@ -63,6 +63,10 @@ public class BookingService {
         booking.setDuration(bookingRequest.getDuration());
         booking.setStartDate(bookingRequest.getStartDate());
         booking.setPrice(bookingRequest.getPrice());
+        booking.setFullName(bookingRequest.getFullName());
+        booking.setEmail(bookingRequest.getEmail());
+        booking.setPhone(bookingRequest.getPhone());
+        booking.setAddress(bookingRequest.getAddress());
         booking.setAccount(currentAccount);
         Account consultingAccount = accountRepository.findById(bookingRequest.getConsultingId())
                 .orElseThrow(() -> new NotFoundException("Consulting account not found"));
@@ -125,6 +129,10 @@ public class BookingService {
         oldBooking.setDuration(bookingRequest.getDuration());
         oldBooking.setStartDate(bookingRequest.getStartDate());
         oldBooking.setPrice(bookingRequest.getPrice());
+        oldBooking.setFullName(bookingRequest.getFullName());
+        oldBooking.setEmail(bookingRequest.getEmail());
+        oldBooking.setPhone(bookingRequest.getPhone());
+        oldBooking.setAddress(bookingRequest.getAddress());
         return bookingRepository.save(oldBooking);
     }
 

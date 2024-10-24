@@ -30,17 +30,14 @@ import java.util.regex.Pattern;
 @Service
 public class TourService {
     private ModelMapper modelMapper = new ModelMapper();
-
     @Autowired
     TourRepository tourRepository;
-
     @Autowired
     FarmRepository farmRepository;
     @Autowired
     AuthenticationService authenticationService;
     @Autowired
     SearchHistoryRepository searchHistoryRepository;
-
     @Autowired
     ScheduleJob scheduleJob;
     @Autowired
@@ -229,7 +226,6 @@ public class TourService {
         return dataResponse;
     }
 
-
     public DataResponse<TourResponse> getAllTourPrice(
             @RequestParam int page,
             @RequestParam int size,
@@ -284,8 +280,6 @@ public class TourService {
         return dataResponse;
     }
 
-
-
     private boolean isTimeInRange(LocalTime time) {
         LocalTime morningStart = LocalTime.of(6, 0); // 6:00 AM
         LocalTime morningEnd = LocalTime.of(12, 0); // 12:00 PM
@@ -295,9 +289,6 @@ public class TourService {
         return (time.isAfter(morningStart) && time.isBefore(morningEnd)) ||
                 (time.isAfter(afternoonStart) && time.isBefore(afternoonEnd));
     }
-
-
-
 
     public Tour updateTour(TourRequest tour, long TourId) {
         Account account = modelMapper.map(tour, Account.class);
@@ -324,8 +315,6 @@ public class TourService {
         oldTour.setDeleted(tour.isDeleted());
         return tourRepository.save(oldTour);
     }
-
-
 
     public Tour deleteTour(long TourId) {
         Tour oldTour = tourRepository.findTourById(TourId);
@@ -387,8 +376,6 @@ public class TourService {
             tourResponse.setConsultingId(tour.getAccount().getId());
             tourResponses.add(tourResponse);
         }
-
-
         DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourPage.getTotalElements());

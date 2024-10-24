@@ -73,4 +73,8 @@ public class Tour {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @OneToMany(mappedBy = "tour")
+    @JsonIgnore
+    List<Booking> bookings;
+
 }

@@ -1,10 +1,8 @@
 package com.example.demo.model.Request;
 
 import com.example.demo.entity.Account;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -26,6 +24,19 @@ public class BookingRequest {
 
 
     private String duration;
+    @Email(message = "Invalid Email!")
+    @Column(unique = true)
+    private String email;
+
+    @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
+    @Column(unique = true)
+    private String phone;
+    @NotBlank(message = "Name cannot be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
+    private String fullName;
+
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
 
     @NotNull(message = "Booking date cannot be null")
     private LocalDate bookingDate;

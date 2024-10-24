@@ -2,10 +2,13 @@ package com.example.demo.model.Request;
 
 import lombok.Data;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 public class KoiFishOrderRequest {
 
-    private long koiFishId;
+    private List<Long> koiFishId;
     private double quantity;
     private float price;
     private long customerId;
