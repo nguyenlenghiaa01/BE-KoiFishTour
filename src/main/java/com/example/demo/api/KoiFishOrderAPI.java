@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 
+import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.KoiFishOrder;
 
 import com.example.demo.model.Request.KoiFishOrderRequest;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
@@ -67,6 +70,13 @@ public class KoiFishOrderAPI {
         OrderResponse orders = koiFishOrderService.getAllOrder(page, size);
         return ResponseEntity.ok(orders);
     }
+//    @GetMapping("/history")
+//    public ResponseEntity<List<KoiFishOrder>> getHistory() {
+//        List<KoiFishOrder> orders = koiFishOrderService.getKoiFishesFromOrders();
+//        return ResponseEntity.ok(orders);
+//    }
+
+
 
     // /api/order/{id} => id của đơn hàng mà mình muốn cập nhật
     @PreAuthorize("hasAuthority('CONSULTING')")

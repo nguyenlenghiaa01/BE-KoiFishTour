@@ -59,7 +59,7 @@ public class KoiFishOrder {
     @JoinColumn(name="customer_id")
     private Account customer;
 
-    @OneToMany(mappedBy = "koiFishOrder")
+    @OneToMany(mappedBy = "koiFishOrder",cascade = CascadeType.ALL)
     private List<ShoppingCart> shoppingCarts;
 
 

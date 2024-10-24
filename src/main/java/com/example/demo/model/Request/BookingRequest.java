@@ -13,7 +13,7 @@ public class BookingRequest {
 
     @NotNull(message = "Start date cannot be null")
 
-    private LocalDate startDate; // Sử dụng LocalDate thay vì Date
+//    private LocalDate startDate; // Sử dụng LocalDate thay vì Date
 
     @Pattern(regexp = "^[^\\d]*$", message = "Status cannot have numbers!")
     @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
@@ -23,7 +23,7 @@ public class BookingRequest {
     private float price;
 
 
-    private String duration;
+//    private String duration;
     @Email(message = "Invalid Email!")
     @Column(unique = true)
     private String email;
@@ -42,7 +42,7 @@ public class BookingRequest {
     private int infant;
 
 
-    private LocalDate bookingDate;
+//    private LocalDate bookingDate;
     private long customerId;
     private long tourId;
 }

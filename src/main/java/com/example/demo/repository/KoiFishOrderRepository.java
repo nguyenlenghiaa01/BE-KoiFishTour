@@ -23,4 +23,6 @@ public interface KoiFishOrderRepository extends JpaRepository<KoiFishOrder,Long>
     Long countDeletedOrdersByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     Page<KoiFishOrder> findAll(Pageable pageable);
+
+    List<KoiFishOrder> findByCustomerId(Long customerId);
 }

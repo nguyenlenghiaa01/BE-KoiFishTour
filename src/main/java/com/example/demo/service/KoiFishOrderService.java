@@ -60,6 +60,7 @@ public class KoiFishOrderService {
 
             ShoppingCart orderDetails = new ShoppingCart();
             orderDetails.setKoiFish(koi);
+            orderDetails.setKoiFishOrder(order);
             orderDetailsList.add(orderDetails);
 
             total += koiFishOrderRequest.getPrice();
@@ -69,6 +70,7 @@ public class KoiFishOrderService {
 
         order.setQuantity(koiFishOrderRequest.getQuantity());
         order.setPrice(koiFishOrderRequest.getPrice());
+//        float totalAmount = total+total.
         order.setTotal(total);
 
         return koiFishOrderRepository.save(order);
@@ -112,6 +114,22 @@ public class KoiFishOrderService {
 
         return  orderResponse;
     }
+    public double calculateTotal(KoiFishOrder koiFishOrder) {
+        double total = 0;
+
+        Account currentAccount = authenticationService.getCurrentAccount();
+        Long customerId = currentAccount.getId();
+        System.out.println("Customer ID: " + customerId);
+        for (ShoppingCart cart : koiFishOrder.getShoppingCarts()) {
+            KoiFish koiFish = cart.getKoiFish();
+            total += koiFishOrder.getPrice() * koiFishOrder.getQuantity();
+        }
+        koiFishOrder.setTotal(total);
+        koiFishOrderRepository.save(koiFishOrder);
+
+        return total;
+    }
+
 
     public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
         KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
@@ -144,6 +162,31 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(existingOrder);
     }
+
+//    public List<KoiFishOrder> getKoiFishesFromOrders() {
+//        Account currentAccount = authenticationService.getCurrentAccount();
+//        Long customerId = currentAccount.getId(); // Lấy ID của customer hiện tại
+//
+//        List<KoiFishOrder> orders = koiFishOrderRepository.findByCustomerId(customerId);
+//
+//        if (orders.isEmpty()) {
+//            System.out.println("Không tìm thấy đơn hàng cho customer ID: " + customerId);
+//            return Collections.emptyList(); // Trả về danh sách rỗng nếu không có đơn hàng
+//        }
+//        Set<KoiFish> koiFishes = new HashSet<>();
+//        for (KoiFishOrder order : orders) {
+//            if (order.getShoppingCarts() != null) {
+//                for (ShoppingCart cart : order.getShoppingCarts()) {
+//                    if (cart.getKoiFish() != null) {
+//                        koiFishes.add(cart.getKoiFish());
+//                    }
+//                }
+//            }
+//        }
+//
+//        return new ArrayList<>(koiFishes);
+//    }
+
 
 
     public KoiFishOrder deleteOrderCart(long id) {

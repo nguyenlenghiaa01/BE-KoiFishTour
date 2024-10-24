@@ -61,9 +61,9 @@ public class BookingService {
         Account account = modelMapper.map(bookingRequest, Account.class);
 
         booking.setBookingDate(new Date());
-        booking.setStatus(bookingRequest.getStatus());
-        booking.setDuration(bookingRequest.getDuration());
-        booking.setStartDate(bookingRequest.getStartDate());
+        booking.setStatus("PENDING");
+//        booking.setDuration(bookingRequest.getDuration());
+//        booking.setStartDate(bookingRequest.getStartDate());
         booking.setPrice(bookingRequest.getPrice());
         booking.setFullName(bookingRequest.getFullName());
         booking.setEmail(bookingRequest.getEmail());
@@ -95,10 +95,10 @@ public class BookingService {
         for (Booking booking : bookings) {
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setEmail(booking.getEmail());
-            bookingResponse.setDuration(booking.getDuration());
+//            bookingResponse.setDuration(booking.getDuration());
             bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
-            bookingResponse.setStartDate(booking.getStartDate());
+//            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
             bookingResponse.setAdult(booking.getAdult());
             bookingResponse.setInfant(booking.getInfant());
@@ -129,10 +129,10 @@ public class BookingService {
         for (Booking booking : bookings) {
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setEmail(booking.getEmail());
-            bookingResponse.setDuration(booking.getDuration());
+//            bookingResponse.setDuration(booking.getDuration());
             bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
-            bookingResponse.setStartDate(booking.getStartDate());
+//            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
             bookingResponse.setAdult(booking.getAdult());
             bookingResponse.setInfant(booking.getInfant());
@@ -166,10 +166,10 @@ public class BookingService {
             if (!booking.isDeleted()) {
                 BookingResponse bookingResponse = new BookingResponse();
                 bookingResponse.setEmail(booking.getEmail());
-                bookingResponse.setDuration(booking.getDuration());
+//                bookingResponse.setDuration(booking.getDuration());
                 bookingResponse.setAddress(booking.getAddress());
                 bookingResponse.setFullName(booking.getFullName());
-                bookingResponse.setStartDate(booking.getStartDate());
+//                bookingResponse.setStartDate(booking.getStartDate());
                 bookingResponse.setStatus(booking.getStatus());
                 bookingResponse.setAdult(booking.getAdult());
                 bookingResponse.setChild(booking.getChild());
@@ -192,16 +192,16 @@ public class BookingService {
         return dataResponse;
     }
 
-    public Long getTotalBookingsByMonthAndYear(int month, int year) {
-        return bookingRepository.countBookingsByMonthAndYear(month, year);
-    }
-    public Long getTotalPriceByMonthAndYear(int month, int year) {
-        return bookingRepository.sumPriceByMonthAndYear(month, year);
-    }
-
-    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
-        return bookingRepository.countDeletedBookingsByMonthAndYear(month, year);
-    }
+//    public Long getTotalBookingsByMonthAndYear(int month, int year) {
+//        return bookingRepository.countBookingsByMonthAndYear(month, year);
+//    }
+//    public Long getTotalPriceByMonthAndYear(int month, int year) {
+//        return bookingRepository.sumPriceByMonthAndYear(month, year);
+//    }
+//
+//    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
+//        return bookingRepository.countDeletedBookingsByMonthAndYear(month, year);
+//    }
 
     public float getTotalBookingPayments() {
         List<Booking> bookings = bookingRepository.findAll();
@@ -223,8 +223,8 @@ public class BookingService {
 
         // Cập nhật các thông tin từ bookingRequest
         oldBooking.setStatus(bookingRequest.getStatus());
-        oldBooking.setDuration(bookingRequest.getDuration());
-        oldBooking.setStartDate(bookingRequest.getStartDate());
+//        oldBooking.setDuration(bookingRequest.getDuration());
+//        oldBooking.setStartDate(bookingRequest.getStartDate());
         oldBooking.setPrice(bookingRequest.getPrice());
         oldBooking.setFullName(bookingRequest.getFullName());
         oldBooking.setEmail(bookingRequest.getEmail());
