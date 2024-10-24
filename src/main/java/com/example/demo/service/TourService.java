@@ -291,7 +291,6 @@ public class TourService {
     }
 
     public Tour updateTour(TourRequest tour, long TourId) {
-        Account account = modelMapper.map(tour, Account.class);
         Account consultingAccount = accountRepository.findById(tour.getConsultingId())
                 .orElseThrow(() -> new NotFoundException("Account not found ID: " + tour.getConsultingId()));
         Tour oldTour = tourRepository.findTourById(TourId);
