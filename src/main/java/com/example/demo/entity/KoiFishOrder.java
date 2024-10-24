@@ -59,13 +59,12 @@ public class KoiFishOrder {
     @JoinColumn(name="customer_id")
     private Account customer;
 
+    @OneToMany(mappedBy = "koiFishOrder")
+    private List<ShoppingCart> shoppingCarts;
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_koi_fish",
-            joinColumns = @JoinColumn(name = "koi_fish_order_id"),
-            inverseJoinColumns = @JoinColumn(name = "koi_fish_id")
-    )
-    private List<KoiFish> koiFishes;
+
+    @OneToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 
 }

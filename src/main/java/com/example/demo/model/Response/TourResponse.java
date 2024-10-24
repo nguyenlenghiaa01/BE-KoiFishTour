@@ -21,7 +21,6 @@ public class TourResponse {
     private double price;
     private String time;
     private String description;
-    private boolean isDelete;
     private long consultingId;
     private Set<Farm> farms;
 }

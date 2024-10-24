@@ -88,4 +88,10 @@ public class Booking {
     @JoinColumn(name = "tour_id")
     private Tour tour;
 
+    @OneToOne(mappedBy = "booking")
+    @JsonIgnore
+    private KoiFishOrder koiFishOrder;
+
+
+
 }

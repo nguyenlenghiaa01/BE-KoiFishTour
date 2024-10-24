@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 public class KoiFishOrderRequest {
 
-    private List<Long> koiFishId;
+    private List<Long> shoppingCart;
     private double quantity;
     private float price;
     private long customerId;

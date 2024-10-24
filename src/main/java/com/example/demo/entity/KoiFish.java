@@ -51,8 +51,9 @@ public class KoiFish {
     @JoinColumn(name = "farm_id")
     Farm farm;
 
-    @ManyToMany(mappedBy = "koiFishes")
+
+    @OneToMany(mappedBy = "koiFish")
     @JsonIgnore
-    private List<KoiFishOrder> koiFishOrders;
+    private List<ShoppingCart> shoppingCarts;
 
 }

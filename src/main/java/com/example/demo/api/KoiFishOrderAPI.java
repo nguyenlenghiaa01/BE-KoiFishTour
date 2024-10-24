@@ -25,7 +25,7 @@ public class KoiFishOrderAPI {
     @PreAuthorize("hasAuthority('CONSULTING')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
-        KoiFishOrder koiFishOrder = koiFishOrderService.createNewOrder(koiFishOrderRequest);
+        KoiFishOrder koiFishOrder = koiFishOrderService.create(koiFishOrderRequest);
             return ResponseEntity.ok(koiFishOrder);
     }
 

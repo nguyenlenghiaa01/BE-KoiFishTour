@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderRequest;
+import com.example.demo.model.Request.ShoppingCartRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.*;
 import org.modelmapper.ModelMapper;
@@ -37,60 +38,41 @@ public class KoiFishOrderService {
     @Autowired
     KoiRepository getKoiRepository;
 
+
     @Autowired
     private AuthenticationService authenticationService;
     private final ModelMapper modelMapper = new ModelMapper();
+    public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
+        Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found for ID: " + koiFishOrderRequest.getCustomerId()));
+         Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
+                 .orElseThrow(() -> new RuntimeException("Consultant not found for ID: " + koiFishOrderRequest.getConsultingId()));
 
-    public KoiFishOrder createNewOrder(KoiFishOrderRequest koiFishOrderRequest) {
-        KoiFishOrder newOrder = new KoiFishOrder();
+        KoiFishOrder order = new KoiFishOrder();
+        order.setCreateAt(new Date());
+        order.setCustomer(customer);
 
-        // Lấy tài khoản hiện tại
-        Account currentAccount = authenticationService.getCurrentAccount();
-        if (currentAccount == null) {
-            throw new RuntimeException("Customer account not found.");
-        }
-        newOrder.setCustomer(currentAccount);
-        newOrder.setCreateAt(new Date());
+        List<ShoppingCart> orderDetailsList = new ArrayList<>();
+        double total = 0;
+        for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
+            KoiFish koi = koiRepository.findById(koiFishId)
+                    .orElseThrow(() -> new RuntimeException("KoiFish not found for ID: " + koiFishId));
 
-        Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
-                .orElseThrow(() -> new RuntimeException("Consulting account not found."));
-        newOrder.setConsulting(consulting);
+            ShoppingCart orderDetails = new ShoppingCart();
+            orderDetails.setKoiFish(koi);
+            orderDetailsList.add(orderDetails);
 
-        List<Long> koiFishIds = koiFishOrderRequest.getKoiFishId();
-        if (koiFishIds.isEmpty()) {
-            throw new RuntimeException("At least one KoiFish must be selected.");
-        }
-
-        List<KoiFish> koiFishes = new ArrayList<>();
-        double totalAmount = 0;
-
-        for (Long koiFishId : koiFishIds) {
-            KoiFish koiFish = koiRepository.findById(koiFishId)
-                    .orElseThrow(() -> new RuntimeException("KoiFish with ID " + koiFishId + " not found."));
-            double quantity = koiFishOrderRequest.getQuantity();
-            if (quantity <= 0) {
-                throw new RuntimeException("Quantity for KoiFish ID " + koiFishId + " must be greater than 0.");
-            }
-
-            double price = koiFishOrderRequest.getPrice();
-            if (price < 0) {
-                throw new RuntimeException("Price for KoiFish ID " + koiFishId + " cannot be negative.");
-            }
-
-            koiFishes.add(koiFish);
-            totalAmount += price * quantity;
+            total += koiFishOrderRequest.getPrice();
         }
 
-        newOrder.setKoiFishes(koiFishes);
-        newOrder.setTotal(totalAmount);
-        newOrder.setQuantity(koiFishOrderRequest.getQuantity());
+        order.setShoppingCarts(orderDetailsList);
 
-        return koiFishOrderRepository.save(newOrder);
+        order.setQuantity(koiFishOrderRequest.getQuantity());
+        order.setPrice(koiFishOrderRequest.getPrice());
+        order.setTotal(total);
+
+        return koiFishOrderRepository.save(order);
     }
-
-
-
-
 
     public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
         return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
@@ -137,33 +119,28 @@ public class KoiFishOrderService {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found."));
         existingOrder.setCustomer(customer);
-        List<Long> koiFishIds = koiFishOrderRequest.getKoiFishId();
-        if (koiFishIds.isEmpty()) {
-            throw new RuntimeException("At least one KoiFish must be selected.");
+        Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
+                .orElseThrow(() -> new RuntimeException("Consultant not found for ID: " + koiFishOrderRequest.getConsultingId()));
+
+        existingOrder.setConsulting(consulting);
+        List<ShoppingCart> orderDetailsList = new ArrayList<>();
+        double total = 0;
+        for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
+            KoiFish koi = koiRepository.findById(koiFishId)
+                    .orElseThrow(() -> new RuntimeException("KoiFish not found for ID: " + koiFishId));
+
+            ShoppingCart orderDetails = new ShoppingCart();
+            orderDetails.setKoiFish(koi);
+            orderDetailsList.add(orderDetails);
+
+            total += koiFishOrderRequest.getPrice();
         }
 
-        List<KoiFish> koiFishes = new ArrayList<>();
-        double totalAmount = 0;
-        for (Long koiFishId : koiFishIds) {
-            KoiFish koiFish = koiRepository.findById(koiFishId)
-                    .orElseThrow(() -> new RuntimeException("KoiFish with ID " + koiFishId + " not found."));
-            double quantity = koiFishOrderRequest.getQuantity();
-            if (quantity <= 0) {
-                throw new RuntimeException("Quantity for KoiFish ID " + koiFishId + " must be greater than 0.");
-            }
+        existingOrder.setShoppingCarts(orderDetailsList);
 
-            double price = koiFishOrderRequest.getPrice();
-            if (price < 0) {
-                throw new RuntimeException("Price for KoiFish ID " + koiFishId + " cannot be negative.");
-            }
-
-            koiFishes.add(koiFish);
-            totalAmount += price * quantity;
-        }
-
-        existingOrder.setKoiFishes(koiFishes);
-        existingOrder.setTotal(totalAmount);
         existingOrder.setQuantity(koiFishOrderRequest.getQuantity());
+        existingOrder.setPrice(koiFishOrderRequest.getPrice());
+        existingOrder.setTotal(total);
 
         return koiFishOrderRepository.save(existingOrder);
     }
