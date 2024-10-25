@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -43,6 +42,11 @@ public class TourAPI {
     public ResponseEntity<?> getTour(@RequestParam int page, @RequestParam int size){
         DataResponse dataResponse = tourService.getAllTourNotOpen(page, size);
         return ResponseEntity.ok(dataResponse);
+    }
+    @PostMapping("/setOpen")
+    public ResponseEntity<Tour> setOpen (long id){
+        Tour tour = tourService.setOpen(id);
+        return  ResponseEntity.ok(tour);
     }
 
     @GetMapping("/get/all")

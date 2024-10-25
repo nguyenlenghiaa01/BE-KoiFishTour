@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -154,7 +155,6 @@ public class TourService {
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
-
 
     public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
 //        HistoryTourSearch searchHistory = new HistoryTourSearch();
@@ -324,7 +324,23 @@ public class TourService {
         return tourRepository.save(oldTour);
     }
 
+    public Tour setOpen(long TourId){
+        Tour oldTour = tourRepository.findTourById(TourId);
+        if(oldTour ==null){
+            throw new NotFoundException("Tour not found !");
+        }
+        oldTour.setStatus("Not open");
+        stopScheduling(TourId);
+        return tourRepository.save(oldTour);
+    }
+    private static Map<Long, Boolean> isScheduledMap = new ConcurrentHashMap<>();
+
+    public void stopScheduling(long tourId) {
+        isScheduledMap.put(tourId, false);
+    }
+
     public String scheduleTour(Long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
+        isScheduledMap.put(id, true);
         LocalDateTime now = LocalDateTime.now();
 
         if (startTime.isBefore(now)) {
@@ -347,11 +363,14 @@ public class TourService {
         Tour tour = tourOpt.get();
         tour.setPrice(price);
         tourRepository.save(tour);
+
         scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
         scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
 
-        return "Tour scheduling success!";
+
+        return "Tour scheduling set successfully from " + startTime + " to " + endTime;
     }
+
 
     public DataResponse<TourResponse> getAll(@RequestParam int page, @RequestParam int size) {
         Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
@@ -382,5 +401,4 @@ public class TourService {
         dataResponse.setTotalPages(tourPage.getTotalPages());
         return dataResponse;
     }
-
 }
