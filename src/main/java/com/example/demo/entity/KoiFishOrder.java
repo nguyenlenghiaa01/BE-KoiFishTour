@@ -33,11 +33,9 @@ public class KoiFishOrder {
     Date createAt;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private float price;
+    private double paidMoney = 0;
 
-    private double quantity;
-
-    private double total;
+    private double totalPrice = 0;
 
     public KoiFishOrder() {
         this.koiFishOrderId = generateOrderId();

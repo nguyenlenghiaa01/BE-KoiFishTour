@@ -64,9 +64,9 @@ public class KoiFishOrderAPI {
 //    }
 
     // Get danh sách đơn hàng
-    @GetMapping
-    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
-        OrderResponse orders = koiFishOrderService.getAllOrder(page, size);
+    @GetMapping("customer/{id}")
+    public ResponseEntity getCustomerOrder(@PathVariable long id, @RequestParam int page, @RequestParam int size){
+        OrderResponse orders = koiFishOrderService.getCustomerOrder(id, page, size);
         return ResponseEntity.ok(orders);
     }
 //    @GetMapping("/history")

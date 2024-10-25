@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
 public class ShoppingCart {
@@ -16,7 +14,7 @@ public class ShoppingCart {
     private boolean isDeleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "shopping_cart_id")
+    @JoinColumn(name = "koi_fish_id")
     private KoiFish koiFish;
 
     @ManyToOne

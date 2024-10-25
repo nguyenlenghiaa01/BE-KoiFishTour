@@ -13,7 +13,7 @@ public interface KoiFishOrderRepository extends JpaRepository<KoiFishOrder,Long>
     KoiFishOrder findOrderById(long id);
     List<KoiFishOrder> findOrderCartsByIsDeletedFalse();
 
-    @Query("SELECT SUM(k.total) FROM KoiFishOrder k WHERE k.isDeleted = false AND MONTH(k.createAt) = :month AND YEAR(k.createAt) = :year")
+    @Query("SELECT SUM(k.totalPrice) FROM KoiFishOrder k WHERE k.isDeleted = false AND MONTH(k.createAt) = :month AND YEAR(k.createAt) = :year")
     Double findTotalOrderAmountByMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     @Query("SELECT COUNT(k) FROM KoiFishOrder k WHERE k.isDeleted = false AND MONTH(k.createAt) = :month AND YEAR(k.createAt) = :year")
@@ -24,5 +24,5 @@ public interface KoiFishOrderRepository extends JpaRepository<KoiFishOrder,Long>
 
     Page<KoiFishOrder> findAll(Pageable pageable);
 
-    List<KoiFishOrder> findByCustomerId(Long customerId);
+    Page<KoiFishOrder> findOrdersByCustomerId(long customerId, Pageable pageable);
 }

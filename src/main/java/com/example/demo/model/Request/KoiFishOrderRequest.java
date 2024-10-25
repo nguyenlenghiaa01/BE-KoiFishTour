@@ -9,8 +9,10 @@ import java.util.Set;
 public class KoiFishOrderRequest {
 
     private List<Long> shoppingCart;
-    private double quantity;
-    private float price;
     private long customerId;
     private long consultingId;
+    private long bookingId;
+    private String status;
+    private float paidMoney = 0;
+    private double totalPrice = 0;
 }
