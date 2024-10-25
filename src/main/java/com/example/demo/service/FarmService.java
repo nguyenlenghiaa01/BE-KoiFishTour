@@ -54,6 +54,8 @@ public class FarmService {
             farmResponse.setLocation(farm.getLocation());
             farmResponse.setOwner(farm.getOwner());
             farmResponse.setImage(farm.getImage());
+            farmResponse.setImage1(farm.getImage1());
+            farmResponse.setImage2(farm.getImage2());
 
             farmResponses.add(farmResponse);
         }
@@ -78,6 +80,8 @@ public class FarmService {
         oldFarm.setLocation(farm.getLocation());
         oldFarm.setImage(farm.getImage());
         oldFarm.setDeleted(farm.isDeleted());
+        oldFarm.setImage1(farm.getImage1());
+        oldFarm.setImage2(farm.getImage2());
         return farmRepository.save(oldFarm);
     }
     public Farm deleteFarm(long id){

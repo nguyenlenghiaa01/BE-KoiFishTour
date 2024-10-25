@@ -46,6 +46,8 @@ public class Farm {
     private String owner;
 
     private String image;
+    private String image1;
+    private String image2;
 
     @PrePersist
     private void prePersist() {
