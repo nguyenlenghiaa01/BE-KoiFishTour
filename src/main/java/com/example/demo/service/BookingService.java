@@ -51,19 +51,25 @@ public class BookingService {
     EmailService emailService;
     @Autowired
     TourRepository tourRepository;
-
+@Autowired
+NotificationService notificationService;
 
     @Autowired
     BookingService bookingService;
     public Booking createNewBooking(BookingRequest bookingRequest) {
-        //  create booking
-        Booking booking = new Booking();
-        Account account = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
+        Tour tour = tourRepository.findTourByTourId(bookingRequest.getTourId());
+        if (tour == null) {
+            throw new NotFoundException("Not found tour");
+        }
 
+        Account customer = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
+        if (customer == null) {
+            throw new NotFoundException("Not found customer");
+        }
+
+        Booking booking = new Booking();
         booking.setBookingDate(new Date());
         booking.setStatus("PENDING");
-//        booking.setDuration(bookingRequest.getDuration());
-//        booking.setStartDate(bookingRequest.getStartDate());
         booking.setPrice(bookingRequest.getPrice());
         booking.setFullName(bookingRequest.getFullName());
         booking.setEmail(bookingRequest.getEmail());
@@ -71,24 +77,25 @@ public class BookingService {
         booking.setChild(bookingRequest.getChild());
         booking.setAdult(bookingRequest.getAdult());
         booking.setInfant(bookingRequest.getInfant());
-        booking.setTour(booking.getTour());
-//        booking.setAddress(bookingRequest.getAddress());
-        Tour tour = tourRepository.findTourByTourId(bookingRequest.getTourId());
-            if(tour==null){
-                throw  new NotFoundException("Not found tour");
-            }
         booking.setTour(tour);
-        Account customer = accountRepository.findAccountByCode(bookingRequest.getCustomerId());
-              if(customer ==null){
-                 throw  new NotFoundException("Not found customer");
-              }
         booking.setAccount(customer);
+
         try {
-            return bookingRepository.save(booking);
+            Booking savedBooking = bookingRepository.save(booking);
+
+            String bookingInfo = "Tour: " + savedBooking.getTour().getTourId() +
+                    ", Customer: " + savedBooking.getAccount().getCode() +
+                    ", Email: " + savedBooking.getEmail();
+
+            notificationService.sendBookingNotification(bookingInfo);
+
+            return savedBooking;
         } catch (Exception e) {
             throw new DuplicateEntity("Duplicate booking id !");
         }
     }
+
+
     public DataResponse<BookingResponse> getAllBookingCustomer(@RequestParam int page,
                                                                @RequestParam int size,
                                                                @RequestParam long customerId) {
