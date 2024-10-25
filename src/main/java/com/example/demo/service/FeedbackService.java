@@ -6,14 +6,20 @@ import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FeedbackRequest;
+import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.FeedbackResponse;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.FeedbackRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FeedbackService {
@@ -47,10 +53,24 @@ public class FeedbackService {
         }
     }
 
-    public List<Feedback> getAllFeedback(){
+    public List<Feedback> getAllFeedback() {
         List<Feedback> feedbacks = feedbackRepository.findFeedbacksByIsDeletedFalse();
         return feedbacks;
     }
+
+
+    public DataResponse<FeedbackResponse> getFeedBack(int page, int size) {
+        Page<FeedbackResponse> feedbackResponsePage = feedbackRepository.findAllFeedbackResponses(PageRequest.of(page, size));
+        List<FeedbackResponse> feedbacks = feedbackResponsePage.getContent();
+        DataResponse<FeedbackResponse> response = new DataResponse<>();
+        response.setListData(feedbacks);
+        response.setTotalElements(feedbackResponsePage.getTotalElements());
+        response.setTotalPages(feedbackResponsePage.getTotalPages());
+        response.setPageNumber(feedbackResponsePage.getNumber());
+        return response;
+    }
+
+
     public Feedback updateFeedback(FeedbackRequest feedback, long id){
 
         Feedback oldFeedback = feedbackRepository.findFeedbackById(id);

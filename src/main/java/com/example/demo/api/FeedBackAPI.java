@@ -4,6 +4,8 @@ package com.example.demo.api;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FeedbackRequest;
+import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.FeedbackResponse;
 import com.example.demo.service.FeedbackService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -32,10 +34,14 @@ public class FeedBackAPI {
 
     // Lấy feedback
     @GetMapping("/guest/get")
-    public ResponseEntity<List<Feedback>> get() {
-        List<Feedback> feedbacks = feedbackService.getAllFeedback();
-        return ResponseEntity.ok(feedbacks);
+    public ResponseEntity<DataResponse<FeedbackResponse>> get(
+            @RequestParam int page,
+            @RequestParam int size) {
+        DataResponse<FeedbackResponse> feedbackResponse = feedbackService.getFeedBack(page, size);
+        return ResponseEntity.ok(feedbackResponse);
     }
+
+
 
     // update feedback
     @PreAuthorize("hasAuthority('CUSTOMER')")
