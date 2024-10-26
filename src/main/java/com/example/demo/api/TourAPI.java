@@ -34,7 +34,7 @@ public class TourAPI {
 
     @GetMapping("/guest/get")
     public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = tourService.getAll(page, size);
+        DataResponse dataResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 

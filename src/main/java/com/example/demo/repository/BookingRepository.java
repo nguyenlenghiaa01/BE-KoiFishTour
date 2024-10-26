@@ -17,14 +17,15 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     Page<Booking> findAll(Pageable pageable);
     List<Booking>findBookingByIsDeletedTrue();
 
-//    @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.bookingDate) = :month AND YEAR(b.bookingDate) = :year")
-//    Long countBookingsByMonthAndYear(@Param("month") int month, @Param("year") int year);
-//
-//    @Query("SELECT SUM(b.price) FROM Booking b WHERE MONTH(b.startDate) = :month AND YEAR(b.startDate) = :year AND b.isDeleted = false")
-//    Long sumPriceByMonthAndYear(@Param("month") int month, @Param("year") int year);
-//
-//    @Query("SELECT COUNT(b) FROM Booking b WHERE b.isDeleted = true AND MONTH(b.startDate) = :month AND YEAR(b.startDate) = :year")
-//    Long countDeletedBookingsByMonthAndYear(@Param("month") int month, @Param("year") int year);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year")
+    Long countBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
+
+    @Query("SELECT SUM(b.price) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.isDeleted = false")
+    Long sumPriceByTourStartDate(@Param("month") int month, @Param("year") int year);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.isDeleted = true AND MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year")
+    Long countDeletedBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
+
 //
     @Query("SELECT b FROM Booking b WHERE b.account.id = :accountId AND b.isDeleted = false")
     Page<Booking> findByAccountIdAndIsDeletedFalse(@Param("accountId") Long accountId, Pageable pageable);

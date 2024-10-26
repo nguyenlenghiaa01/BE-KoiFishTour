@@ -44,11 +44,12 @@ public class KoiFishOrderService {
     @Autowired
     private AuthenticationService authenticationService;
     private final ModelMapper modelMapper = new ModelMapper();
-    public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest){
+
+    public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found!"));
-         Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
-                 .orElseThrow(() -> new RuntimeException("Consultant not found"));
+        Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
+                .orElseThrow(() -> new RuntimeException("Consultant not found"));
         Booking booking = bookingRepository.findById(koiFishOrderRequest.getBookingId())
                 .orElseThrow(() -> new NotFoundException("Booking not found!"));
         KoiFishOrder order = new KoiFishOrder();
@@ -74,13 +75,13 @@ public class KoiFishOrderService {
         return koiFishOrderRepository.save(order);
     }
 
-    public OrderResponse getAllOrder(int page, int size){
+    public OrderResponse getAllOrder(int page, int size) {
         Page orderPage = koiFishOrderRepository.findAll(PageRequest.of(page, size));
         List<KoiFishOrder> koiFishOrders = orderPage.getContent();
         List<KoiFishOrder> activeKoiFishOrders = new ArrayList<>();
 
         for (KoiFishOrder order : koiFishOrders) {
-            if(!order.isDeleted()) {
+            if (!order.isDeleted()) {
                 activeKoiFishOrders.add(order);
             }
         }
@@ -91,7 +92,7 @@ public class KoiFishOrderService {
         orderResponse.setTotalElements(orderPage.getTotalElements());
         orderResponse.setTotalPages(orderPage.getTotalPages());
 
-        return  orderResponse;
+        return orderResponse;
     }
 
     public OrderResponse getCustomerOrder(long customerId, int page, int size) {
@@ -154,10 +155,21 @@ public class KoiFishOrderService {
 //    }
 
 //    public List<KoiFishOrder> getKoiFishesFromOrders() {
-//      Account currentAccount = authenticationService.getCurrentAccount();
-//       Long customerId = currentAccount.getId();
-//       }
+//        Account currentAccount = authenticationService.getCurrentAccount();
+//        Long customerId = currentAccount.getId();
+//    }
 
+    public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
+        return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
+    }
+
+    public Double countOrdersByMonthAndYear(int month, int year) {
+        return koiFishOrderRepository.countOrdersByMonthAndYear(month, year);
+    }
+
+    public Long countDeletedOrdersByMonthAndYear(int month, int year) {
+        return koiFishOrderRepository.countDeletedOrdersByMonthAndYear(month, year);
+    }
 
 
     public KoiFishOrder deleteOrderCart(long id) {

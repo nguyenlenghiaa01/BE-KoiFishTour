@@ -239,16 +239,16 @@ NotificationService notificationService;
         return dataResponse;
     }
 
-//    public Long getTotalBookingsByMonthAndYear(int month, int year) {
-//        return bookingRepository.countBookingsByMonthAndYear(month, year);
-//    }
-//    public Long getTotalPriceByMonthAndYear(int month, int year) {
-//        return bookingRepository.sumPriceByMonthAndYear(month, year);
-//    }
-//
-//    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
-//        return bookingRepository.countDeletedBookingsByMonthAndYear(month, year);
-//    }
+    public Long getTotalBookingsByMonthAndYear(int month, int year) {
+        return bookingRepository.countBookingsByTourStartDate(month, year);
+    }
+    public Long getTotalPriceByMonthAndYear(int month, int year) {
+        return bookingRepository.sumPriceByTourStartDate(month, year);
+    }
+
+    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
+        return bookingRepository.countDeletedBookingsByTourStartDate(month, year);
+    }
 
     public float getTotalBookingPayments() {
         List<Booking> bookings = bookingRepository.findAll();
