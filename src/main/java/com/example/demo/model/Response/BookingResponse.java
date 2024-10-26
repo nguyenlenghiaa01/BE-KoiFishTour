@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class BookingResponse {
 
+    private long bookingId;
     private LocalDate startDate;
     private String status;
     private float price;

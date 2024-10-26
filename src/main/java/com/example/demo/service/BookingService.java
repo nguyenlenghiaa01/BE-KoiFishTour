@@ -106,6 +106,7 @@ NotificationService notificationService;
         List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
             BookingResponse bookingResponse = new BookingResponse();
+            bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
 //            bookingResponse.setDuration(booking.getDuration());
 //            bookingResponse.setAddress(booking.getAddress());
@@ -140,6 +141,7 @@ NotificationService notificationService;
         List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
             BookingResponse bookingResponse = new BookingResponse();
+            bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
 //            bookingResponse.setDuration(booking.getDuration());
 //            bookingResponse.setAddress(booking.getAddress());
@@ -175,6 +177,7 @@ NotificationService notificationService;
         List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
             BookingResponse bookingResponse = new BookingResponse();
+            bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
 //            bookingResponse.setDuration(booking.getDuration());
 //            bookingResponse.setAddress(booking.getAddress());
@@ -212,6 +215,7 @@ NotificationService notificationService;
         for (Booking booking : bookings) {
             if (!booking.isDeleted()) {
                 BookingsResponse bookingResponse = new BookingsResponse();
+                bookingResponse.setBookingId(booking.getId());
                 bookingResponse.setEmail(booking.getEmail());
 //                bookingResponse.setDuration(booking.getDuration());
 //                bookingResponse.setAddress(booking.getAddress());

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class BookingsResponse {
+    private long bookingId;
     private LocalDate startDate;
     private String status;
     private float price;
