@@ -4,6 +4,7 @@ import com.example.demo.entity.Booking;
 import com.example.demo.entity.Breed;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
+import com.example.demo.model.Response.BookingsResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -62,9 +63,9 @@ public class BookingAPI {
 
     // Get danh sách breed
     @GetMapping
-    public ResponseEntity<DataResponse<BookingResponse>> get(@RequestParam int page,
-                                                             @RequestParam int size) {
-        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBooking(page, size);
+    public ResponseEntity<DataResponse<BookingsResponse>> get(@RequestParam int page,
+                                                              @RequestParam int size) {
+        DataResponse<BookingsResponse> bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
     }
 

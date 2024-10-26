@@ -9,6 +9,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
+import com.example.demo.model.Response.BookingsResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
@@ -91,7 +92,7 @@ NotificationService notificationService;
 
             return savedBooking;
         } catch (Exception e) {
-            throw new DuplicateEntity("Duplicate booking id !");
+            throw new DuplicateEntity("Something went wrong!");
         }
     }
 
@@ -204,13 +205,13 @@ NotificationService notificationService;
 
 
 
-    public DataResponse<BookingResponse> getAllBooking(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<BookingsResponse> getAllBooking(@RequestParam int page, @RequestParam int size) {
         Page<Booking> bookingPage = bookingRepository.findAll(PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
-        List<BookingResponse> activeBookings = new ArrayList<>();
+        List<BookingsResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
             if (!booking.isDeleted()) {
-                BookingResponse bookingResponse = new BookingResponse();
+                BookingsResponse bookingResponse = new BookingsResponse();
                 bookingResponse.setEmail(booking.getEmail());
 //                bookingResponse.setDuration(booking.getDuration());
 //                bookingResponse.setAddress(booking.getAddress());
@@ -222,14 +223,14 @@ NotificationService notificationService;
                 bookingResponse.setInfant(booking.getInfant());
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setPrice(booking.getPrice());
-                bookingResponse.setTourId(booking.getTour().getId());
+                bookingResponse.setTourName(booking.getTour().getTourName());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
 
                 activeBookings.add(bookingResponse);
             }
         }
 
-        DataResponse<BookingResponse> dataResponse = new DataResponse<>();
+        DataResponse<BookingsResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(activeBookings);
         dataResponse.setPageNumber(bookingPage.getNumber());
         dataResponse.setTotalElements(bookingPage.getTotalElements());

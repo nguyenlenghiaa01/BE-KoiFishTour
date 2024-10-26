@@ -84,6 +84,7 @@ public class TourService {
     }
 
 
+
     public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
         Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("open", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
@@ -392,7 +393,7 @@ public class TourService {
             tourResponse.setPrice(tour.getPrice());
             tourResponse.setTime(tour.getTime());
             tourResponse.setDescription(tour.getDescription());
-            tourResponse.setConsultingId(tour.getAccount().getFullName());
+            tourResponse.setConsultingName(tour.getAccount().getFullName());
             tourResponses.add(tourResponse);
         }
         DataResponse<TourResponses> dataResponse = new DataResponse<>();

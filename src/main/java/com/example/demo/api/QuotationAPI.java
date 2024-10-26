@@ -1,7 +1,9 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Quotation;
+import com.example.demo.entity.QuotationProcess;
 import com.example.demo.model.Request.QuotationRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.QuotationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -31,6 +33,12 @@ public class QuotationAPI {
     public ResponseEntity<?> getAllQuotation() {
         List<Quotation> quotations = quotationService.getAllQuotation();
         return ResponseEntity.ok(quotations);
+    }
+
+    @GetMapping("/pending")
+    public ResponseEntity<?> get(int page , int size){
+        DataResponse<Quotation> quotationProcesses = quotationService.getAllQuotation(page, size);
+        return ResponseEntity.ok(quotationProcesses);
     }
 
     @PutMapping("{id}")

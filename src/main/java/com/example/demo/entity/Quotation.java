@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.Enum.QuotationEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -42,7 +43,8 @@ public class Quotation {
     @Column(name = "upload_at", nullable = false)
     private LocalDateTime uploadAt;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private QuotationEnum status;
 
     @OneToMany(mappedBy = "quotation")
     @JsonIgnore

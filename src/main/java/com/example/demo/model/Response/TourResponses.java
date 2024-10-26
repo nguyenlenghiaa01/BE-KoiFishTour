@@ -19,6 +19,6 @@ public class TourResponses {
     private double price;
     private String time;
     private String description;
-    private String consultingId;
+    private String consultingName;
     private Set<Farm> farms;
 }

@@ -1,6 +1,7 @@
 
 package com.example.demo.entity;
 
+import com.example.demo.Enum.QuotationEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -35,8 +36,8 @@ public class QuotationProcess {
 
     public String generateFarmId() {
         Random random = new Random();
-        int number = random.nextInt(10000000); // Tạo số ngẫu nhiên từ 0 đến 9999999
-        return String.format("QOP%07d", number); // Định dạng với 7 chữ số
+        int number = random.nextInt(10000000);
+        return String.format("QOP%07d", number);
     }
 
     @Column(nullable = false)
@@ -45,8 +46,8 @@ public class QuotationProcess {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private QuotationEnum status;
 
     private String notes;
 

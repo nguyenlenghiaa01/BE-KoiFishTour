@@ -49,11 +49,9 @@ public class Booking {
 //    @NotBlank(message = "Address cannot be blank")
 //    private String address;
     @Email(message = "Invalid Email!")
-    @Column(unique = true)
     private String email;
 
     @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
-    @Column(unique = true)
     private String phone;
 
     private int adult;

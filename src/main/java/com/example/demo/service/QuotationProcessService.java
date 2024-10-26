@@ -6,14 +6,19 @@ import com.example.demo.entity.QuotationProcess;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.QuotationProcessRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.QuotationProcessRepository;
 import com.example.demo.repository.QuotationRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,10 +53,31 @@ public class QuotationProcessService {
         }
     }
 
-    public List<QuotationProcess> getAllQuotationProcess() {
+    public DataResponse<QuotationProcess> getAllQuotation(@RequestParam int page, @RequestParam int size, @RequestParam long id) {
+        Quotation quotation = quotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Quotation not found!"));
 
-        return quotationProcessRepository.findQuotationProcessesByIsDeletedFalse();
+        Page<QuotationProcess> quotationPage = quotationProcessRepository.findAll(PageRequest.of(page, size));
+        List<QuotationProcess> quotations = new ArrayList<>();
+
+        for (QuotationProcess quotationProcess : quotationPage.getContent()) {
+            QuotationProcess updatedQuotationProcess = new QuotationProcess();
+            updatedQuotationProcess.setNotes(quotationProcess.getNotes());
+            updatedQuotationProcess.setStatus(quotation.getStatus());
+            updatedQuotationProcess.setAccount(quotationProcess.getAccount());
+            updatedQuotationProcess.setQuotationProcessId(quotationProcess.getQuotationProcessId());
+
+            quotations.add(updatedQuotationProcess);
+        }
+        DataResponse<QuotationProcess> dataResponse = new DataResponse<>();
+        dataResponse.setListData(quotations);
+        dataResponse.setTotalElements(quotationPage.getTotalElements());
+        dataResponse.setPageNumber(quotationPage.getNumber());
+        dataResponse.setTotalPages(quotationPage.getTotalPages());
+
+        return dataResponse;
     }
+
+
 
     public QuotationProcess updateQuotationProcess(QuotationProcessRequest quotationProcessRequest, long id) {
         QuotationProcess existingQuotationProcess = quotationProcessRepository.findQuotationProcessById(id);

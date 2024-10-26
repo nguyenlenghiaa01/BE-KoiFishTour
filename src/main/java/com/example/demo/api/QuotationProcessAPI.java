@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.QuotationProcess;
 import com.example.demo.entity.Tour;
 import com.example.demo.model.Request.QuotationProcessRequest;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.QuotationProcessService;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,11 +32,13 @@ public class QuotationProcessAPI {
     }
 
     // Get danh sách quotation Process
-    @GetMapping
-    public ResponseEntity<?> get(){
-        List<QuotationProcess> quotationProcesses = quotationProcessService.getAllQuotationProcess();
+    @GetMapping("/all")
+    public ResponseEntity<?> get(int page , int size,long id){
+        DataResponse<QuotationProcess> quotationProcesses = quotationProcessService.getAllQuotation(page, size, id);
         return ResponseEntity.ok(quotationProcesses);
     }
+
+
     // /api/tour/{id} => id cua thang tour minh muon update
     @PutMapping("{id}")
     public ResponseEntity<?> updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation

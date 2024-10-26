@@ -25,11 +25,9 @@ public class BookingRequest {
 
 //    private String duration;
     @Email(message = "Invalid Email!")
-    @Column(unique = true)
     private String email;
 
     @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
-    @Column(unique = true)
     private String phone;
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
