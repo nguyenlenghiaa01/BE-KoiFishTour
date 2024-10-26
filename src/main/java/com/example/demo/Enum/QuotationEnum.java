@@ -1,7 +1,7 @@
 package com.example.demo.Enum;
 
 public enum QuotationEnum {
-    ACCEPT,
+    APPROVE,
     PENDING,
     CANCEL
 }

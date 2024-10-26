@@ -91,6 +91,7 @@ public class TourAPI {
             return ResponseEntity.ok(updatedTour);
     }
 
+
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteTour(@PathVariable long id) {
             Tour deletedTour = tourService.deleteTour(id);

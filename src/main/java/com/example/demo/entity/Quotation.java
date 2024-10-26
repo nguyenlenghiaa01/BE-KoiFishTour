@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +29,7 @@ public class Quotation {
     @PrePersist
     private void prePersist() {
         this.quotationId = generateQuotationId(); // Sử dụng hàm để tạo mã duy nhất
-        this.uploadAt = LocalDateTime.now(); // Gán thời gian upload khi lưu vào DB
+//        this.uploadAt = LocalDateTime.now(); // Gán thời gian upload khi lưu vào DB
     }
 
     public String generateQuotationId() {
@@ -37,11 +38,13 @@ public class Quotation {
         return String.format("QUO%07d", number); // Định dạng với 7 chữ số
     }
 
+    private Date createAt= new Date();
+
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @Column(name = "upload_at", nullable = false)
-    private LocalDateTime uploadAt;
+//    @Column(name = "upload_at", nullable = false)
+//    private LocalDateTime uploadAt;
 
     @Enumerated(EnumType.STRING)
     private QuotationEnum status;
@@ -50,6 +53,8 @@ public class Quotation {
     @JsonIgnore
     private List<QuotationProcess> quotationProcesses;
 
+    private double perAdultPrice;
+    private double perChildPrice;
     @OneToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking;

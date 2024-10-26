@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class QuotationRequest {
     long bookingId;
-    @Enumerated(EnumType.STRING)
-    QuotationEnum status;
+    private double adultPrice;
+    private double childPrice;
 }

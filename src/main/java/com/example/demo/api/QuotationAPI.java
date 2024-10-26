@@ -4,6 +4,7 @@ import com.example.demo.entity.Quotation;
 import com.example.demo.entity.QuotationProcess;
 import com.example.demo.model.Request.QuotationRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.QuotationResponse;
 import com.example.demo.service.QuotationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -18,7 +19,6 @@ import java.util.List;
 @RequestMapping("api/quotation")
 @SecurityRequirement(name = "api")
 @CrossOrigin("*")
-@PreAuthorize("hasAuthority('MANAGER')")
 public class QuotationAPI {
     @Autowired
     QuotationService quotationService;
@@ -30,20 +30,25 @@ public class QuotationAPI {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllQuotation() {
-        List<Quotation> quotations = quotationService.getAllQuotation();
+    public ResponseEntity<?> getAllQuotation(int page, int size) {
+        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotations(page, size);
         return ResponseEntity.ok(quotations);
     }
 
     @GetMapping("/pending")
     public ResponseEntity<?> get(int page , int size){
-        DataResponse<Quotation> quotationProcesses = quotationService.getAllQuotation(page, size);
+        DataResponse<QuotationResponse> quotationProcesses = quotationService.getAllQuotation(page, size);
         return ResponseEntity.ok(quotationProcesses);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotation(quotationRequest, id);
+        return ResponseEntity.ok(newQuotation);
+    }
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> updateQuotationCancel(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
+        Quotation newQuotation = quotationService.updateQuotationCancel(quotationRequest, id);
         return ResponseEntity.ok(newQuotation);
     }
 
