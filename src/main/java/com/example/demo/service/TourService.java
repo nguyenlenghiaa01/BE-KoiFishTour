@@ -14,6 +14,7 @@ import com.example.demo.repository.SearchHistoryRepository;
 import com.example.demo.repository.TourRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +48,8 @@ public class TourService {
     ScheduleJob scheduleJob;
     @Autowired
     AccountRepository accountRepository;
+
+
 
     public Tour createNewTour(TourRequest tourRequest) {
         Account consultingAccount = accountRepository.findById(tourRequest.getConsultingId())
@@ -329,61 +332,60 @@ public class TourService {
         return tourRepository.save(oldTour);
     }
 
-    public Tour setOpen(long TourId){
+    public Tour setOpen(long TourId) throws SchedulerException {
         Tour oldTour = tourRepository.findTourById(TourId);
         if(oldTour ==null){
             throw new NotFoundException("Tour not found !");
         }
         oldTour.setStatus("Not open");
-        stopScheduling(TourId);
+        scheduleJob.cancelScheduledJob(TourId);
         return tourRepository.save(oldTour);
     }
-    private static Map<Long, Boolean> isScheduledMap = new ConcurrentHashMap<>();
 
-    public void stopScheduling(long tourId) {
-        isScheduledMap.put(tourId, false);
-    }
-
-
-    List<ScheduleJob> scheduleJobs = new ArrayList<>();
-
-//    public void cancelScheduledJob(long tourId) {
-//        if (scheduleJobs.containsKey(tourId)) {
-//            scheduleJobs.remove(tourId);
-//        }
-//    }
-
+    private Map<Long, ScheduleJob> scheduledJobs = new HashMap<>();
     public String scheduleTour(OpenTourRequest openTourRequest) throws Exception {
         LocalDateTime now = LocalDateTime.now();
-        OpenTourRequest openTourRequest1 = new OpenTourRequest();
-            Optional<Tour> tourOpt = tourRepository.findById(openTourRequest1.getId());
-            if(!tourOpt.isPresent()){
-                throw  new NotFoundException("Not Found ID");
-            }
 
-            Tour tour = tourOpt.get();
-            tour.setPrice(openTourRequest.getPrice());
-            tourRepository.save(tour);
+        // Kiểm tra và lấy Tour từ cơ sở dữ liệu
+        Optional<Tour> tourOpt = tourRepository.findById(openTourRequest.getId());
+        if (!tourOpt.isPresent()) {
+            throw new NotFoundException("Not Found ID");
+        }
+
+        Tour tour = tourOpt.get();
+
+
+        // Xác nhận thời gian hợp lệ
         LocalDateTime startTime = openTourRequest.getStartTime();
         LocalDateTime endTime = openTourRequest.getEndTime();
 
-            if (startTime.isBefore(now)) {
-                throw new Exception("Start time cannot be in the past!");
-            }
-            if (endTime.isBefore(now)) {
-                throw new Exception("End time cannot be in the past!");
-            }
-            if (endTime.isBefore(startTime)) {
-                throw new Exception("End time cannot be before start time!");
-            }
+        if (startTime.isBefore(now)) {
+            throw new Exception("Start time cannot be in the past!");
+        }
+        if (endTime.isBefore(now)) {
+            throw new Exception("End time cannot be in the past!");
+        }
+        if (endTime.isBefore(startTime)) {
+            throw new Exception("End time cannot be before start time!");
+        }
 
-            // Schedule the new activation and deactivation
-            scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
-            scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
+        // Hủy công việc cũ nếu tồn tại
+        if (scheduledJobs.containsKey(tour.getId())) {
+            ScheduleJob existingJob = scheduledJobs.get(tour.getId());
+            existingJob.cancelScheduledJob(tour.getId()); // Hủy công việc đã lên lịch
+            scheduledJobs.remove(tour.getId());
+        }
 
+        scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
+        scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
+        tour.setPrice(openTourRequest.getPrice());
+        tourRepository.save(tour);
 
-        return "Tour scheduling set successfully from " + openTourRequest1.getStartTime() + " to " + openTourRequest1.getEndTime();
-    }
+        scheduledJobs.put(tour.getId(), scheduleJob);
+
+        return "Tour scheduling set successfully from " + startTime + " to " + endTime;
+
+}
 
 
     public DataResponse<TourResponses>getAll(@RequestParam int page, @RequestParam int size) {

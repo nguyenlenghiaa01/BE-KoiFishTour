@@ -8,6 +8,7 @@ import com.example.demo.model.Response.TourResponse;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class TourAPI {
         return ResponseEntity.ok(dataResponse);
     }
     @PostMapping("/setOpen")
-    public ResponseEntity<Tour> setOpen (long id){
+    public ResponseEntity<Tour> setOpen (long id) throws SchedulerException {
         Tour tour = tourService.setOpen(id);
         return  ResponseEntity.ok(tour);
     }
