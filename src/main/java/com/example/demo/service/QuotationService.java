@@ -41,13 +41,7 @@ public class QuotationService {
         quotation.setBooking(booking);
         quotation.setStatus(QuotationEnum.PENDING);
 
-        try {
-            Quotation newQuotation = quotationRepository.save(quotation);
-            return  newQuotation;
-
-        } catch (Exception e) {
-            throw new DuplicateEntity("Duplicate quotation id!");
-        }
+        return quotationRepository.save(quotation);
     }
 
     public DataResponse<QuotationResponse> getAllQuotations(@RequestParam int page, @RequestParam int size) {
