@@ -98,7 +98,7 @@ public class TourAPI {
 
 
     @PostMapping("/schedule")
-    public String scheduleTour(@RequestParam Long id,
+    public String scheduleTour(@RequestParam long id,
                                @RequestParam double price,
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime startTime,
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime endTime) {

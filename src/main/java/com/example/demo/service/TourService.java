@@ -341,7 +341,7 @@ public class TourService {
         isScheduledMap.put(tourId, false);
     }
 
-    public String scheduleTour(Long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
+    public String scheduleTour(long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
         isScheduledMap.put(id, true);
         LocalDateTime now = LocalDateTime.now();
 
