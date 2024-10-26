@@ -42,15 +42,15 @@ public class Quotation {
     @Column(name = "upload_at", nullable = false)
     private LocalDateTime uploadAt;
 
-    private String fileUrl;
+    private String status;
 
     @OneToMany(mappedBy = "quotation")
     @JsonIgnore
     private List<QuotationProcess> quotationProcesses;
 
-    @OneToOne // Mối quan hệ 1-1 với Booking
+    @OneToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
-    private Booking booking; // Quotation liên kết với một Booking duy nhất
+    private Booking booking;
 
 
 }

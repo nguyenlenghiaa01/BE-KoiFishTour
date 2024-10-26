@@ -29,7 +29,7 @@ public class QuotationService {
                 orElseThrow(() -> new NotFoundException("Booking not exist!"));
 
         quotation.setBooking(booking);
-        quotation.setFileUrl(quotationRequest.getFileUrl());
+        quotation.setStatus(quotationRequest.getStatus());
 
         try {
             Quotation newQuotation = quotationRepository.save(quotation);
@@ -54,7 +54,7 @@ public class QuotationService {
         Booking booking = bookingRepository.findById(quotationRequest.getBookingId()).
                 orElseThrow(() -> new NotFoundException("Booking not exist!"));
         quotation.setBooking(booking);
-        quotation.setFileUrl(quotationRequest.getFileUrl());
+        quotation.setStatus(quotationRequest.getStatus());
 
         return quotationRepository.save(quotation);
     }

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class QuotationRequest {
     long bookingId;
-    String fileUrl;
+    String status;
 }

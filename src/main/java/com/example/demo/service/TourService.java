@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
+import com.example.demo.model.Response.TourResponses;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.FarmRepository;
 import com.example.demo.repository.SearchHistoryRepository;
@@ -372,13 +373,13 @@ public class TourService {
     }
 
 
-    public DataResponse<TourResponse> getAll(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<TourResponses>getAll(@RequestParam int page, @RequestParam int size) {
         Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
-        List<TourResponse> tourResponses = new ArrayList<>();
+        List<TourResponses> tourResponses = new ArrayList<>();
 
         for (Tour tour : tours) {
-            TourResponse tourResponse = new TourResponse();
+            TourResponses tourResponse = new TourResponses();
             tourResponse.setId(tour.getId());
             tourResponse.setTourId(tour.getTourId());
             tourResponse.setDeleted(tour.isDeleted());
@@ -391,10 +392,10 @@ public class TourService {
             tourResponse.setPrice(tour.getPrice());
             tourResponse.setTime(tour.getTime());
             tourResponse.setDescription(tour.getDescription());
-            tourResponse.setConsultingId(tour.getAccount().getId());
+            tourResponse.setConsultingId(tour.getAccount().getFullName());
             tourResponses.add(tourResponse);
         }
-        DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
+        DataResponse<TourResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourPage.getTotalElements());
         dataResponse.setPageNumber(tourPage.getNumber());
