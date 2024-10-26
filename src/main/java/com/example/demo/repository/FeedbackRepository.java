@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Feedback;
+import com.example.demo.entity.Quotation;
 import com.example.demo.model.Response.FeedbackResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
             "FROM Feedback f JOIN f.customer c WHERE f.isDeleted = false")
     Page<FeedbackResponse> findAllFeedbackResponses(Pageable pageable);
 
-
+    Page<Feedback> findAll(Pageable pageable);
 
 
 }

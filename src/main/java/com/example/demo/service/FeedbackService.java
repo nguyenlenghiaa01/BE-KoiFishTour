@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,13 +54,34 @@ public class FeedbackService {
         }
     }
 
-    public List<Feedback> getAllFeedback() {
-        List<Feedback> feedbacks = feedbackRepository.findFeedbacksByIsDeletedFalse();
-        return feedbacks;
+
+    public DataResponse<FeedbackResponse> getAllFeedback(@RequestParam int page, @RequestParam int size) {
+        Page<Feedback> feedbackPage = feedbackRepository.findAll(PageRequest.of(page, size));
+
+        List<FeedbackResponse> feedbackResponses = new ArrayList<>();
+
+        for (Feedback feedback : feedbackPage.getContent()) {
+            FeedbackResponse response = new FeedbackResponse();
+            response.setId(feedback.getId());
+            response.setComment(feedback.getComment());
+            response.setRating(feedback.getRating());
+            response.setEmail(feedback.getCustomer().getEmail());
+            if (feedback.getRating() >= 4) {
+                feedbackResponses.add(response);
+            }
+        }
+        DataResponse<FeedbackResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(feedbackResponses);
+        dataResponse.setTotalElements(feedbackPage.getTotalElements());
+        dataResponse.setTotalPages(feedbackPage.getTotalPages());
+        dataResponse.setPageNumber(feedbackPage.getNumber());
+
+        return dataResponse;
     }
 
 
-    public DataResponse<FeedbackResponse> getFeedBack(int page, int size) {
+
+    public DataResponse<FeedbackResponse> getFeedBack(@RequestParam int page,@RequestParam int size) {
         Page<FeedbackResponse> feedbackResponsePage = feedbackRepository.findAllFeedbackResponses(PageRequest.of(page, size));
         List<FeedbackResponse> feedbacks = feedbackResponsePage.getContent();
         DataResponse<FeedbackResponse> response = new DataResponse<>();

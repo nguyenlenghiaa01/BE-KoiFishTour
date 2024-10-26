@@ -33,11 +33,19 @@ public class FeedBackAPI {
     }
 
     // Lấy feedback
-    @GetMapping("/guest/get")
+    @GetMapping("/get")
     public ResponseEntity<DataResponse<FeedbackResponse>> get(
             @RequestParam int page,
             @RequestParam int size) {
         DataResponse<FeedbackResponse> feedbackResponse = feedbackService.getFeedBack(page, size);
+        return ResponseEntity.ok(feedbackResponse);
+    }
+
+    @GetMapping("/guest/get")
+    public ResponseEntity<DataResponse<FeedbackResponse>> getAll(
+            @RequestParam int page,
+            @RequestParam int size) {
+        DataResponse<FeedbackResponse> feedbackResponse = feedbackService.getAllFeedback(page, size);
         return ResponseEntity.ok(feedbackResponse);
     }
 
