@@ -15,6 +15,8 @@ import java.util.Set;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

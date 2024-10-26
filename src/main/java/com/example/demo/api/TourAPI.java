@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Tour;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -98,12 +99,9 @@ public class TourAPI {
 
 
     @PostMapping("/schedule")
-    public String scheduleTour(@RequestParam long id,
-                               @RequestParam double price,
-                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime startTime,
-                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime endTime) {
+    public String scheduleTour(OpenTourRequest openTourRequest) {
         try {
-            return tourService.scheduleTour(id, price, startTime, endTime);
+            return tourService.scheduleTour(openTourRequest);
         } catch (Exception e) {
             return "Error during scheduling: " + e.getMessage();
         }

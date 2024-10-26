@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
@@ -26,6 +27,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -341,36 +344,45 @@ public class TourService {
         isScheduledMap.put(tourId, false);
     }
 
-    public String scheduleTour(long id, double price, LocalDateTime startTime, LocalDateTime endTime) throws Exception {
-        isScheduledMap.put(id, true);
+
+    List<ScheduleJob> scheduleJobs = new ArrayList<>();
+
+//    public void cancelScheduledJob(long tourId) {
+//        if (scheduleJobs.containsKey(tourId)) {
+//            scheduleJobs.remove(tourId);
+//        }
+//    }
+
+    public String scheduleTour(OpenTourRequest openTourRequest) throws Exception {
         LocalDateTime now = LocalDateTime.now();
+        OpenTourRequest openTourRequest1 = new OpenTourRequest();
+            Optional<Tour> tourOpt = tourRepository.findById(openTourRequest1.getId());
+            if(!tourOpt.isPresent()){
+                throw  new NotFoundException("Not Found ID");
+            }
 
-        if (startTime.isBefore(now)) {
-            throw new Exception("Start time cannot be in the past!");
-        }
+            Tour tour = tourOpt.get();
+            tour.setPrice(openTourRequest.getPrice());
+            tourRepository.save(tour);
+        LocalDateTime startTime = openTourRequest.getStartTime();
+        LocalDateTime endTime = openTourRequest.getEndTime();
 
-        if (endTime.isBefore(now)) {
-            throw new Exception("End time cannot be in the past!");
-        }
+            if (startTime.isBefore(now)) {
+                throw new Exception("Start time cannot be in the past!");
+            }
+            if (endTime.isBefore(now)) {
+                throw new Exception("End time cannot be in the past!");
+            }
+            if (endTime.isBefore(startTime)) {
+                throw new Exception("End time cannot be before start time!");
+            }
 
-        if (endTime.isBefore(startTime)) {
-            throw new Exception("End time cannot be before start time!");
-        }
-
-        Optional<Tour> tourOpt = tourRepository.findById(id);
-        if (!tourOpt.isPresent()) {
-            throw new Exception("Tour does not exist!");
-        }
-
-        Tour tour = tourOpt.get();
-        tour.setPrice(price);
-        tourRepository.save(tour);
-
-        scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
-        scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
+            // Schedule the new activation and deactivation
+            scheduleJob.scheduleActivation(tour.getId(), Timestamp.valueOf(startTime));
+            scheduleJob.scheduleDeactivation(tour.getId(), Timestamp.valueOf(endTime));
 
 
-        return "Tour scheduling set successfully from " + startTime + " to " + endTime;
+        return "Tour scheduling set successfully from " + openTourRequest1.getStartTime() + " to " + openTourRequest1.getEndTime();
     }
 
 
