@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TourRepository extends JpaRepository<Tour,Long> , JpaSpecificationExecutor<Tour> {
-    Tour findTourByTourId(String id);
+    Tour findTourByTourId(String tourId);
     Tour findTourById(long id);
     List<Tour> findByStatus(String status);
     List<Tour> findToursByIsDeletedFalse();

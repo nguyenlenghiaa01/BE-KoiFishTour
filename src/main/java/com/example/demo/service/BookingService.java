@@ -81,19 +81,10 @@ NotificationService notificationService;
         booking.setTour(tour);
         booking.setAccount(customer);
 
-        try {
-            Booking savedBooking = bookingRepository.save(booking);
 
-            String bookingInfo = "Tour: " + savedBooking.getTour().getTourId() +
-                    ", Customer: " + savedBooking.getAccount().getCode() +
-                    ", Email: " + savedBooking.getEmail();
 
-            notificationService.sendBookingNotification(bookingInfo);
+            return bookingRepository.save(booking);
 
-            return savedBooking;
-        } catch (Exception e) {
-            throw new DuplicateEntity("Something went wrong!");
-        }
     }
 
 

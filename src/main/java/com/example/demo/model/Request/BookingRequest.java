@@ -33,14 +33,11 @@ public class BookingRequest {
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
-//    @NotBlank(message = "Address cannot be blank")
-//    private String address;
     private int adult;
     private int child;
     private int infant;
 
 
-//    private LocalDate bookingDate;
     private String customerId;
     private String tourId;
 }
