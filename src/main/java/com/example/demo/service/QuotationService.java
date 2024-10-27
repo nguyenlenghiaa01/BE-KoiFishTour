@@ -81,6 +81,24 @@ public class QuotationService {
 
         return dataResponse;
     }
+    public QuotationResponse getQuotationByBookingId(String id) {
+        Booking booking = bookingRepository.findBookingsByBookingId(id);
+        if (booking == null) {
+            throw new NotFoundException("Not found booking code");
+        }
+
+        Quotation quotation = quotationRepository.findById(booking.getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
+
+        QuotationResponse quotationResponse = new QuotationResponse();
+        quotationResponse.setQuotationId(quotation.getId());
+        quotationResponse.setBookingId(booking.getId());
+        quotationResponse.setAdultPrice(quotation.getPerAdultPrice());
+        quotationResponse.setChildPrice(quotation.getPerChildPrice());
+        quotationResponse.setStatus(quotation.getStatus());
+
+        return quotationResponse;
+    }
+
 
     public DataResponse<QuotationResponse> getAllQuotations(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));

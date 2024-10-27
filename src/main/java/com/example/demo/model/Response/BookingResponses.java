@@ -10,7 +10,6 @@ public class BookingResponses {
     private long bookingId;
     private LocalDate startDate;
     private String status;
-    private double totalPrice;
     private String duration;
     private String email;
     private String phone;

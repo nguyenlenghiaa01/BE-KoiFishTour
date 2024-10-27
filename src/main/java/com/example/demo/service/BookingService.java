@@ -138,13 +138,13 @@ public class BookingService {
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setCustomerId(booking.getAccount().getId());
 
-            Quotation quotation = quotationRepository.findById(booking.getId())
-                    .orElseThrow(() -> new NotFoundException("Quotation not found for booking id: " + booking.getId()));
-
-            double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice() +
-                    quotation.getBooking().getChild() * quotation.getPerChildPrice() +
-                    quotation.getBooking().getPrice();
-            bookingResponse.setTotalPrice(totalPrice);
+//            Quotation quotation = quotationRepository.findById(booking.getId())
+//                    .orElseThrow(() -> new NotFoundException("Quotation not found for booking id: " + booking.getId()));
+//
+//            double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice() +
+//                    quotation.getBooking().getChild() * quotation.getPerChildPrice() +
+//                    quotation.getBooking().getPrice();
+//            bookingResponse.setTotalPrice(totalPrice);
 
             // Thiết lập thông tin Tour vào BookingResponse
             Tour tour = booking.getTour();

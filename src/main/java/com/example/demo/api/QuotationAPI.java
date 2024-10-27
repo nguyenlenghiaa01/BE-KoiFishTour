@@ -40,6 +40,11 @@ public class QuotationAPI {
         DataResponse<QuotationResponse> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
+    @GetMapping("/bookingCode")
+    public ResponseEntity<?> getQuotationByBookingCode(String id){
+        QuotationResponse quotationResponse = quotationService.getQuotationByBookingId(id);
+        return ResponseEntity.ok(quotationResponse);
+    }
 
     @GetMapping("/pending")
     public ResponseEntity<?> get(int page , int size){
