@@ -63,6 +63,7 @@ public class QuotationService {
                 quotationResponse.setChildPrice(quotation.getBooking().getChild() *quotation.getPerChildPrice());
                 quotationResponse.setBookingId(quotation.getBooking().getId());
                 quotationResponse.setQuotationId(quotation.getId());
+                quotationResponse.setStatus(quotation.getStatus());
 
                 double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice()+
                         quotation.getBooking().getChild() *quotation.getPerChildPrice()
@@ -162,7 +163,7 @@ public class QuotationService {
         quotationProcess.setQuotation(quotation1);
         quotationProcess.setCreatedAt(LocalDateTime.now());
         quotationProcess.setNotes(quotation1Request.getNote());
-        quotationProcess.setStatus(quotation1.getStatus());
+//        quotationProcess.setStatus(quotation1.getStatus());
 
         quotationProcessRepository.save(quotationProcess);
         return quotation1;

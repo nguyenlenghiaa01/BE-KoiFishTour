@@ -7,9 +7,7 @@ import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
-import com.example.demo.model.Response.BookingResponse;
-import com.example.demo.model.Response.BookingsResponse;
-import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.*;
 import com.example.demo.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,34 +119,55 @@ public class BookingService {
 
         return dataResponse;
     }
-    public DataResponse<BookingResponse> getBookingByCustomer(@RequestParam int page,
-                                                                   @RequestParam int size,
-                                                                   @RequestParam String  id) {
+    public DataResponse<BookingResponses> getBookingByCustomer(@RequestParam int page,
+                                                               @RequestParam int size,
+                                                               @RequestParam String id) {
         Account customer = accountRepository.findAccountByCode(id);
         Page<Booking> bookingPage = bookingRepository.findByAccountCode(id, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
 
-        List<BookingResponse> activeBookings = new ArrayList<>();
+        List<BookingResponses> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-            BookingResponse bookingResponse = new BookingResponse();
+            BookingResponses bookingResponse = new BookingResponses();
             bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
-//            bookingResponse.setDuration(booking.getDuration());
-//            bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
-//            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
             bookingResponse.setAdult(booking.getAdult());
             bookingResponse.setInfant(booking.getInfant());
-            bookingResponse.setPrice(booking.getPrice());
             bookingResponse.setPhone(booking.getPhone());
-            bookingResponse.setTourId(booking.getTour().getId());
             bookingResponse.setCustomerId(booking.getAccount().getId());
+
+            Quotation quotation = quotationRepository.findById(booking.getId())
+                    .orElseThrow(() -> new NotFoundException("Quotation not found for booking id: " + booking.getId()));
+
+            double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice() +
+                    quotation.getBooking().getChild() * quotation.getPerChildPrice() +
+                    quotation.getBooking().getPrice();
+            bookingResponse.setTotalPrice(totalPrice);
+
+            // Thiết lập thông tin Tour vào BookingResponse
+            Tour tour = booking.getTour();
+            if (tour != null) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setDescription(tour.getDescription());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setConsultingId(tour.getAccount().getId());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setTime(tour.getTime());
+
+                bookingResponse.setTourId(tourResponse);
+            }
 
             activeBookings.add(bookingResponse);
         }
 
-        DataResponse<BookingResponse> dataResponse = new DataResponse<>();
+        DataResponse<BookingResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(activeBookings);
         dataResponse.setPageNumber(bookingPage.getNumber());
         dataResponse.setTotalElements(bookingPage.getTotalElements());

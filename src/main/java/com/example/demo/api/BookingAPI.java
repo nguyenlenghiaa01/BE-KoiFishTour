@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Booking;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
+import com.example.demo.model.Response.BookingResponses;
 import com.example.demo.model.Response.BookingsResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BookingService;
@@ -73,10 +74,10 @@ public class BookingAPI {
     }
 
     @GetMapping("/customerId")
-    public ResponseEntity<DataResponse<BookingResponse>> getCustomerBooking(@RequestParam int page,
-                                                                            @RequestParam int size,
-                                                                            @RequestParam String id) {
-        DataResponse<BookingResponse> bookingResponse = bookingService.getBookingByCustomer(page, size,id);
+    public ResponseEntity<DataResponse<BookingResponses>> getCustomerBooking(@RequestParam int page,
+                                                                             @RequestParam int size,
+                                                                             @RequestParam String id) {
+        DataResponse<BookingResponses> bookingResponse = bookingService.getBookingByCustomer(page, size,id);
         return ResponseEntity.ok(bookingResponse);
     }
 
