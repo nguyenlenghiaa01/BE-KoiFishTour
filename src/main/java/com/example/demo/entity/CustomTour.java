@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -38,6 +39,8 @@ public class CustomTour {
     private int adult;
     private int child;
     private int infant;
+
+    private List<String> farm;
 
     private boolean isDeleted = false;
 

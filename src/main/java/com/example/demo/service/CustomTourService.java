@@ -50,6 +50,7 @@ public class CustomTourService {
             customTourResponse.setAdult(customTour.getAdult());
             customTourResponse.setChild(customTour.getChild());
             customTourResponse.setInfant(customTour.getInfant());
+            customTourResponse.setFarm(customTour.getFarm());
 
             customTourResponses.add(customTourResponse);
         }
@@ -77,6 +78,7 @@ public class CustomTourService {
         oldCus.setAdult(customTourRequest.getAdult());
         oldCus.setChild(customTourRequest.getChild());
         oldCus.setInfant(customTourRequest.getInfant());
+        oldCus.setFarm(customTourRequest.getFarm());
         return customerTourRepository.save(oldCus);
     }
     public CustomTour deleteCus(long id){

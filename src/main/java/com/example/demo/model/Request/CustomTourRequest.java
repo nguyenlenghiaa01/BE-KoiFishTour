@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class CustomTourRequest {
@@ -33,4 +34,5 @@ public class CustomTourRequest {
     private int adult;
     private int child;
     private int infant;
+    private List<String> farm;
 }

@@ -39,6 +39,8 @@ public class KoiFishOrderService {
 
     @Autowired
     BookingRepository bookingRepository;
+    @Autowired
+    TourRepository tourRepository;
 
 
     @Autowired
@@ -48,15 +50,17 @@ public class KoiFishOrderService {
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found!"));
-        Account consulting = accountRepository.findById(koiFishOrderRequest.getConsultingId())
-                .orElseThrow(() -> new RuntimeException("Consultant not found"));
         Booking booking = bookingRepository.findById(koiFishOrderRequest.getBookingId())
                 .orElseThrow(() -> new NotFoundException("Booking not found!"));
+        Tour tour = tourRepository.findById(booking.getTour().getId())
+                .orElseThrow(() -> new RuntimeException("Tour not found!"));
+        Account account = accountRepository.findById(tour.getAccount().getId())
+                .orElseThrow(() -> new RuntimeException("Consulting account not found!"));
         KoiFishOrder order = new KoiFishOrder();
         order.setCreateAt(new Date());
         order.setCustomer(customer);
-        order.setConsulting(consulting);
         order.setBooking(booking);
+        order.setConsulting(account);
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
 
         for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {

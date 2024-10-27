@@ -10,7 +10,6 @@ public class KoiFishOrderRequest {
 
     private List<Long> shoppingCart;
     private long customerId;
-    private long consultingId;
     private long bookingId;
     private String status;
     private float paidMoney = 0;
