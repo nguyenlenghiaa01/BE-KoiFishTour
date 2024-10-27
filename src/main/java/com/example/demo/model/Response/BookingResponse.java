@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -23,11 +24,10 @@ public class BookingResponse {
     private String phone;
     private String fullName;
     private String address;
-    private LocalDate bookingDate;
+    private Date bookingDate;
     private int adult;
     private int child;
     private int infant;
     private long customerId;
     private long tourId;
-
 }

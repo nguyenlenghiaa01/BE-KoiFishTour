@@ -91,8 +91,12 @@ public class BookingService {
         Page<Booking> bookingPage = bookingRepository.findByAccountIdAndIsDeletedFalse(customerId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
 
+
+
         List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
+//            Tour tour = tourRepository.findById(booking.getTour().getId()).orElseThrow(() -> new NotFoundException("Tour not found!"));
+//            Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
@@ -107,6 +111,7 @@ public class BookingService {
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setTourId(booking.getTour().getId());
             bookingResponse.setCustomerId(booking.getAccount().getId());
+            bookingResponse.setBookingDate(booking.getBookingDate());
 
             activeBookings.add(bookingResponse);
         }
@@ -128,6 +133,7 @@ public class BookingService {
 
         List<BookingResponses> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
+
             BookingResponses bookingResponse = new BookingResponses();
             bookingResponse.setBookingId(booking.getBookingId());
             bookingResponse.setEmail(booking.getEmail());
@@ -149,17 +155,19 @@ public class BookingService {
             // Thiết lập thông tin Tour vào BookingResponse
             Tour tour = booking.getTour();
             if (tour != null) {
-                TourResponse tourResponse = new TourResponse();
+                Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
+                TourResponses tourResponse = new TourResponses();
                 tourResponse.setId(tour.getId());
                 tourResponse.setTourName(tour.getTourName());
                 tourResponse.setDescription(tour.getDescription());
                 tourResponse.setStartDate(tour.getStartDate());
-                tourResponse.setConsultingId(tour.getAccount().getId());
+//                tourResponse.setConsultingId(tour.getAccount().getId());
                 tourResponse.setPrice(tour.getPrice());
                 tourResponse.setImage(tour.getImage());
                 tourResponse.setDuration(tour.getDuration());
                 tourResponse.setTourId(tour.getTourId());
                 tourResponse.setTime(tour.getTime());
+                tourResponse.setConsultingName(consulting.getFullName());
 
                 bookingResponse.setTourId(tourResponse);
             }
@@ -199,6 +207,7 @@ public class BookingService {
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setTourId(booking.getTour().getId());
             bookingResponse.setCustomerId(booking.getAccount().getId());
+            bookingResponse.setBookingDate(booking.getBookingDate());
 
             activeBookings.add(bookingResponse);
         }

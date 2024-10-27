@@ -3,6 +3,7 @@ package com.example.demo.model.Response;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class BookingsResponse {
@@ -15,10 +16,11 @@ public class BookingsResponse {
     private String phone;
     private String fullName;
     private String address;
-    private LocalDate bookingDate;
+    private Date bookingDate;
     private int adult;
     private int child;
     private int infant;
     private long customerId;
     private String tourName;
+    private String consultingName;
 }
