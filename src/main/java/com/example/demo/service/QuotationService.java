@@ -40,7 +40,8 @@ public class QuotationService {
 
         quotation.setBooking(booking);
         quotation.setStatus(QuotationEnum.PENDING);
-
+        quotation.setPerAdultPrice(quotationRequest.getPerAdultPrice());
+        quotation.setPerChildPrice(quotationRequest.getPerChildPrice());
         return quotationRepository.save(quotation);
     }
 
@@ -54,8 +55,8 @@ public class QuotationService {
                 quotationResponse.setAdultPrice(quotation.getBooking().getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(quotation.getBooking().getChild() *quotation.getPerChildPrice());
                 quotationResponse.setBookingId(quotation.getBooking().getId());
-                double totalPrice =0;
-                totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice()+
+
+                double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice()+
                         quotation.getBooking().getChild() *quotation.getPerChildPrice()
                         +quotation.getBooking().getPrice();
                 quotationResponse.setTotalPrice(totalPrice);
