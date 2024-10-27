@@ -29,4 +29,8 @@ public class CustomTourRequest {
     @NotNull(message = "Price cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double budget;
+
+    private int adult;
+    private int child;
+    private int infant;
 }

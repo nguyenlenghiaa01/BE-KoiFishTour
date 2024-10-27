@@ -35,6 +35,10 @@ public class CustomTour {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double budget;
 
+    private int adult;
+    private int child;
+    private int infant;
+
     private boolean isDeleted = false;
 
     @ManyToOne

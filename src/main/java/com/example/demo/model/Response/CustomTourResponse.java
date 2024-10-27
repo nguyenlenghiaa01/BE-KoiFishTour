@@ -21,4 +21,7 @@ public class CustomTourResponse {
 
     private String address;
     private double budget;
+    private int adult;
+    private int child;
+    private int infant;
 }

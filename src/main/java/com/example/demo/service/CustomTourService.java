@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustomerTourService {
+public class CustomTourService {
     private ModelMapper modelMapper = new ModelMapper();
     // xu ly nhung logic lien qua
     @Autowired
@@ -45,8 +45,11 @@ public class CustomerTourService {
             customTourResponse.setAddress(customTour.getAddress());
             customTourResponse.setDuration(customTour.getDuration());
             customTourResponse.setStartDate(customTour.getStartDate());
-            customTourResponse.setEmail(customTourResponse.getEmail());
-            customTourResponse.setPhone(customTourResponse.getPhone());
+            customTourResponse.setEmail(customTour.getEmail());
+            customTourResponse.setPhone(customTour.getPhone());
+            customTourResponse.setAdult(customTour.getAdult());
+            customTourResponse.setChild(customTour.getChild());
+            customTourResponse.setInfant(customTour.getInfant());
 
             customTourResponses.add(customTourResponse);
         }
@@ -65,13 +68,15 @@ public class CustomerTourService {
 
         CustomTour oldCus = customerTourRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found!"));
 
-        //=> co breed co ton tai;
         oldCus.setEmail(customTourRequest.getEmail());
         oldCus.setDuration(customTourRequest.getDuration());
         oldCus.setBudget(customTourRequest.getBudget());
         oldCus.setPhone(customTourRequest.getPhone());
         oldCus.setFullName(customTourRequest.getFullName());
         oldCus.setStartDate(customTourRequest.getStartDate());
+        oldCus.setAdult(customTourRequest.getAdult());
+        oldCus.setChild(customTourRequest.getChild());
+        oldCus.setInfant(customTourRequest.getInfant());
         return customerTourRepository.save(oldCus);
     }
     public CustomTour deleteCus(long id){
