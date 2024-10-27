@@ -6,6 +6,7 @@ import com.example.demo.model.Request.Quotation1Request;
 import com.example.demo.model.Request.QuotationRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.QuotationResponse;
+import com.example.demo.model.Response.QuotationResponses;
 import com.example.demo.service.QuotationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -32,12 +33,12 @@ public class QuotationAPI {
 
     @GetMapping
     public ResponseEntity<?> getAllQuotation(int page, int size) {
-        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotation(page, size);
+        DataResponse<QuotationResponses> quotations = quotationService.getAllQuotation(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/cancel")
     public ResponseEntity<?> getAllQuotationCancel(int page, int size) {
-        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotationsCancel(page, size);
+        DataResponse<QuotationResponses> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/bookingCode")
@@ -48,7 +49,7 @@ public class QuotationAPI {
 
     @GetMapping("/pending")
     public ResponseEntity<?> get(int page , int size){
-        DataResponse<QuotationResponse> quotationProcesses = quotationService.getAllQuotations(page, size);
+        DataResponse<QuotationResponses> quotationProcesses = quotationService.getAllQuotations(page, size);
         return ResponseEntity.ok(quotationProcesses);
     }
 

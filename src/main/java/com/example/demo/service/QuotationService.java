@@ -6,10 +6,7 @@ import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.Quotation1Request;
 import com.example.demo.model.Request.QuotationRequest;
-import com.example.demo.model.Response.DataResponse;
-import com.example.demo.model.Response.KoiFishResponse;
-import com.example.demo.model.Response.QuotationProcessResponse;
-import com.example.demo.model.Response.QuotationResponse;
+import com.example.demo.model.Response.*;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.QuotationProcessRepository;
@@ -58,13 +55,13 @@ public class QuotationService {
         return quotationRepository.save(quotation);
     }
 
-    public DataResponse<QuotationResponse> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<QuotationResponses> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
-        List<QuotationResponse> pendingQuotations = new ArrayList<>();
+        List<QuotationResponses> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()!=QuotationEnum.PENDING) {
-                QuotationResponse quotationResponse = new QuotationResponse();
+                QuotationResponses quotationResponse = new QuotationResponses();
                 quotationResponse.setAdultPrice(quotation.getBooking().getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(quotation.getBooking().getChild() *quotation.getPerChildPrice());
                 quotationResponse.setBookingId(quotation.getBooking().getId());
@@ -79,7 +76,7 @@ public class QuotationService {
             }
         }
 
-        DataResponse<QuotationResponse> dataResponse = new DataResponse<>();
+        DataResponse<QuotationResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(pendingQuotations);
         dataResponse.setTotalElements(pendingQuotations.size());
         dataResponse.setPageNumber(quotationPage.getNumber());
@@ -96,32 +93,33 @@ public class QuotationService {
         Quotation quotation = quotationRepository.findById(booking.getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
 
         QuotationResponse quotationResponse = new QuotationResponse();
-        quotationResponse.setQuotationId(quotation.getId());
-        quotationResponse.setBookingId(booking.getId());
-        quotationResponse.setAdultPrice(quotation.getPerAdultPrice()*booking.getAdult());
-        quotationResponse.setChildPrice(quotation.getPerChildPrice()*booking.getChild());
-        quotationResponse.setStatus(quotation.getStatus());
-        quotationResponse.setCreateAt(quotation.getCreateAt());
-        quotationResponse.setSaleName(quotation.getAccount().getFullName());
-        quotationResponse.setFullName(booking.getFullName());
-        quotationResponse.setPhone(booking.getPhone());
-        quotationResponse.setEmail(booking.getEmail());
-        quotationResponse.setPriceTour(booking.getPrice());
-        quotationResponse.setTotalPrice(quotation.getPerAdultPrice()*booking.getAdult()
-                                        +quotation.getPerChildPrice()*booking.getChild()
-                                        +booking.getPrice());
-
+        if (!quotation.getStatus().equals(QuotationEnum.CANCEL)) {
+            quotationResponse.setQuotationId(quotation.getQuotationId());
+            quotationResponse.setBookingId(booking.getId());
+            quotationResponse.setAdultPrice(quotation.getPerAdultPrice() * booking.getAdult());
+            quotationResponse.setChildPrice(quotation.getPerChildPrice() * booking.getChild());
+            quotationResponse.setStatus(quotation.getStatus());
+            quotationResponse.setCreateAt(quotation.getCreateAt());
+            quotationResponse.setSaleName(quotation.getAccount().getFullName());
+            quotationResponse.setFullName(booking.getFullName());
+            quotationResponse.setPhone(booking.getPhone());
+            quotationResponse.setEmail(booking.getEmail());
+            quotationResponse.setPriceTour(booking.getPrice());
+            quotationResponse.setTotalPrice(quotation.getPerAdultPrice() * booking.getAdult()
+                    + quotation.getPerChildPrice() * booking.getChild()
+                    + booking.getPrice());
+        }
         return quotationResponse;
     }
 
 
-    public DataResponse<QuotationResponse> getAllQuotations(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<QuotationResponses> getAllQuotations(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
-        List<QuotationResponse> pendingQuotations = new ArrayList<>();
+        List<QuotationResponses> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()==QuotationEnum.PENDING) {
-                QuotationResponse quotationResponse = new QuotationResponse();
+                QuotationResponses quotationResponse = new QuotationResponses();
                 quotationResponse.setAdultPrice(quotation.getBooking().getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(quotation.getBooking().getChild() *quotation.getPerChildPrice());
                 quotationResponse.setBookingId(quotation.getBooking().getId());
@@ -135,7 +133,7 @@ public class QuotationService {
             }
         }
 
-        DataResponse<QuotationResponse> dataResponse = new DataResponse<>();
+        DataResponse<QuotationResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(pendingQuotations);
         dataResponse.setTotalElements(pendingQuotations.size());
         dataResponse.setPageNumber(quotationPage.getNumber());
@@ -144,12 +142,12 @@ public class QuotationService {
         return dataResponse;
     }
 
-    public DataResponse<QuotationResponse> getAllQuotation(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<QuotationResponses> getAllQuotation(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
-        List<QuotationResponse> pendingQuotations = new ArrayList<>();
+        List<QuotationResponses> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
-                QuotationResponse quotationResponse = new QuotationResponse();
+                QuotationResponses quotationResponse = new QuotationResponses();
                 quotationResponse.setAdultPrice(quotation.getBooking().getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(quotation.getBooking().getChild() *quotation.getPerChildPrice());
                 quotationResponse.setBookingId(quotation.getBooking().getId());
@@ -162,7 +160,7 @@ public class QuotationService {
                 pendingQuotations.add(quotationResponse);
         }
 
-        DataResponse<QuotationResponse> dataResponse = new DataResponse<>();
+        DataResponse<QuotationResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(pendingQuotations);
         dataResponse.setTotalElements(pendingQuotations.size());
         dataResponse.setPageNumber(quotationPage.getNumber());

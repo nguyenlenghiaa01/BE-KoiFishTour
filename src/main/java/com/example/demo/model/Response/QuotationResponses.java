@@ -4,15 +4,14 @@ import com.example.demo.Enum.QuotationEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
-public class QuotationResponse {
+public class QuotationResponses {
     private long bookingId;
     private double adultPrice;
     private double childPrice;
     private double totalPrice;
-    private String quotationId;
+    private long quotationId;
     private QuotationEnum status;
     private LocalDateTime createAt;
     private String saleName;
