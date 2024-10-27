@@ -187,6 +187,9 @@ public class QuotationService {
         if(quotation == null) {
             throw new NotFoundException("Quotation not found!");
         }
+        Booking booking = bookingRepository.findById(quotation.getBooking().getId()).orElseThrow(() -> new NotFoundException("Booking not found!"));
+        booking.setStatus("CANCEL");
+        bookingRepository.save(booking);
         quotation.setStatus(QuotationEnum.CANCEL);
         Quotation quotation1=quotationRepository.save(quotation);
         QuotationProcess quotationProcess = new QuotationProcess();
