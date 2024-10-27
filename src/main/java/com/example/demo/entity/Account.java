@@ -42,7 +42,7 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     private boolean isDeleted=false;
 
-    float balance=0;
+    double balance=0;
 
     @Email(message = "Invalid Email!")
     @Column(unique = true)

@@ -68,7 +68,7 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setBookingDate(new Date());
         booking.setStatus("PENDING");
-        booking.setPrice(bookingRequest.getPrice());
+        booking.setPrice(tour.getPrice());
         booking.setFullName(bookingRequest.getFullName());
         booking.setEmail(bookingRequest.getEmail());
         booking.setPhone(bookingRequest.getPhone());
@@ -328,7 +328,7 @@ public class BookingService {
         if(booking == null){
             throw new NotFoundException("Not found booking");
         }
-        float money = booking.getPrice()*100;
+        double money = booking.getPrice()*100;
         String amount = String.valueOf((int)money);
 
         String tmnCode = "V3LITBWK";
@@ -423,7 +423,7 @@ public class BookingService {
         transactions1.setDescription("CUSTOMER TO ADMIN");
         transactionsSet.add(transactions1);
 
-        float newBalance = admin.getBalance() + booking.getPrice();
+        double newBalance = admin.getBalance() + booking.getPrice();
         admin.setBalance(newBalance);
 
         // set transaction vao payment

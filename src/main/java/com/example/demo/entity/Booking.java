@@ -35,7 +35,7 @@ public class Booking {
 
     @NotNull(message = "Price cannot be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    private float price;
+    private double price;
 
 //    private String  duration;
 
