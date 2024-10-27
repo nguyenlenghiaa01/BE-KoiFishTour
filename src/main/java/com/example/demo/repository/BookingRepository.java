@@ -34,7 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     @Query("SELECT b FROM Booking b WHERE b.tour.id = :tourId AND b.isDeleted = false")
     Page<Booking> findByTourIdAndIsDeletedFalse(@Param("tourId") Long tourId, Pageable pageable);
     Page<Booking> findByAccountCode(String id, Pageable pageable);
-
+//    Page<Booking> findAll(long id,Pageable pageable);
 
 
 }

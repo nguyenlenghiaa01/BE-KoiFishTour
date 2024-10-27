@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Quotation;
 import com.example.demo.entity.QuotationProcess;
+import com.example.demo.model.Request.Quotation1Request;
 import com.example.demo.model.Request.QuotationRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.QuotationResponse;
@@ -31,13 +32,18 @@ public class QuotationAPI {
 
     @GetMapping
     public ResponseEntity<?> getAllQuotation(int page, int size) {
-        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotations(page, size);
+        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotation(page, size);
+        return ResponseEntity.ok(quotations);
+    }
+    @GetMapping("/cancel")
+    public ResponseEntity<?> getAllQuotationCancel(int page, int size) {
+        DataResponse<QuotationResponse> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
 
     @GetMapping("/pending")
     public ResponseEntity<?> get(int page , int size){
-        DataResponse<QuotationResponse> quotationProcesses = quotationService.getAllQuotation(page, size);
+        DataResponse<QuotationResponse> quotationProcesses = quotationService.getAllQuotations(page, size);
         return ResponseEntity.ok(quotationProcesses);
     }
 
@@ -50,6 +56,16 @@ public class QuotationAPI {
     public ResponseEntity<?> updateQuotationCancel(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotationCancel(quotationRequest, id);
         return ResponseEntity.ok(newQuotation);
+    }
+    @PostMapping("/cancel")
+    public ResponseEntity<Quotation> postId(Quotation1Request quotation1Request,long id){
+        Quotation newQuotation = quotationService.setQuotationCancel(quotation1Request, id);
+        return  ResponseEntity.ok(newQuotation);
+    }
+    @PostMapping("/approve")
+    public ResponseEntity<Quotation> post(Quotation1Request quotation1Request,long id){
+        Quotation newQuotation = quotationService.setQuotationApprove(quotation1Request, id);
+        return  ResponseEntity.ok(newQuotation);
     }
 
     @DeleteMapping("{id}")

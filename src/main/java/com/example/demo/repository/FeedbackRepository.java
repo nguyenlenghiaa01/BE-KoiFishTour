@@ -14,7 +14,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
     Feedback findFeedbackById(long id);
     List<Feedback> findFeedbacksByIsDeletedFalse();
 
-    @Query("SELECT new com.example.demo.model.Response.FeedbackResponse(f.id, f.comment, f.rating, c.email) " +
+    @Query("SELECT new com.example.demo.model.Response.FeedbackResponse(f.id, f.comment, f.rating, c.email,c.image,c.fullName) " +
             "FROM Feedback f JOIN f.customer c WHERE f.isDeleted = false")
     Page<FeedbackResponse> findAllFeedbackResponses(Pageable pageable);
 

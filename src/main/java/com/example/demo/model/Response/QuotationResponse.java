@@ -8,4 +8,5 @@ public class QuotationResponse {
     private double adultPrice;
     private double childPrice;
     private double totalPrice;
+    private long quotationId;
 }

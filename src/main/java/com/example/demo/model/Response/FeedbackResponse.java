@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedbackResponse {
-
     private long id;
     private String comment;
     private int rating;
     private String email;
+    private String image;
+    private String nameCustomer;
 }

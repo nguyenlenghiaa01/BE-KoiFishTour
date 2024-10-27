@@ -61,12 +61,16 @@ public class BookingAPI {
 //    }
 
 
-    // Get danh sách breed
     @GetMapping
     public ResponseEntity<DataResponse<BookingsResponse>> get(@RequestParam int page,
                                                               @RequestParam int size) {
         DataResponse<BookingsResponse> bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
+    }
+    @GetMapping("/idQuotation")
+    public ResponseEntity<Booking> get(long id){
+        Booking booking = bookingService.getQuotation(id);
+        return ResponseEntity.ok(booking);
     }
 
     @GetMapping("/customerId")

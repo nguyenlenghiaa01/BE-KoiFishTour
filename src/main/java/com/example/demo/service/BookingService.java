@@ -4,17 +4,13 @@ import com.example.demo.Enum.PaymentEnum;
 import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.model.Response.BookingsResponse;
 import com.example.demo.model.Response.DataResponse;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.BookingRepository;
-import com.example.demo.repository.PaymentRepository;
-import com.example.demo.repository.TourRepository;
+import com.example.demo.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,8 +48,11 @@ public class BookingService {
     EmailService emailService;
     @Autowired
     TourRepository tourRepository;
-@Autowired
-NotificationService notificationService;
+
+    @Autowired
+    QuotationRepository quotationRepository;
+    @Autowired
+    NotificationService notificationService;
 
     @Autowired
     BookingService bookingService;
@@ -194,7 +193,11 @@ NotificationService notificationService;
         return dataResponse;
     }
 
-
+    public Booking getQuotation(long id){
+        Quotation quotation = quotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Quotation not found!"));
+        Booking booking = bookingRepository.findById(quotation.getBooking().getId()).orElseThrow(() -> new NotFoundException("Booking not found!"));
+        return booking;
+    }
 
 
 

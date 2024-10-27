@@ -66,6 +66,8 @@ public class FeedbackService {
             response.setComment(feedback.getComment());
             response.setRating(feedback.getRating());
             response.setEmail(feedback.getCustomer().getEmail());
+            response.setImage(feedback.getCustomer().getImage());
+            response.setNameCustomer(feedback.getCustomer().getFullName());
             if (feedback.getRating() >= 4) {
                 feedbackResponses.add(response);
             }
