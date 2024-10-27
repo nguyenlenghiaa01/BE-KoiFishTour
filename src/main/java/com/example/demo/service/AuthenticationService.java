@@ -177,17 +177,22 @@ public class AuthenticationService implements UserDetailsService {
 
     }
 
-    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+    public String changePassword(ChangePasswordRequest changePasswordRequest) {
         Account account = getCurrentAccount();
         String originPassword = account.getPassword();
+        String message;
 
         try {
             if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), originPassword)) {
-                throw new AuthException("Invalid current password!");
+                message = "Invalid current password!";
+                return message;
             }
 
             account.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
             accountRepository.save(account);
+            message = "Successfully change your password!";
+
+            return message;
         }catch (Exception e) {
             throw new AuthException(e.getMessage());
         }

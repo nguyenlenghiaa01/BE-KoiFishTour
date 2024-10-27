@@ -102,8 +102,8 @@ public class AuthenticationAPI {
 
     @PostMapping("change-password")
     public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
-            authenticationService.changePassword(changePasswordRequest);
-            return ResponseEntity.ok("Change password successfully");
+            String message = authenticationService.changePassword(changePasswordRequest);
+            return ResponseEntity.ok(message);
     }
 
 }
