@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class CustomTourRequest {
     @NotNull(message = "Start date cannot be null")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     private String duration;
