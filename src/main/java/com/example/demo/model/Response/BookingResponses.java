@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class BookingResponses {
-    private long bookingId;
+    private String bookingId;
     private LocalDate startDate;
     private String status;
     private String duration;
