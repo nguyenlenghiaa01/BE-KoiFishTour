@@ -19,4 +19,5 @@ public class QuotationResponse {
     private String fullName;
     private String phone;
     private String email;
+    private double priceTour;
 }

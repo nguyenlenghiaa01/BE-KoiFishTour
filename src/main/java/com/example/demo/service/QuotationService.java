@@ -98,14 +98,18 @@ public class QuotationService {
         QuotationResponse quotationResponse = new QuotationResponse();
         quotationResponse.setQuotationId(quotation.getId());
         quotationResponse.setBookingId(booking.getId());
-        quotationResponse.setAdultPrice(quotation.getPerAdultPrice());
-        quotationResponse.setChildPrice(quotation.getPerChildPrice());
+        quotationResponse.setAdultPrice(quotation.getPerAdultPrice()*booking.getAdult());
+        quotationResponse.setChildPrice(quotation.getPerChildPrice()*booking.getChild());
         quotationResponse.setStatus(quotation.getStatus());
         quotationResponse.setCreateAt(quotation.getCreateAt());
         quotationResponse.setSaleName(quotation.getAccount().getFullName());
         quotationResponse.setFullName(booking.getFullName());
         quotationResponse.setPhone(booking.getPhone());
         quotationResponse.setEmail(booking.getEmail());
+        quotationResponse.setPriceTour(booking.getPrice());
+        quotationResponse.setTotalPrice(quotation.getPerAdultPrice()*booking.getAdult()
+                                        +quotation.getPerChildPrice()*booking.getChild()
+                                        +booking.getPrice());
 
         return quotationResponse;
     }
