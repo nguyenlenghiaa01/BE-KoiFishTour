@@ -145,6 +145,9 @@ public class Account implements UserDetails {
     @JsonIgnore
     private Tour tour;
 
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    private List<Quotation> quotations;
 
 }
 

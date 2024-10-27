@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.Enum.QuotationEnum;
-import com.example.demo.entity.Booking;
-import com.example.demo.entity.KoiFish;
-import com.example.demo.entity.Quotation;
-import com.example.demo.entity.QuotationProcess;
+import com.example.demo.entity.*;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.Quotation1Request;
@@ -13,6 +10,7 @@ import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.model.Response.QuotationProcessResponse;
 import com.example.demo.model.Response.QuotationResponse;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.QuotationProcessRepository;
 import com.example.demo.repository.QuotationRepository;
@@ -38,20 +36,28 @@ public class QuotationService {
     BookingRepository bookingRepository;
     @Autowired
     QuotationProcessRepository quotationProcessRepository;
+    @Autowired
+    AuthenticationService authenticationService;
+    @Autowired
+    AccountRepository accountRepository;
 
     private ModelMapper modelMapper = new ModelMapper();
 
     public Quotation createQuotation(QuotationRequest quotationRequest) {
         Quotation quotation = new Quotation();
-        Booking booking = bookingRepository.findById(quotationRequest.getBookingId()).
-                orElseThrow(() -> new NotFoundException("Booking not exist!"));
+        Booking booking = bookingRepository.findById(quotationRequest.getBookingId())
+                .orElseThrow(() -> new NotFoundException("Booking not exist!"));
 
+        Account account = accountRepository.findById(quotationRequest.getSaleId())
+                .orElseThrow(() -> new NotFoundException("Sale id not found!"));
         quotation.setBooking(booking);
         quotation.setStatus(QuotationEnum.PENDING);
         quotation.setPerAdultPrice(quotationRequest.getPerAdultPrice());
         quotation.setPerChildPrice(quotationRequest.getPerChildPrice());
+        quotation.setAccount(account);
         return quotationRepository.save(quotation);
     }
+
     public DataResponse<QuotationResponse> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
@@ -95,6 +101,11 @@ public class QuotationService {
         quotationResponse.setAdultPrice(quotation.getPerAdultPrice());
         quotationResponse.setChildPrice(quotation.getPerChildPrice());
         quotationResponse.setStatus(quotation.getStatus());
+        quotationResponse.setCreateAt(quotation.getCreateAt());
+        quotationResponse.setSaleName(quotation.getAccount().getFullName());
+        quotationResponse.setFullName(booking.getFullName());
+        quotationResponse.setPhone(booking.getPhone());
+        quotationResponse.setEmail(booking.getEmail());
 
         return quotationResponse;
     }

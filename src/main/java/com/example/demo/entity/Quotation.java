@@ -38,7 +38,7 @@ public class Quotation {
         return String.format("QUO%07d", number); // Định dạng với 7 chữ số
     }
 
-    private Date createAt= new Date();
+    private LocalDateTime createAt= LocalDateTime.now();
 
     @Column(nullable = false)
     private boolean isDeleted = false;
@@ -58,6 +58,10 @@ public class Quotation {
     @OneToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking;
+
+    @ManyToOne
+    @JoinColumn(name = "sale_id")
+    private Account account;
 
 
 }
