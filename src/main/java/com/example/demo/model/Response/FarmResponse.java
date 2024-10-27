@@ -25,5 +25,7 @@ public class FarmResponse {
     private String image;
     private String image1;
     private String image2;
+    private String description;
+
 
 }

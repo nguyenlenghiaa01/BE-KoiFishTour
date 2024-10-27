@@ -31,5 +31,7 @@ public class FarmRequest {
     private String image1;
     private String image2;
     private boolean isDeleted;
+    private String description;
+
 
 }
