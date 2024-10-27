@@ -1,7 +1,6 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
-import com.example.demo.entity.Breed;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.model.Response.BookingsResponse;

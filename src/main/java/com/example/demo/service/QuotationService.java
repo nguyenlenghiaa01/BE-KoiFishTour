@@ -162,6 +162,7 @@ public class QuotationService {
         quotationProcess.setQuotation(quotation1);
         quotationProcess.setCreatedAt(LocalDateTime.now());
         quotationProcess.setNotes(quotation1Request.getNote());
+        quotationProcess.setStatus(quotation1.getStatus());
 
         quotationProcessRepository.save(quotationProcess);
         return quotation1;
