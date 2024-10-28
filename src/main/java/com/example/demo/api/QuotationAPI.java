@@ -64,7 +64,7 @@ public class QuotationAPI {
         return ResponseEntity.ok(newQuotation);
     }
     @PostMapping("/cancel")
-    public ResponseEntity<Quotation> postId(Quotation1Request quotation1Request,long id){
+    public ResponseEntity<Quotation> postId(Quotation1Request quotation1Request,String id){
         Quotation newQuotation = quotationService.setQuotationCancel(quotation1Request, id);
         return  ResponseEntity.ok(newQuotation);
     }

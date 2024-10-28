@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface QuotationRepository extends JpaRepository<Quotation, Long> {
     Quotation findQuotationById(long id);
+    Quotation findQuotationByQuotationId(String id);
     List<Quotation> findQuotationsByIsDeletedFalse();
 
     Page<Quotation> findAll(Pageable pageable);

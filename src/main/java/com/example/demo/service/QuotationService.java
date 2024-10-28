@@ -181,8 +181,8 @@ public class QuotationService {
         quotation.setBooking(booking);
         return quotationRepository.save(quotation);
     }
-    public Quotation setQuotationCancel(Quotation1Request quotation1Request,long id) {
-        Quotation quotation = quotationRepository.findQuotationById(id);
+    public Quotation setQuotationCancel(Quotation1Request quotation1Request,String id) {
+        Quotation quotation = quotationRepository.findQuotationByQuotationId(id);
 
         if(quotation == null) {
             throw new NotFoundException("Quotation not found!");
