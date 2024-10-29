@@ -34,9 +34,15 @@ public class KoiFishAPI {
 
     // Get danh sách cá Koi
     @GetMapping("/guest/get")
-    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = koiService.getAllKoi(page, size);
+    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
+        DataResponse<?> dataResponse = koiService.getAllKoi(page, size);
         return ResponseEntity.ok(dataResponse);
+    }
+
+    @PostMapping("/listKoiFish")
+    public ResponseEntity<?> getList(@RequestParam int page,@RequestParam int size ,long id){
+        DataResponse<KoiFish> koiFishDataResponse = koiService.getListKoiFish(page, size, id);
+        return ResponseEntity.ok(koiFishDataResponse);
     }
 
     // Cập nhật cá Koi

@@ -1,14 +1,15 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Booking;
+import com.example.demo.entity.Farm;
 import com.example.demo.entity.KoiFish;
+import com.example.demo.entity.Tour;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.KoiFishResponse;
-import com.example.demo.repository.BreedRepository;
-import com.example.demo.repository.FarmRepository;
-import com.example.demo.repository.KoiRepository;
+import com.example.demo.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service // danh dau day la mot lop xu ly logic
 public class KoiFishService {
@@ -31,6 +33,11 @@ public class KoiFishService {
 
     @Autowired
     FarmRepository farmRepository;
+    @Autowired
+    BookingRepository bookingRepository;
+    @Autowired
+    TourRepository tourRepository;
+
 
     public KoiFish createNewKoi(KoiFishRequest koiFishRequest) {
         KoiFish koiFish = new KoiFish();
@@ -69,6 +76,31 @@ public class KoiFishService {
         dataResponse.setPageNumber(fishPage.getNumber());
         dataResponse.setTotalPages(fishPage.getTotalPages());
         return dataResponse;
+    }
+    public DataResponse<KoiFish> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
+        Page<KoiFish> koiFish = koiRepository.findAll(PageRequest.of(page,size));
+        List<KoiFish> koiFishList = koiFish.getContent();
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Booking not found!"));
+        Tour tour = tourRepository.findById(booking.getTour().getId())
+                .orElseThrow(() -> new NotFoundException("Tour not found!"));
+        Set<Farm> farms = tour.getFarms();
+        if (farms.isEmpty()) {
+            throw new NotFoundException("No farms found for the selected tour");
+        }
+        List<KoiFish> allKoiFishes = new ArrayList<>();
+        for (Farm farm : farms) {
+            List<KoiFish> koiFishes = farm.getKoiFishes();
+            allKoiFishes.addAll(koiFishes);
+        }
+
+        DataResponse<KoiFish> dataResponse = new DataResponse<KoiFish>();
+        dataResponse.setListData(koiFishList);
+        dataResponse.setTotalElements(koiFish.getTotalElements());
+        dataResponse.setPageNumber(koiFish.getNumber());
+        dataResponse.setTotalPages(koiFish.getTotalPages());
+        return dataResponse;
+
     }
     public KoiFish updateKoiFish(KoiFishRequest koi, long id){
         // buoc 1: tim toi thang student co id nhu la FE cung cap

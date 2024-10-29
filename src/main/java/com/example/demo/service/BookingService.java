@@ -50,7 +50,8 @@ public class BookingService {
     @Autowired
     QuotationRepository quotationRepository;
     @Autowired
-    NotificationService notificationService;
+    FarmRepository farmRepository;
+
 
     @Autowired
     BookingService bookingService;
@@ -226,6 +227,18 @@ public class BookingService {
         Booking booking = bookingRepository.findById(quotation.getBooking().getId()).orElseThrow(() -> new NotFoundException("Booking not found!"));
         return booking;
     }
+
+//    public DataResponse< Booking> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
+//        Page<Booking> bookingPage =bookingRepository.findAll(PageRequest.of(page,size));
+//        List<Booking> bookings= bookingPage.getContent();
+//        Booking booking = bookingRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException("Booking not found!"));
+//        Tour tour = tourRepository.findById(booking.getTour().getId())
+//                .orElseThrow(()-> new NotFoundException("Tour not found"));
+//        Farm farm = farmRepository.findById(tour.getFarms().)
+//                .orElseThrow(()-> new NotFoundException("Shopping Cart not found"));
+//
+//    }
 
 
 
