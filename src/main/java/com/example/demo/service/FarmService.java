@@ -69,6 +69,13 @@ public class FarmService {
         return dataResponse;
 
     }
+    public Farm getFarmById(long id){
+        Farm farm = farmRepository.findFarmById(id);
+        if(farm ==null){
+            throw  new NotFoundException("Farm not found");
+        }
+        return farm;
+    }
 
     public Farm updateFarm(FarmRequest farm, long id){
 
