@@ -197,18 +197,21 @@ public class QuotationService {
         quotationProcess.setQuotation(quotation1);
         quotationProcess.setCreatedAt(LocalDateTime.now());
         quotationProcess.setNotes(quotation1Request.getNote());
-//        quotationProcess.setStatus(quotation1.getStatus());
 
         quotationProcessRepository.save(quotationProcess);
         return quotation1;
     }
     public Quotation setQuotationApprove(Quotation1Request quotation1Request,long id) {
         Quotation quotation = quotationRepository.findQuotationById(id);
+        Booking booking = bookingRepository.findById(quotation.getBooking().getId())
+                .orElseThrow(() -> new NotFoundException("Booking not found!"));
 
         if(quotation == null) {
             throw new NotFoundException("Quotation not found!");
         }
         quotation.setStatus(QuotationEnum.APPROVE);
+        booking.setStatus("APPROVE");
+        bookingRepository.save(booking);
          Quotation quotation1=quotationRepository.save(quotation);
         QuotationProcess quotationProcess = new QuotationProcess();
         quotationProcess.setAccount(quotation1.getBooking().getAccount());

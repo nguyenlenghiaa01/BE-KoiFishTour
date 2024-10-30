@@ -32,27 +32,20 @@ public class BookingService {
     // xu ly nhung logic lien qua
     @Autowired
     BookingRepository bookingRepository;
-
     @Autowired
     AccountRepository accountRepository;
-
     @Autowired
     AuthenticationService authenticationService;
-
     @Autowired
     PaymentRepository paymentRepository;
-
     @Autowired
     EmailService emailService;
     @Autowired
     TourRepository tourRepository;
-
     @Autowired
     QuotationRepository quotationRepository;
     @Autowired
     FarmRepository farmRepository;
-
-
     @Autowired
     BookingService bookingService;
     public Booking createNewBooking(BookingRequest bookingRequest) {
@@ -239,10 +232,6 @@ public class BookingService {
 //                .orElseThrow(()-> new NotFoundException("Shopping Cart not found"));
 //
 //    }
-
-
-
-
     public DataResponse<BookingsResponse> getAllBooking(@RequestParam int page, @RequestParam int size) {
         Page<Booking> bookingPage = bookingRepository.findAll(PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
@@ -388,7 +377,8 @@ public class BookingService {
             urlBuilder.append("&");
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
-
+         booking.setStatus("PAID");
+         bookingRepository.save(booking);
         return urlBuilder.toString();
     }
 
@@ -409,7 +399,7 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking Not Found"));
 
-        // Tạo đối tượng Payment
+        // Create payment
         Payment payment = new Payment();
         payment.setBooking(booking);
         payment.setCreateAt(new Date());
@@ -417,11 +407,11 @@ public class BookingService {
 
         Set<Transactions> transactionsSet = new HashSet<>();
 
-        // Tạo giao dịch nạp tiền cho khách hàng
+        // Create transactions for customer
         Transactions transactions = new Transactions();
         Account customer = authenticationService.getCurrentAccount();
-        transactions.setFrom(null); // Nạp tiền không có người gửi
-        transactions.setReceiver(booking.getAccount()); // Người nhận là khách hàng
+        transactions.setFrom(null); // nguoi nap tien la null
+        transactions.setReceiver(booking.getAccount()); // nhan la customer
         transactions.setPayment(payment);
         transactions.setStatus(TransactionsEnum.SUCCESS); // Set trang thai
         transactions.setDescription("NAP TIEN TO CUSTOMER");
@@ -429,8 +419,8 @@ public class BookingService {
 
         Transactions transactions1 = new Transactions();
         Account admin = accountRepository.findAccountByRole(Role.ADMIN);
-        transactions1.setFrom(customer); // Người gửi là khách hàng
-        transactions1.setReceiver(admin); // Người nhận là admin
+        transactions1.setFrom(customer); //gui la customer
+        transactions1.setReceiver(admin); // nhan la admin
         transactions1.setPayment(payment);
         transactions1.setStatus(TransactionsEnum.SUCCESS);
         transactions1.setDescription("CUSTOMER TO ADMIN");

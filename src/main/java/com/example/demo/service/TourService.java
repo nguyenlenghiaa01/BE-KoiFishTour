@@ -60,7 +60,7 @@ public class TourService {
         newTour.setStartDate(tourRequest.getStartDate());
         newTour.setDuration(tourRequest.getDuration());
         newTour.setPrice(tourRequest.getPrice());
-        newTour.setStatus("Not open");
+        newTour.setStatus("NOT OPEN");
         newTour.setTime(tourRequest.getTime());
         newTour.setDescription(tourRequest.getDescription());
         newTour.setImage(tourRequest.getImage());
@@ -92,7 +92,7 @@ public class TourService {
 
 
     public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
-        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("open", PageRequest.of(page, size));
+        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("OPEN", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
@@ -128,7 +128,7 @@ public class TourService {
     }
 
     public DataResponse<TourResponse> getAllTourNotOpen(@RequestParam int page, @RequestParam int size) {
-        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("Not open", PageRequest.of(page, size));
+        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("NOT OPEN", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
@@ -183,7 +183,7 @@ public class TourService {
             return new DataResponse<>();
         }
 
-        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("open"));
+        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"));
         if (startDate != null) {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
@@ -204,7 +204,7 @@ public class TourService {
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
         for (Tour tour : tourPage.getContent()) {
-            if(tour.getStatus().equals("open")) {
+            if(tour.getStatus().equals("OPEN")) {
                 if(!tour.isDeleted()) {
                     TourResponse tourResponse = new TourResponse();
                     tourResponse.setId(tour.getId());
@@ -337,7 +337,7 @@ public class TourService {
         if(oldTour ==null){
             throw new NotFoundException("Tour not found !");
         }
-        oldTour.setStatus("Not open");
+        oldTour.setStatus("NOT OPEN");
         scheduleJob.cancelScheduledJob(TourId);
         return tourRepository.save(oldTour);
     }

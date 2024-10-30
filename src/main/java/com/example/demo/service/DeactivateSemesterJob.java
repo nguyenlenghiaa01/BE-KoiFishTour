@@ -28,8 +28,8 @@ public class DeactivateSemesterJob implements Job {
             Optional<Tour> tourOpt = tourRepository.findById(Long.parseLong(openTourId));
             if (tourOpt.isPresent()) {
                 Tour tour = tourOpt.get();
-                if (tour.getStatus().equals("open")) {
-                    tour.setStatus("Not open");
+                if (tour.getStatus().equals("OPEN")) {
+                    tour.setStatus("NOT OPEN");
                     tourRepository.save(tour);
                     System.out.println("Tour " + openTourId + " inactive (status: INACTIVE).");
                 } else {

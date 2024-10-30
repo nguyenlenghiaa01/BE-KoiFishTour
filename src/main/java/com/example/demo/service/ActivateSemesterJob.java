@@ -28,7 +28,7 @@ public class ActivateSemesterJob implements Job {
             Optional<Tour> tourOpt = tourRepository.findById(Long.parseLong(openTourId));
             if (tourOpt.isPresent()) {
                 Tour tour = tourOpt.get();
-                tour.setStatus("open");
+                tour.setStatus("OPEN");
                 tourRepository.save(tour);
                 System.out.println("Tour " + openTourId + " active (status: Active).");
             } else {
