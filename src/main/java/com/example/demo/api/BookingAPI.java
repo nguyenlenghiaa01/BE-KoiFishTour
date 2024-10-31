@@ -24,7 +24,7 @@ public class BookingAPI {
     @Autowired
     BookingService bookingService;
     @PostMapping("/VNPay")
-    public ResponseEntity<?> createVNPay(long id) {
+    public ResponseEntity<?> createVNPay(String id) {
         String vnPayUrl = null;
         try {
             vnPayUrl = bookingService.createUrl(id);

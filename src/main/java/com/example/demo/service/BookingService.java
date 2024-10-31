@@ -322,11 +322,11 @@ public class BookingService {
         return bookingRepository.save(oldBooking);
     }
 
-    public String createUrl(long id) throws  Exception {
+    public String createUrl(String id) throws  Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
-        Booking booking = bookingRepository.findBookingById(id);
+        Booking booking = bookingRepository.findBookingByBookingId(id);
         if(booking == null){
             throw new NotFoundException("Not found booking");
         }

@@ -85,7 +85,7 @@ public class QuotationService {
         return dataResponse;
     }
     public QuotationResponse getQuotationByBookingId(String id) {
-        Booking booking = bookingRepository.findBookingsByBookingId(id);
+        Booking booking = bookingRepository.findBookingByBookingId(id);
         if (booking == null) {
             throw new NotFoundException("Not found booking code");
         }

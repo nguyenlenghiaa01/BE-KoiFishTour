@@ -36,6 +36,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     Page<Booking> findByAccountCode(String id, Pageable pageable);
 //    Page<Booking> findAll(long id,Pageable pageable);
 
-    Booking findBookingsByBookingId(String bookingId);
+    Booking findBookingByBookingId(String bookingId);
 
 }
