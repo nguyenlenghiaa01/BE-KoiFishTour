@@ -88,6 +88,9 @@ public class Booking {
     @JsonIgnore
     private KoiFishOrder koiFishOrder;
 
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    private Quotation quotation;
+
 
 
 }

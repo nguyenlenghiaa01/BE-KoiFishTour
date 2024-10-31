@@ -330,13 +330,14 @@ public class BookingService {
         if(booking == null){
             throw new NotFoundException("Not found booking");
         }
-        double money = booking.getPrice()*100;
+        Quotation quotation = quotationRepository.findById(booking.getQuotation().getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
+        double money = (booking.getPrice()+quotation.getPerAdultPrice()+quotation.getPerChildPrice())*100;
         String amount = String.valueOf((int)money);
 
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "https://blearning.vn/guide/swp/docker-local?orderID=" + booking.getId();
+        String returnUrl = "https://blearning.vn/guide/swp/docker-local?orderID=" + booking.getBookingId();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();
@@ -345,7 +346,7 @@ public class BookingService {
         vnpParams.put("vnp_TmnCode", tmnCode);
         vnpParams.put("vnp_Locale", "vn");
         vnpParams.put("vnp_CurrCode", currCode);
-        vnpParams.put("vnp_TxnRef", String.valueOf(booking.getId()));
+        vnpParams.put("vnp_TxnRef", String.valueOf(booking.getBookingId()));
         vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + booking.getId());
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount",amount);
@@ -377,9 +378,15 @@ public class BookingService {
             urlBuilder.append("&");
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
-         booking.setStatus("PAID");
-         bookingRepository.save(booking);
-        return urlBuilder.toString();
+        try {
+            booking.setStatus("PAID");
+            bookingRepository.save(booking);
+            return "Payment successful: " + urlBuilder.toString();
+        } catch (Exception e) {
+            booking.setStatus("FAILED");
+            bookingRepository.save(booking);
+            return "Payment failed. Please try again.";
+        }
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {
