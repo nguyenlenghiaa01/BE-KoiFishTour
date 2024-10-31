@@ -331,7 +331,7 @@ public class BookingService {
             throw new NotFoundException("Not found booking");
         }
         Quotation quotation = quotationRepository.findById(booking.getQuotation().getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
-        double money = (booking.getPrice()+quotation.getPerAdultPrice()+quotation.getPerChildPrice())*100;
+        double money = (booking.getPrice()+quotation.getPerAdultPrice()*booking.getAdult()+quotation.getPerChildPrice()*booking.getChild())*100;
         String amount = String.valueOf((int)money);
 
         String tmnCode = "V3LITBWK";
@@ -347,7 +347,7 @@ public class BookingService {
         vnpParams.put("vnp_Locale", "vn");
         vnpParams.put("vnp_CurrCode", currCode);
         vnpParams.put("vnp_TxnRef", String.valueOf(booking.getBookingId()));
-        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + booking.getId());
+        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + booking.getBookingId());
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount",amount);
 
@@ -379,13 +379,13 @@ public class BookingService {
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
         try {
-            booking.setStatus("PAID");
+            booking.setStatus("PAYMENT-SUCCESS");
             bookingRepository.save(booking);
-            return "Payment successful: " + urlBuilder.toString();
+            return urlBuilder.toString();
         } catch (Exception e) {
-            booking.setStatus("FAILED");
+            booking.setStatus("PAYMENT-FAILED");
             bookingRepository.save(booking);
-            return "Payment failed. Please try again.";
+            return urlBuilder.toString();
         }
     }
 
