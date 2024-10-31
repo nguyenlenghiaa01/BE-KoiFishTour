@@ -337,7 +337,8 @@ public class BookingService {
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "https://blearning.vn/guide/swp/docker-local?orderID=" + booking.getBookingId();
+        String successUrl = "http://localhost:5173/booking-payment-success?bookingID=" + booking.getBookingId();
+        String failureUrl = "http://localhost:5173/booking-payment-failed?bookingID=" + booking.getBookingId();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();
@@ -351,7 +352,7 @@ public class BookingService {
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount",amount);
 
-        vnpParams.put("vnp_ReturnUrl", returnUrl);
+//        vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_CreateDate", formattedCreateDate);
         vnpParams.put("vnp_IpAddr", "128.199.178.23");
 
@@ -379,13 +380,13 @@ public class BookingService {
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
         try {
-            booking.setStatus("PAYMENT-SUCCESS");
+            booking.setStatus("PAID");
             bookingRepository.save(booking);
-            return urlBuilder.toString();
+            return successUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
         } catch (Exception e) {
-            booking.setStatus("PAYMENT-FAILED");
+            booking.setStatus("FAILED");
             bookingRepository.save(booking);
-            return urlBuilder.toString();
+            return failureUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
         }
     }
 

@@ -21,7 +21,7 @@ public class DashBoardAPI {
     @Autowired
     KoiFishOrderService koiFishOrderService;
 
-    @PostMapping("/total-booking")
+    @GetMapping("/total-booking")
     public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -29,7 +29,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalBookings);
     }
 
-    @PostMapping("/total-price")
+    @GetMapping("/total-price")
     public ResponseEntity<Long> getTotalPrice(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -37,7 +37,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalPrice);
     }
 
-    @PostMapping("/total/deleted")
+    @GetMapping("/total/deleted")
     public ResponseEntity<Long> getTotalDeletedBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -45,7 +45,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalDeletedBookings);
     }
 
-    @PostMapping("/total-order")
+    @GetMapping("/total-order")
     public ResponseEntity<Double> getTotalOrderAmount(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
         Integer month = orderTotalRequest.getMonth();
         Integer year = orderTotalRequest.getYear();
@@ -61,7 +61,7 @@ public class DashBoardAPI {
 //        return ResponseEntity.ok(totalAmount);
 //    }
 
-    @PostMapping("/count")
+    @GetMapping("/count")
     public ResponseEntity<Double> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
         int month = orderTotalRequest.getMonth();
         int year = orderTotalRequest.getYear();
@@ -69,7 +69,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalOrders);
     }
 
-    @PostMapping("/count/deleted")
+    @GetMapping("/count/deleted")
     public ResponseEntity<Long> getTotalDeletedOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
         int month = orderTotalRequest.getMonth();
         int year = orderTotalRequest.getYear();

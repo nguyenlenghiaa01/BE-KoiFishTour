@@ -39,7 +39,7 @@ public class KoiFishAPI {
         return ResponseEntity.ok(dataResponse);
     }
 
-    @PostMapping("/listKoiFish")
+    @GetMapping("/listKoiFish")
     public ResponseEntity<?> getList(@RequestParam int page,@RequestParam int size ,long id){
         DataResponse<KoiFish> koiFishDataResponse = koiService.getListKoiFish(page, size, id);
         return ResponseEntity.ok(koiFishDataResponse);
