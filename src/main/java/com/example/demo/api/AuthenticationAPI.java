@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api")
@@ -84,6 +85,11 @@ public class AuthenticationAPI {
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: " + e.getMessage());
         }
+    }
+    @GetMapping("/role")
+    public ResponseEntity<Map<String, Integer>> getRoleCounts(){
+        Map<String, Integer> account =authenticationService.getAllAccountByRole();
+        return ResponseEntity.ok(account);
     }
 
 
