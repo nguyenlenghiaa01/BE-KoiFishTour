@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.Enum.PaymentEnum;
+import com.example.demo.Enum.QuotationEnum;
 import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
@@ -275,7 +276,7 @@ public class BookingService {
     }
 
     public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
-        return bookingRepository.countDeletedBookingsByTourStartDate(month, year);
+        return bookingRepository.countFailedBookingsByTourStartDate(month, year);
     }
 
     public float getTotalBookingPayments() {
@@ -390,6 +391,21 @@ public class BookingService {
 //        }
 
         return urlBuilder.toString();
+    }
+    public Booking updateStatus(String id){
+    Booking booking = bookingRepository.findBookingByBookingId(id);
+    if(booking==null){
+       throw  new NotFoundException("Booking not found!");
+    }
+     booking.setStatus("PAID");
+    bookingRepository.save(booking);
+    Quotation quotation = quotationRepository.findById(booking.getQuotation().getId())
+            .orElseThrow(() -> new NotFoundException("Quotation not found!"));
+
+    quotation.setStatus(QuotationEnum.PAID);
+    quotationRepository.save(quotation);
+    return booking;
+
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {

@@ -82,7 +82,11 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
 
-
+    @PutMapping("/updateStatus")
+    public ResponseEntity<Booking> updateStatus(String id){
+        Booking booking =bookingService.updateStatus(id);
+        return  ResponseEntity.ok(booking);
+    }
 
     @GetMapping("/history")
     public ResponseEntity<DataResponse<BookingResponse>> getHistory(@RequestParam int page,

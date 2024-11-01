@@ -26,7 +26,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -109,6 +111,30 @@ public class AuthenticationService implements UserDetailsService {
         List<Account> accounts = accountRepository.findAll();
         return accounts;
     }
+
+    public Map<String, Integer> getAllAccountByRole() {
+        List<Account> accounts = accountRepository.findAll();
+        int cusCount = 0;
+        int saleCount = 0;
+        int consultingCount = 0;
+
+        for (Account account : accounts) {
+            if (account.getRole() == Role.CUSTOMER) {
+                cusCount++;
+            } else if (account.getRole() == Role.SALE) {
+                saleCount++;
+            } else if (account.getRole() == Role.CONSULTING) {
+                consultingCount++;
+            }
+        }
+        Map<String, Integer> roleCounts = new HashMap<>();
+        roleCounts.put("CUSTOMER", cusCount);
+        roleCounts.put("SALE", saleCount);
+        roleCounts.put("CONSULTING", consultingCount);
+
+        return roleCounts;
+    }
+
 
 
     @Override

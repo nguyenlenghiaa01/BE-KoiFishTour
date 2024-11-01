@@ -3,5 +3,6 @@ package com.example.demo.Enum;
 public enum QuotationEnum {
     APPROVE,
     PENDING,
-    CANCEL
+    CANCEL,
+    PAID
 }

@@ -17,16 +17,17 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     Page<Booking> findAll(Pageable pageable);
     List<Booking>findBookingByIsDeletedTrue();
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year")
+    @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.status = 'PAID'")
     Long countBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
 
-    @Query("SELECT SUM(b.price) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.isDeleted = false")
+    @Query("SELECT SUM(b.price) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.isDeleted = false AND b.status = 'PAID'")
     Long sumPriceByTourStartDate(@Param("month") int month, @Param("year") int year);
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.isDeleted = true AND MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year")
-    Long countDeletedBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.status = 'FAILED'")
+    Long countFailedBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
 
-//
+
+    //
     @Query("SELECT b FROM Booking b WHERE b.account.id = :accountId AND b.isDeleted = false")
     Page<Booking> findByAccountIdAndIsDeletedFalse(@Param("accountId") Long accountId, Pageable pageable);
 
