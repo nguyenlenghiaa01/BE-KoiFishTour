@@ -327,6 +327,7 @@ public class BookingService {
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
         Booking booking = bookingRepository.findBookingByBookingId(id);
+
         if(booking == null){
             throw new NotFoundException("Not found booking");
         }
@@ -337,8 +338,7 @@ public class BookingService {
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String successUrl = "http://localhost:5173/booking-payment-success?bookingID=" + booking.getBookingId();
-        String failureUrl = "http://localhost:5173/booking-payment-failed?bookingID=" + booking.getBookingId();
+        String returnUrl = "http://localhost:5173/booking-payment-success?bookingID=" + booking.getBookingId();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();
@@ -352,7 +352,7 @@ public class BookingService {
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount",amount);
 
-//        vnpParams.put("vnp_ReturnUrl", returnUrl);
+        vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_CreateDate", formattedCreateDate);
         vnpParams.put("vnp_IpAddr", "128.199.178.23");
 
@@ -379,15 +379,17 @@ public class BookingService {
             urlBuilder.append("&");
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
-        try {
-            booking.setStatus("PAID");
-            bookingRepository.save(booking);
-            return successUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
-        } catch (Exception e) {
-            booking.setStatus("FAILED");
-            bookingRepository.save(booking);
-            return failureUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
-        }
+//        try {
+//            booking.setStatus("PAID");
+//            bookingRepository.save(booking);
+//            return successUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
+//        } catch (Exception e) {
+//            booking.setStatus("FAILED");
+//            bookingRepository.save(booking);
+//            return failureUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
+//        }
+
+        return urlBuilder.toString();
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {
