@@ -39,7 +39,7 @@ public class FarmAPI {
         DataResponse dataResponse = farmService.getAllFarm(page, size);
         return ResponseEntity.ok(dataResponse);
     }
-    @PostMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Farm> get(long id){
         Farm farm = farmService.getFarmById(id);
         return ResponseEntity.ok(farm);

@@ -75,7 +75,6 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(newAccount);
     }
 
-
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {
         try {

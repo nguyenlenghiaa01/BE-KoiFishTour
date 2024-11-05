@@ -135,8 +135,6 @@ public class AuthenticationService implements UserDetailsService {
         return roleCounts;
     }
 
-
-
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByUserName(userName);
@@ -183,6 +181,7 @@ public class AuthenticationService implements UserDetailsService {
 
         return prefix + randomNumber;
     }
+
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest){
         Account account = accountRepository.findAccountByEmail(forgotPasswordRequest.getEmail());
         if(account == null){
@@ -223,6 +222,7 @@ public class AuthenticationService implements UserDetailsService {
             throw new AuthException(e.getMessage());
         }
     }
+
     public UserResponse loginGoogle(String token){
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
@@ -249,5 +249,6 @@ public class AuthenticationService implements UserDetailsService {
         }
 
     }
+
 }
 

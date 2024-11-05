@@ -20,5 +20,7 @@ public interface TourRepository extends JpaRepository<Tour,Long> , JpaSpecificat
     Page<Tour> findByStatusIgnoreCase(String status, Pageable pageable);
     Page<Tour>findAll(Pageable pageable);
 
+    List<Tour> findToursByStartDate(LocalDate startDate);
+
 
 }

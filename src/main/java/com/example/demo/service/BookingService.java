@@ -405,7 +405,6 @@ public class BookingService {
     quotation.setStatus(QuotationEnum.PAID);
     quotationRepository.save(quotation);
     return booking;
-
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -421,9 +420,11 @@ public class BookingService {
         return result.toString();
     }
 
-    public String createTransactionId(long id) {
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Booking Not Found"));
+    public String createTransactionId(String id) {
+        Booking booking = bookingRepository.findBookingByBookingId(id);
+        if(booking == null){
+            throw new NotFoundException("Booking not found");
+        }
 
         // Create payment
         Payment payment = new Payment();
