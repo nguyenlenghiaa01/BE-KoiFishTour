@@ -3,6 +3,7 @@ package com.example.demo.api;
 import com.example.demo.entity.Account;
 import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.EmailService;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,8 +52,9 @@ public class AuthenticationAPI {
 
 
     @GetMapping("account")
-    public ResponseEntity <List<Account>>getAllAccount(){
-        List<Account> accounts = authenticationService.getAllAccount();
+    public ResponseEntity <DataResponse<AccountResponse>>getAllAccount(@RequestParam int page,
+                                                       @RequestParam int size){
+        DataResponse<AccountResponse> accounts = authenticationService.getAllAccount(page, size);
         return ResponseEntity.ok(accounts);
     }
 
@@ -74,6 +76,7 @@ public class AuthenticationAPI {
         Account newAccount = authenticationService.deleteAccount(id);
         return ResponseEntity.ok(newAccount);
     }
+
 
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {

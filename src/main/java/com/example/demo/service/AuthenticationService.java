@@ -2,12 +2,15 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.Enum.Role;
+import com.example.demo.entity.Breed;
 import com.example.demo.exception.AuthException;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
 import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
+import com.example.demo.model.Response.BreedResponse;
+import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.UserResponse;
 import com.example.demo.repository.AccountRepository;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +19,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,11 +30,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Lazy
@@ -107,9 +110,32 @@ public class AuthenticationService implements UserDetailsService {
         }
     }
 
-    public List<Account> getAllAccount() {
-        List<Account> accounts = accountRepository.findAll();
-        return accounts;
+    public DataResponse<AccountResponse> getAllAccount(@RequestParam int page,@RequestParam int size) {
+        Page accountPage = accountRepository.findAll(PageRequest.of(page, size));
+        List<Account> accounts = accountPage.getContent();
+        List<AccountResponse> accountResponses = new ArrayList<>();
+        for(Account account: accounts) {
+            if(!account.isDeleted()) {
+                AccountResponse accountResponse = new AccountResponse();
+                accountResponse.setId(account.getId());
+                accountResponse.setCode(account.getCode());
+                accountResponse.setAddress(account.getAddress());
+                accountResponse.setRole(account.getRole());
+                accountResponse.setPhone(account.getPhone());
+                accountResponse.setFullName(account.getFullName());
+                accountResponse.setEmail(account.getEmail());
+                accountResponse.setRole(account.getRole());
+
+                accountResponses.add(accountResponse);
+            }
+        }
+
+        DataResponse<AccountResponse> dataResponse = new DataResponse<AccountResponse>();
+        dataResponse.setListData(accountResponses);
+        dataResponse.setTotalElements(accountPage.getTotalElements());
+        dataResponse.setPageNumber(accountPage.getNumber());
+        dataResponse.setTotalPages(accountPage.getTotalPages());
+        return dataResponse;
     }
 
     public Map<String, Integer> getAllAccountByRole() {
