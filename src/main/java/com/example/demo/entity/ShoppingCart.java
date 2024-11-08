@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class ShoppingCart {
 
     @ManyToOne
     @JoinColumn(name="koi_fish_order_id")
+    @JsonIgnore
     private KoiFishOrder koiFishOrder;
 
 }
