@@ -323,7 +323,7 @@ public class BookingService {
         return bookingRepository.save(oldBooking);
     }
 
-    public String createUrl(String id) throws  Exception {
+    public String createUrlAvailableTour(String id) throws  Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
@@ -332,8 +332,8 @@ public class BookingService {
         if(booking == null){
             throw new NotFoundException("Not found booking");
         }
-        Quotation quotation = quotationRepository.findById(booking.getQuotation().getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
-        double money = (booking.getPrice()+quotation.getPerAdultPrice()*booking.getAdult()+quotation.getPerChildPrice()*booking.getChild())*100;
+
+        double money = booking.getPrice() * 100;
         String amount = String.valueOf((int)money);
 
         String tmnCode = "V3LITBWK";
@@ -380,18 +380,10 @@ public class BookingService {
             urlBuilder.append("&");
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
-//        try {
-//            booking.setStatus("PAID");
-//            bookingRepository.save(booking);
-//            return successUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
-//        } catch (Exception e) {
-//            booking.setStatus("FAILED");
-//            bookingRepository.save(booking);
-//            return failureUrl + "&paymentUrl=" + URLEncoder.encode(urlBuilder.toString(), "UTF-8");
-//        }
 
         return urlBuilder.toString();
     }
+
     public Booking updateStatus(String id){
     Booking booking = bookingRepository.findBookingByBookingId(id);
     if(booking==null){

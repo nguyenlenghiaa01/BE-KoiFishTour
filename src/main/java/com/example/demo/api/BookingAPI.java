@@ -23,11 +23,11 @@ import java.util.List;
 public class BookingAPI {
     @Autowired
     BookingService bookingService;
-    @PostMapping("/VNPay")
+    @PostMapping("/VNPayAvailableTour")
     public ResponseEntity<?> createVNPay(String id) {
         String vnPayUrl = null;
         try {
-            vnPayUrl = bookingService.createUrl(id);
+            vnPayUrl = bookingService.createUrlAvailableTour(id);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
