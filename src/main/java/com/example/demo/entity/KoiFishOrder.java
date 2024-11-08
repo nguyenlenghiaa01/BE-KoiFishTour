@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.Enum.OrderEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -30,12 +31,14 @@ public class KoiFishOrder {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
+    @Enumerated(EnumType.STRING)
+    private OrderEnum status;
     Date createAt;
 
     @Min(value = 0, message = "Total price must be positive!")
-    private double paidMoney = 0;
+    private double paidMoney;
 
-    private double totalPrice = 0;
+    private double totalPrice;
 
     public KoiFishOrder() {
         this.koiFishOrderId = generateOrderId();

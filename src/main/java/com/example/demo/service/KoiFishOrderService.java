@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Enum.OrderEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderRequest;
@@ -60,6 +61,9 @@ public class KoiFishOrderService {
         order.setCreateAt(new Date());
         order.setCustomer(customer);
         order.setBooking(booking);
+        order.setTotalPrice(0);
+        order.setPaidMoney(0);
+        order.setStatus(OrderEnum.PENDING);
         order.setConsulting(account);
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
 
@@ -116,10 +120,11 @@ public class KoiFishOrderService {
         KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
+
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
         for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
             KoiFish koi = koiRepository.findById(koiFishId)
-                    .orElseThrow(() -> new RuntimeException("KoiFish not found for ID: " + koiFishId));
+                    .orElseThrow(() -> new NotFoundException("KoiFish not found for ID: " + koiFishId));
 
             ShoppingCart orderDetails = new ShoppingCart();
             orderDetails.setKoiFish(koi);
@@ -128,6 +133,7 @@ public class KoiFishOrderService {
 
         existingOrder.setShoppingCarts(orderDetailsList);
 
+        existingOrder.setStatus(koiFishOrderRequest.getStatus());
         existingOrder.setTotalPrice(koiFishOrderRequest.getTotalPrice());
         existingOrder.setPaidMoney(koiFishOrderRequest.getPaidMoney());
 

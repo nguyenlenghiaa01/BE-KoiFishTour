@@ -1,6 +1,8 @@
 package com.example.demo.model.Request;
 
+import com.example.demo.Enum.OrderEnum;
 import lombok.Data;
+import org.hibernate.query.Order;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +13,7 @@ public class KoiFishOrderRequest {
     private List<Long> shoppingCart;
     private long customerId;
     private long bookingId;
-    private String status;
-    private float paidMoney = 0;
-    private double totalPrice = 0;
+    private OrderEnum status;
+    private double paidMoney;
+    private double totalPrice;
 }

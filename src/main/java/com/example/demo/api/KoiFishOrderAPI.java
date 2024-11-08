@@ -78,7 +78,7 @@ public class KoiFishOrderAPI {
 
 
     // /api/order/{id} => id của đơn hàng mà mình muốn cập nhật
-    @PreAuthorize("hasAuthority('CONSULTING')")
+//    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);

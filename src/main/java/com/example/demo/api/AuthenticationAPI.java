@@ -41,6 +41,7 @@ public class AuthenticationAPI {
         String email = registerRequest.getEmail();
         return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }
+
     @PostMapping("login")
     public ResponseEntity <AccountResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         AccountResponse accountResponse = authenticationService.login(loginRequest);
@@ -49,7 +50,6 @@ public class AuthenticationAPI {
         }
         return ResponseEntity.ok(accountResponse);
     }
-
 
     @GetMapping("account")
     public ResponseEntity <DataResponse<AccountResponse>>getAllAccount(@RequestParam int page,
@@ -77,7 +77,6 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(newAccount);
     }
 
-
     @PostMapping("/loginGoogle")
     public ResponseEntity<String> login(@RequestBody String idToken) {
         try {
@@ -88,13 +87,12 @@ public class AuthenticationAPI {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: " + e.getMessage());
         }
     }
+
     @GetMapping("/role")
     public ResponseEntity<Map<String, Integer>> getRoleCounts(){
         Map<String, Integer> account =authenticationService.getAllAccountByRole();
         return ResponseEntity.ok(account);
     }
-
-
 
     @PostMapping("forgot-password")
     public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest){
