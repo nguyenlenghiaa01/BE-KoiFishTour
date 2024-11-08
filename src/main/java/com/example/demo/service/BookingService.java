@@ -323,7 +323,7 @@ public class BookingService {
         return bookingRepository.save(oldBooking);
     }
 
-    public String createUrlAvailableTour(String id) throws  Exception {
+    public String createUrl(String id) throws  Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
@@ -391,11 +391,7 @@ public class BookingService {
     }
      booking.setStatus("PAID");
     bookingRepository.save(booking);
-    Quotation quotation = quotationRepository.findById(booking.getQuotation().getId())
-            .orElseThrow(() -> new NotFoundException("Quotation not found!"));
 
-    quotation.setStatus(QuotationEnum.PAID);
-    quotationRepository.save(quotation);
     return booking;
     }
 

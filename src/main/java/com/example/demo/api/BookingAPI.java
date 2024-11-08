@@ -23,11 +23,11 @@ import java.util.List;
 public class BookingAPI {
     @Autowired
     BookingService bookingService;
-    @PostMapping("/VNPayAvailableTour")
+    @PostMapping("/VNPay")
     public ResponseEntity<?> createVNPay(String id) {
         String vnPayUrl = null;
         try {
-            vnPayUrl = bookingService.createUrlAvailableTour(id);
+            vnPayUrl = bookingService.createUrl(id);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -87,7 +87,7 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @PutMapping("/updateStatus")
+    @PutMapping("/setStatusAfterPayment")
     public ResponseEntity<Booking> updateStatus(String id){
         Booking booking =bookingService.updateStatus(id);
         return  ResponseEntity.ok(booking);
