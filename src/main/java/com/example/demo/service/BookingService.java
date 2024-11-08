@@ -63,7 +63,7 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setBookingDate(new Date());
         booking.setStatus("PENDING");
-        booking.setPrice(tour.getPrice());
+        booking.setPrice(bookingRequest.getPrice());
         booking.setFullName(bookingRequest.getFullName());
         booking.setEmail(bookingRequest.getEmail());
         booking.setPhone(bookingRequest.getPhone());
@@ -290,29 +290,29 @@ public class BookingService {
         return totalPayments;
     }
 
-    public Booking updateBooking(BookingRequest bookingRequest, long id) {
-        // Tìm booking cũ theo ID
-        Booking oldBooking = bookingRepository.findBookingById(id);
-        if (oldBooking == null) {
-            throw new NotFoundException("Booking not found !");
-        }
-
-        // Cập nhật các thông tin từ bookingRequest
-        oldBooking.setStatus(bookingRequest.getStatus());
-//        oldBooking.setDuration(bookingRequest.getDuration());
-//        oldBooking.setStartDate(bookingRequest.getStartDate());
-        oldBooking.setPrice(bookingRequest.getPrice());
-        oldBooking.setFullName(bookingRequest.getFullName());
-        oldBooking.setEmail(bookingRequest.getEmail());
-        oldBooking.setPhone(bookingRequest.getPhone());
-//        oldBooking.setAddress(bookingRequest.getAddress());
-        oldBooking.setAdult(bookingRequest.getAdult());
-        oldBooking.setInfant(bookingRequest.getInfant());
-        oldBooking.setChild(bookingRequest.getChild());
-
-        // Lưu và trả về booking đã cập nhật
-        return bookingRepository.save(oldBooking);
-    }
+//    public Booking updateBooking(BookingRequest bookingRequest, long id) {
+//        // Tìm booking cũ theo ID
+//        Booking oldBooking = bookingRepository.findBookingById(id);
+//        if (oldBooking == null) {
+//            throw new NotFoundException("Booking not found !");
+//        }
+//
+//        // Cập nhật các thông tin từ bookingRequest
+//        oldBooking.setStatus(bookingRequest.getStatus());
+////        oldBooking.setDuration(bookingRequest.getDuration());
+////        oldBooking.setStartDate(bookingRequest.getStartDate());
+//        oldBooking.setPrice(bookingRequest.getPrice());
+//        oldBooking.setFullName(bookingRequest.getFullName());
+//        oldBooking.setEmail(bookingRequest.getEmail());
+//        oldBooking.setPhone(bookingRequest.getPhone());
+////        oldBooking.setAddress(bookingRequest.getAddress());
+//        oldBooking.setAdult(bookingRequest.getAdult());
+//        oldBooking.setInfant(bookingRequest.getInfant());
+//        oldBooking.setChild(bookingRequest.getChild());
+//
+//        // Lưu và trả về booking đã cập nhật
+//        return bookingRepository.save(oldBooking);
+//    }
 
     public Booking deleteBooking(long Id) {
         Booking oldBooking = bookingRepository.findBookingById(Id);

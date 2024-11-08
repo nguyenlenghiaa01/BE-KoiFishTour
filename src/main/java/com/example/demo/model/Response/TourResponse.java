@@ -19,6 +19,8 @@ public class TourResponse {
     private String image;
     private String status;
     private double price;
+    private double perAdultPrice;
+    private double perChildrenPrice;
     private String time;
     private String description;
     private long consultingId;

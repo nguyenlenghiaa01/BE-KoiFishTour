@@ -108,11 +108,11 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
-        Booking newBooking = bookingService.updateBooking(booking,id);
-        return ResponseEntity.ok(newBooking);
-    }
+//    @PutMapping("{id}")
+//    public ResponseEntity<?> updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
+//        Booking newBooking = bookingService.updateBooking(booking,id);
+//        return ResponseEntity.ok(newBooking);
+//    }
 
 
     @DeleteMapping("{id}")

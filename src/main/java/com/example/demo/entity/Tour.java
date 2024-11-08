@@ -62,6 +62,8 @@ public class Tour {
         this.tourId = generateTourId();
     }
 
+    private double perAdultPrice;
+    private double perChildrenPrice;
 
     @ManyToMany
     @JoinTable(

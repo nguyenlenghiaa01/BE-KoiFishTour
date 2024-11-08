@@ -32,5 +32,8 @@ public class TourRequest {
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "Invalid time format! Must be in HH:mm format.")
     private String time;
     private long consultingId;
+
+    private double perAdultPrice;
+    private double perChildrenPrice;
     Set<Long> farmId;
 }
