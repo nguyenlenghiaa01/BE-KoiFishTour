@@ -120,11 +120,11 @@ public class AuthenticationService implements UserDetailsService {
                 accountResponse.setId(account.getId());
                 accountResponse.setCode(account.getCode());
                 accountResponse.setAddress(account.getAddress());
-                accountResponse.setRole(account.getRole());
                 accountResponse.setPhone(account.getPhone());
                 accountResponse.setFullName(account.getFullName());
                 accountResponse.setEmail(account.getEmail());
                 accountResponse.setRole(account.getRole());
+                accountResponse.setImage(account.getImage());
 
                 accountResponses.add(accountResponse);
             }
@@ -143,6 +143,7 @@ public class AuthenticationService implements UserDetailsService {
         int cusCount = 0;
         int saleCount = 0;
         int consultingCount = 0;
+        int managerCount=0;
 
         for (Account account : accounts) {
             if (account.getRole() == Role.CUSTOMER) {
@@ -151,12 +152,15 @@ public class AuthenticationService implements UserDetailsService {
                 saleCount++;
             } else if (account.getRole() == Role.CONSULTING) {
                 consultingCount++;
+            } else if(account.getRole() == Role.MANAGER){
+                managerCount++;
             }
         }
         Map<String, Integer> roleCounts = new HashMap<>();
         roleCounts.put("CUSTOMER", cusCount);
         roleCounts.put("SALE", saleCount);
         roleCounts.put("CONSULTING", consultingCount);
+        roleCounts.put("MANAGER",managerCount);
 
         return roleCounts;
     }
