@@ -130,11 +130,11 @@ public class KoiFishOrderService {
 
             ShoppingCart orderDetails = new ShoppingCart();
             orderDetails.setKoiFish(koi);
+            orderDetails.setKoiFishOrder(existingOrder);
             orderDetailsList.add(orderDetails);
         }
 
         existingOrder.setShoppingCarts(orderDetailsList);
-
         existingOrder.setStatus(koiFishOrderRequest.getStatus());
         existingOrder.setTotalPrice(koiFishOrderRequest.getTotalPrice());
         existingOrder.setPaidMoney(koiFishOrderRequest.getPaidMoney());
