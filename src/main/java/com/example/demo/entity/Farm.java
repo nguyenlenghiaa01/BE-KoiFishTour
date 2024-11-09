@@ -64,4 +64,8 @@ public class Farm {
     @OneToMany(mappedBy = "farm")
     @JsonIgnore
     List<KoiFish> koiFishes;
+
+    @ManyToMany(mappedBy = "farms")
+    @JsonIgnore
+    private Set<CustomTour> customTours = new HashSet<>();
 }

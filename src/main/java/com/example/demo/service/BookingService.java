@@ -216,11 +216,7 @@ public class BookingService {
         return dataResponse;
     }
 
-    public Booking getQuotation(long id){
-        Quotation quotation = quotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Quotation not found!"));
-        Booking booking = bookingRepository.findById(quotation.getBooking().getId()).orElseThrow(() -> new NotFoundException("Booking not found!"));
-        return booking;
-    }
+
 
 //    public DataResponse< Booking> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
 //        Page<Booking> bookingPage =bookingRepository.findAll(PageRequest.of(page,size));

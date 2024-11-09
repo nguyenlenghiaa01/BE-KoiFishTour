@@ -1,5 +1,6 @@
 package com.example.demo.model.Request;
 
+import com.example.demo.entity.Farm;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
@@ -7,6 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class CustomTourRequest {
@@ -31,8 +33,10 @@ public class CustomTourRequest {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double budget;
 
+    private String status;
+
     private int adult;
     private int child;
     private int infant;
-    private List<String> farm;
+    private Set<Farm> farm;
 }

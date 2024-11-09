@@ -56,8 +56,8 @@ public class Quotation {
     private double perAdultPrice;
     private double perChildPrice;
     @OneToOne
-    @JoinColumn(name = "booking_id", referencedColumnName = "id")
-    private Booking booking;
+    @JoinColumn(name = "custom_booking_id")
+    private CustomBooking customBooking;
 
     @ManyToOne
     @JoinColumn(name = "sale_id")

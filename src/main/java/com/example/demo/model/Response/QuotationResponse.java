@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 public class QuotationResponse {
-    private long bookingId;
+    private long customBookingId;
     private double adultPrice;
     private double childPrice;
     private double totalPrice;

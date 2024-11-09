@@ -68,11 +68,7 @@ public class BookingAPI {
         DataResponse<BookingsResponse> bookingResponse = bookingService.getAllBooking(page, size);
         return ResponseEntity.ok(bookingResponse);
     }
-    @GetMapping("/idQuotation")
-    public ResponseEntity<Booking> get(long id){
-        Booking booking = bookingService.getQuotation(id);
-        return ResponseEntity.ok(booking);
-    }
+
     @PostMapping("/transaction")
     public ResponseEntity<?> create(@RequestParam String id) throws Exception{
         bookingService.createTransactionId(id);

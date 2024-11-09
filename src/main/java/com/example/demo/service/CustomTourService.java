@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.CustomTour;
+import com.example.demo.entity.Farm;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.CustomTourRequest;
 import com.example.demo.model.Response.CustomTourResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.repository.CustomerTourRepository;
+import com.example.demo.repository.FarmRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomTourService {
@@ -23,6 +27,8 @@ public class CustomTourService {
     // xu ly nhung logic lien qua
     @Autowired
     CustomerTourRepository customerTourRepository;
+    @Autowired
+    FarmRepository farmRepository;
     public CustomTour createNewCus(CustomTourRequest customerTourRequest){
         CustomTour customerTour = modelMapper.map(customerTourRequest, CustomTour.class);
         try {
@@ -50,7 +56,8 @@ public class CustomTourService {
             customTourResponse.setAdult(customTour.getAdult());
             customTourResponse.setChild(customTour.getChild());
             customTourResponse.setInfant(customTour.getInfant());
-            customTourResponse.setFarm(customTour.getFarm());
+            customTourResponse.setStatus(customTour.getStatus());
+            customTourResponse.setFarms(customTour.getFarms());
 
             customTourResponses.add(customTourResponse);
         }
@@ -78,7 +85,8 @@ public class CustomTourService {
         oldCus.setAdult(customTourRequest.getAdult());
         oldCus.setChild(customTourRequest.getChild());
         oldCus.setInfant(customTourRequest.getInfant());
-        oldCus.setFarm(customTourRequest.getFarm());
+        oldCus.setFarms(customTourRequest.getFarm());
+        oldCus.setStatus(customTourRequest.getStatus());
         return customerTourRepository.save(oldCus);
     }
     public CustomTour deleteCus(long id){

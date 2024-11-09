@@ -6,7 +6,10 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -18,6 +21,11 @@ public class CustomTour {
     @NotNull(message = "Start date cannot be null")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
+
+    private Date createAt;
+
+    private String status;
+
 
     private String duration;
     @Email(message = "Invalid Email!")
@@ -40,11 +48,20 @@ public class CustomTour {
     private int child;
     private int infant;
 
-    private List<String> farm;
-
     private boolean isDeleted = false;
+
+    @OneToOne(mappedBy = "customTour")
+    private CustomBooking customBooking;
 
     @ManyToOne
     @JoinColumn(name = "sale_id")
     private Account account;
+
+    @ManyToMany
+    @JoinTable(
+            name = "cus_farm",
+            joinColumns = @JoinColumn(name = "customTour_id"),
+            inverseJoinColumns = @JoinColumn(name = "farm_id")
+    )
+    private Set<Farm> farms = new HashSet<>();
 }

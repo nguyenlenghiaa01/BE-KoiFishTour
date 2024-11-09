@@ -149,5 +149,17 @@ public class Account implements UserDetails {
     @JsonIgnore
     private List<Quotation> quotations;
 
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    private List<CustomBooking> customBookings;
+
+    @OneToMany(mappedBy = "consulting")
+    @JsonIgnore
+    private List<CustomBooking> customBooking;
+
+    @OneToMany(mappedBy = "consulting")
+    @JsonIgnore
+    private List<Schedule> schedules;
+
 }
 

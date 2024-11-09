@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class QuotationRequest {
-    long bookingId;
+    long customBookingId;
     long saleId;
     private double perAdultPrice;
     private double perChildPrice;
