@@ -77,11 +77,14 @@ public class KoiFishService {
         dataResponse.setTotalPages(fishPage.getTotalPages());
         return dataResponse;
     }
-    public DataResponse<KoiFish> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
+    public DataResponse<KoiFish> getListKoiFish(@RequestParam int page, @RequestParam int size,String id){
         Page<KoiFish> koiFish = koiRepository.findAll(PageRequest.of(page,size));
         List<KoiFish> koiFishList = koiFish.getContent();
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Booking not found!"));
+        Booking booking = bookingRepository.findBookingByBookingId(id);
+
+        if(booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
         Tour tour = tourRepository.findById(booking.getTour().getId())
                 .orElseThrow(() -> new NotFoundException("Tour not found!"));
         Set<Farm> farms = tour.getFarms();

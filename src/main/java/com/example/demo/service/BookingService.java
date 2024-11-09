@@ -49,6 +49,7 @@ public class BookingService {
     FarmRepository farmRepository;
     @Autowired
     BookingService bookingService;
+
     public Booking createNewBooking(BookingRequest bookingRequest) {
         Tour tour = tourRepository.findTourByTourId(bookingRequest.getTourId());
         if (tour == null) {
@@ -60,21 +61,21 @@ public class BookingService {
             throw new NotFoundException("Not found customer");
         }
 
-            Booking booking = new Booking();
-            booking.setBookingDate(new Date());
-            booking.setStatus("PENDING");
-            booking.setPrice(bookingRequest.getPrice());
-            booking.setFullName(bookingRequest.getFullName());
-            booking.setEmail(bookingRequest.getEmail());
-            booking.setPhone(bookingRequest.getPhone());
-            booking.setChild(bookingRequest.getChild());
-            booking.setAdult(bookingRequest.getAdult());
-            booking.setInfant(bookingRequest.getInfant());
-            booking.setTour(tour);
-            booking.setAccount(customer);
+        Booking booking = new Booking();
+        booking.setBookingDate(new Date());
+        booking.setStatus("PENDING");
+        booking.setPrice(bookingRequest.getPrice());
+        booking.setFullName(bookingRequest.getFullName());
+        booking.setEmail(bookingRequest.getEmail());
+        booking.setPhone(bookingRequest.getPhone());
+        booking.setChild(bookingRequest.getChild());
+        booking.setAdult(bookingRequest.getAdult());
+        booking.setInfant(bookingRequest.getInfant());
+        booking.setTour(tour);
+        booking.setAccount(customer);
 
 
-            return bookingRepository.save(booking);
+        return bookingRepository.save(booking);
 
     }
 
@@ -84,7 +85,6 @@ public class BookingService {
                                                                @RequestParam long customerId) {
         Page<Booking> bookingPage = bookingRepository.findByAccountIdAndIsDeletedFalse(customerId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
-
 
 
         List<BookingResponse> activeBookings = new ArrayList<>();
@@ -118,6 +118,7 @@ public class BookingService {
 
         return dataResponse;
     }
+
     public DataResponse<BookingResponses> getBookingByCustomer(@RequestParam int page,
                                                                @RequestParam int size,
                                                                @RequestParam String id) {
@@ -127,16 +128,16 @@ public class BookingService {
 
         List<BookingResponses> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-
-            BookingResponses bookingResponse = new BookingResponses();
-            bookingResponse.setBookingId(booking.getBookingId());
-            bookingResponse.setEmail(booking.getEmail());
-            bookingResponse.setFullName(booking.getFullName());
-            bookingResponse.setStatus(booking.getStatus());
-            bookingResponse.setAdult(booking.getAdult());
-            bookingResponse.setInfant(booking.getInfant());
-            bookingResponse.setPhone(booking.getPhone());
-            bookingResponse.setCustomerId(booking.getAccount().getId());
+            if (!booking.isDeleted() && "PAID".equals(booking.getStatus())) {
+                BookingResponses bookingResponse = new BookingResponses();
+                bookingResponse.setBookingId(booking.getBookingId());
+                bookingResponse.setEmail(booking.getEmail());
+                bookingResponse.setFullName(booking.getFullName());
+                bookingResponse.setStatus(booking.getStatus());
+                bookingResponse.setAdult(booking.getAdult());
+                bookingResponse.setInfant(booking.getInfant());
+                bookingResponse.setPhone(booking.getPhone());
+                bookingResponse.setCustomerId(booking.getAccount().getId());
 
 //            Quotation quotation = quotationRepository.findById(booking.getId())
 //                    .orElseThrow(() -> new NotFoundException("Quotation not found for booking id: " + booking.getId()));
@@ -146,27 +147,29 @@ public class BookingService {
 //                    quotation.getBooking().getPrice();
 //            bookingResponse.setTotalPrice(totalPrice);
 
-            // Thiết lập thông tin Tour vào BookingResponse
-            Tour tour = booking.getTour();
-            if (tour != null) {
-                Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
-                TourResponses tourResponse = new TourResponses();
-                tourResponse.setId(tour.getId());
-                tourResponse.setTourName(tour.getTourName());
-                tourResponse.setDescription(tour.getDescription());
-                tourResponse.setStartDate(tour.getStartDate());
+                // Thiết lập thông tin Tour vào BookingResponse
+                Tour tour = booking.getTour();
+                if (tour != null) {
+                    Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
+                    TourResponses tourResponse = new TourResponses();
+                    tourResponse.setId(tour.getId());
+                    tourResponse.setTourName(tour.getTourName());
+                    tourResponse.setDescription(tour.getDescription());
+                    tourResponse.setStartDate(tour.getStartDate());
 //                tourResponse.setConsultingId(tour.getAccount().getId());
-                tourResponse.setPrice(tour.getPrice());
-                tourResponse.setImage(tour.getImage());
-                tourResponse.setDuration(tour.getDuration());
-                tourResponse.setTourId(tour.getTourId());
-                tourResponse.setTime(tour.getTime());
-                tourResponse.setConsultingName(consulting.getFullName());
+                    tourResponse.setPrice(tour.getPrice());
+                    tourResponse.setImage(tour.getImage());
+                    tourResponse.setDuration(tour.getDuration());
+                    tourResponse.setTourId(tour.getTourId());
+                    tourResponse.setTime(tour.getTime());
+                    tourResponse.setConsultingName(consulting.getFullName());
 
-                bookingResponse.setTourId(tourResponse);
+                    bookingResponse.setTourId(tourResponse);
+                }
+
+                activeBookings.add(bookingResponse);
             }
 
-            activeBookings.add(bookingResponse);
         }
 
         DataResponse<BookingResponses> dataResponse = new DataResponse<>();
@@ -216,8 +219,7 @@ public class BookingService {
     }
 
 
-
-//    public DataResponse< Booking> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
+    //    public DataResponse< Booking> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
 //        Page<Booking> bookingPage =bookingRepository.findAll(PageRequest.of(page,size));
 //        List<Booking> bookings= bookingPage.getContent();
 //        Booking booking = bookingRepository.findById(id)
@@ -266,6 +268,7 @@ public class BookingService {
     public Long getTotalBookingsByMonthAndYear(int month, int year) {
         return bookingRepository.countBookingsByTourStartDate(month, year);
     }
+
     public Long getTotalPriceByMonthAndYear(int month, int year) {
         return bookingRepository.sumPriceByTourStartDate(month, year);
     }
@@ -318,18 +321,18 @@ public class BookingService {
         return bookingRepository.save(oldBooking);
     }
 
-    public String createUrl(String id) throws  Exception {
+    public String createUrl(String id) throws Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
         String formattedCreateDate = createDate.format(formatter);
         Booking booking = bookingRepository.findBookingByBookingId(id);
 
-        if(booking == null){
+        if (booking == null) {
             throw new NotFoundException("Not found booking");
         }
 
         double money = booking.getPrice() * 100;
-        String amount = String.valueOf((int)money);
+        String amount = String.valueOf((int) money);
 
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
@@ -346,7 +349,7 @@ public class BookingService {
         vnpParams.put("vnp_TxnRef", String.valueOf(booking.getBookingId()));
         vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + booking.getBookingId());
         vnpParams.put("vnp_OrderType", "other");
-        vnpParams.put("vnp_Amount",amount);
+        vnpParams.put("vnp_Amount", amount);
 
         vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_CreateDate", formattedCreateDate);
@@ -379,15 +382,15 @@ public class BookingService {
         return urlBuilder.toString();
     }
 
-    public Booking updateStatus(String id){
-    Booking booking = bookingRepository.findBookingByBookingId(id);
-    if(booking==null){
-       throw  new NotFoundException("Booking not found!");
-    }
-     booking.setStatus("PAID");
-    bookingRepository.save(booking);
+    public Booking updateStatus(String id) {
+        Booking booking = bookingRepository.findBookingByBookingId(id);
+        if (booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
+        booking.setStatus("PAID");
+        bookingRepository.save(booking);
 
-    return booking;
+        return booking;
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -405,7 +408,7 @@ public class BookingService {
 
     public String createTransactionId(String id) {
         Booking booking = bookingRepository.findBookingByBookingId(id);
-        if(booking == null){
+        if (booking == null) {
             throw new NotFoundException("Booking not found");
         }
 
