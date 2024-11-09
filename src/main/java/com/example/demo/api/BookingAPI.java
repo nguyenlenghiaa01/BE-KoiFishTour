@@ -112,7 +112,7 @@ public class BookingAPI {
 
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteBooking(@PathVariable long id){
+    public ResponseEntity<?> deleteBooking(@PathVariable String id){
         Booking newBooking = bookingService.deleteBooking(id);
         return ResponseEntity.ok(newBooking);
     }

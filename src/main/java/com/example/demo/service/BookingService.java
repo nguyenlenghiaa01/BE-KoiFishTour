@@ -60,19 +60,18 @@ public class BookingService {
             throw new NotFoundException("Not found customer");
         }
 
-        Booking booking = new Booking();
-        booking.setBookingDate(new Date());
-        booking.setStatus("PENDING");
-        booking.setPrice(bookingRequest.getPrice());
-        booking.setFullName(bookingRequest.getFullName());
-        booking.setEmail(bookingRequest.getEmail());
-        booking.setPhone(bookingRequest.getPhone());
-        booking.setChild(bookingRequest.getChild());
-        booking.setAdult(bookingRequest.getAdult());
-        booking.setInfant(bookingRequest.getInfant());
-        booking.setTour(tour);
-        booking.setAccount(customer);
-
+            Booking booking = new Booking();
+            booking.setBookingDate(new Date());
+            booking.setStatus("PENDING");
+            booking.setPrice(bookingRequest.getPrice());
+            booking.setFullName(bookingRequest.getFullName());
+            booking.setEmail(bookingRequest.getEmail());
+            booking.setPhone(bookingRequest.getPhone());
+            booking.setChild(bookingRequest.getChild());
+            booking.setAdult(bookingRequest.getAdult());
+            booking.setInfant(bookingRequest.getInfant());
+            booking.setTour(tour);
+            booking.setAccount(customer);
 
 
             return bookingRepository.save(booking);
@@ -310,8 +309,8 @@ public class BookingService {
 //        return bookingRepository.save(oldBooking);
 //    }
 
-    public Booking deleteBooking(long Id) {
-        Booking oldBooking = bookingRepository.findBookingById(Id);
+    public Booking deleteBooking(String Id) {
+        Booking oldBooking = bookingRepository.findBookingByBookingId(Id);
         if (oldBooking == null) {
             throw new NotFoundException("Booking not found !");
         }
@@ -455,4 +454,5 @@ public class BookingService {
 
         return "Payment transaction created successfully for booking ID: " + id;
     }
+
 }
