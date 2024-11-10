@@ -51,8 +51,10 @@ public class KoiFishOrderService {
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found!"));
-        Booking booking = bookingRepository.findById(koiFishOrderRequest.getBookingId())
-                .orElseThrow(() -> new NotFoundException("Booking not found!"));
+        Booking booking = bookingRepository.findBookingByBookingId(koiFishOrderRequest.getBookingId());
+        if(booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
         Tour tour = tourRepository.findById(booking.getTour().getId())
                 .orElseThrow(() -> new RuntimeException("Tour not found!"));
         Account account = accountRepository.findById(tour.getAccount().getId())
@@ -190,6 +192,16 @@ public class KoiFishOrderService {
 
         oldKoiFishOrder.setDeleted(true);
         return koiFishOrderRepository.save(oldKoiFishOrder);
+    }
+
+    public KoiFishOrder getOrderByBookingId(String id) {
+        KoiFishOrder order = koiFishOrderRepository.findByBooking_BookingId(id);
+
+        if(order == null) {
+            throw new NotFoundException("Order with this booking id not found!");
+        }
+
+        return order;
     }
 
 }

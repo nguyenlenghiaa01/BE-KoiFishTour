@@ -12,7 +12,7 @@ public class KoiFishOrderRequest {
 
     private List<Long> shoppingCart;
     private long customerId;
-    private long bookingId;
+    private String bookingId;
     private OrderEnum status;
     private double paidMoney;
     private double totalPrice;

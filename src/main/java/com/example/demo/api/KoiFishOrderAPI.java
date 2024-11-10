@@ -93,4 +93,10 @@ public class KoiFishOrderAPI {
             return ResponseEntity.ok(deletedOrder);
     }
 
+    @GetMapping("booking/{id}")
+    public ResponseEntity getOrderByBookingId(@PathVariable String id) {
+        KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
+        return ResponseEntity.ok(order);
+    }
+
 }
