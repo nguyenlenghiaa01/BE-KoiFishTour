@@ -21,7 +21,7 @@ public class DashBoardAPI {
     @Autowired
     KoiFishOrderService koiFishOrderService;
 
-    @GetMapping("/total-booking")
+    @GetMapping("/count-booking")
     public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -29,7 +29,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalBookings);
     }
 
-    @GetMapping("/total-price")
+    @GetMapping("/booking/total-price")
     public ResponseEntity<Long> getTotalPrice(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -37,7 +37,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalPrice);
     }
 
-    @GetMapping("/total/deleted")
+    @GetMapping("/total-booking/deleted")
     public ResponseEntity<Long> getTotalDeletedBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
         int year = bookingTotalRequest.getYear();
@@ -61,7 +61,7 @@ public class DashBoardAPI {
 //        return ResponseEntity.ok(totalAmount);
 //    }
 
-    @GetMapping("/count")
+    @GetMapping("/count-order")
     public ResponseEntity<Double> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
         int month = orderTotalRequest.getMonth();
         int year = orderTotalRequest.getYear();
@@ -69,7 +69,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalOrders);
     }
 
-    @GetMapping("/count/deleted")
+    @GetMapping("/count-order/deleted")
     public ResponseEntity<Long> getTotalDeletedOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
         int month = orderTotalRequest.getMonth();
         int year = orderTotalRequest.getYear();
