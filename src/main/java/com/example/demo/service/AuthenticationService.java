@@ -260,7 +260,8 @@ public class AuthenticationService implements UserDetailsService {
             Account account = accountRepository.findAccountByEmail(email);
             if(account == null) {
                 Account newAccount = new Account();
-                newAccount.setEmail(email);
+                newAccount.setUserName(decodedToken.getEmail());
+                newAccount.setEmail(decodedToken.getEmail());
                 newAccount.setFullName(decodedToken.getName());
                 newAccount.setImage(decodedToken.getPicture());
                 newAccount.setRole(Role.CUSTOMER);

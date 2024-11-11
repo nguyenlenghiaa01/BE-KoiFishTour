@@ -130,10 +130,13 @@ public class KoiFishOrderService {
             KoiFish koi = koiRepository.findById(koiFishId)
                     .orElseThrow(() -> new NotFoundException("KoiFish not found for ID: " + koiFishId));
 
+            boolean exists = orderDetailsList.stream()
+                    .anyMatch(orderDetails -> orderDetails.getKoiFish().getId()==koiFishId);
             ShoppingCart orderDetails = new ShoppingCart();
-            orderDetails.setKoiFish(koi);
-            orderDetails.setKoiFishOrder(existingOrder);
-            orderDetailsList.add(orderDetails);
+                orderDetails.setKoiFish(koi);
+                orderDetails.setKoiFishOrder(existingOrder);
+                orderDetailsList.add(orderDetails);
+
         }
 
         existingOrder.setShoppingCarts(orderDetailsList);
