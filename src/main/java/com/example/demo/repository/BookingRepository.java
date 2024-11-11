@@ -39,5 +39,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 
     Booking findBookingByBookingId(String bookingId);
 
+    @Query("SELECT t.id, t.tourName, COUNT(b.id) AS bookingCount " +
+            "FROM Tour t JOIN t.bookings b " +
+            "GROUP BY t.id, t.tourName " +
+            "ORDER BY bookingCount DESC")
+    List<Object[]> findTop5ToursWithMostBookings();
+
 
 }
