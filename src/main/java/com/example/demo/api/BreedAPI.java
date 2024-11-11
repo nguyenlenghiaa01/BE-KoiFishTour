@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +23,14 @@ public class BreedAPI {
 
     @Autowired
     private BreedService breedService;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody BreedRequest breedRequest) {
         Breed newBreed = breedService.createNewBreed(breedRequest);
+        simpMessagingTemplate.convertAndSend("topic/breed","CREATE NEW BREED");
         return ResponseEntity.ok(newBreed);
     }
 

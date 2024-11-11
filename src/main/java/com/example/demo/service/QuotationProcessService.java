@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,16 +43,14 @@ public class QuotationProcessService {
                 .orElseThrow(() -> new NotFoundException("Quotation not found!"));
         Account account = accountRepository.findById(quotationProcessRequest.getAccountId())
                 .orElseThrow(() -> new NotFoundException("Account not found!"));
+        quotationProcess.setCreatedAt(LocalDateTime.now());
         quotationProcess.setStatus(quotationProcessRequest.getStatus());
         quotationProcess.setNotes(quotationProcessRequest.getNotes());
         quotationProcess.setQuotation(quotation);
         quotationProcess.setAccount(account);
 
-        try {
-            return quotationProcessRepository.save(quotationProcess);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEntity("Duplicate quotation process ID!");
-        }
+        return quotationProcessRepository.save(quotationProcess);
+
     }
 
     public DataResponse<QuotationProcess> getAllQuotation(@RequestParam int page, @RequestParam int size, @RequestParam long id) {

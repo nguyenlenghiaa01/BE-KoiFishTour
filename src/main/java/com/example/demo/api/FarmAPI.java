@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,16 @@ import java.util.List;
 public class FarmAPI {
 
     @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
     private FarmService farmService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody FarmRequest farmRequest) {
         Farm newFarm = farmService.createNewFarm(farmRequest);
+        simpMessagingTemplate.convertAndSend("topic/farm","CREATE NEW FARM");
+
         //return ve font end
         return ResponseEntity.ok(newFarm);
     }
@@ -50,6 +55,8 @@ public class FarmAPI {
     @PutMapping("{id}")
     public ResponseEntity<?> updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id) {
             Farm updatedFarm = farmService.updateFarm(farm, id);
+        simpMessagingTemplate.convertAndSend("topic/farm","UPDATE FARM");
+
             return ResponseEntity.ok(updatedFarm);
     }
 
@@ -58,6 +65,7 @@ public class FarmAPI {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteFarm(@PathVariable long id) {
             Farm deletedFarm = farmService.deleteFarm(id);
+        simpMessagingTemplate.convertAndSend("topic/farm","DELETE FARM");
             return ResponseEntity.ok(deletedFarm);
     }
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,10 +20,13 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name="api")
 public class CustomTourAPI {
     @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
     CustomTourService customTourService;
     @PostMapping
     public ResponseEntity<?>create(@Valid @RequestBody CustomTourRequest customTourRequest){
         CustomTour customTour = customTourService.createNewCus(customTourRequest);
+        simpMessagingTemplate.convertAndSend("topic/customTour","CREATE NEW CUSTOM TOUR");
         return ResponseEntity.ok(customTour);
     }
 
@@ -35,11 +39,13 @@ public class CustomTourAPI {
     @PutMapping("{id}")
     public ResponseEntity<?> updateCustom(@Valid @RequestBody CustomTourRequest customTourRequest, @PathVariable long id) {
         CustomTour cus = customTourService.updateCus(customTourRequest, id);
+        simpMessagingTemplate.convertAndSend("topic/customTour","UPDATE CUSTOM TOUR");
         return ResponseEntity.ok(cus);
     }
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteCustom(@PathVariable long id) {
         CustomTour customTour = customTourService.deleteCus(id);
+        simpMessagingTemplate.convertAndSend("topic/customTour","DELETE CUSTOM TOUR");
         return ResponseEntity.ok(customTour);
     }
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,14 @@ import java.util.List;
 public class KoiFishOrderAPI {
 
     @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
     private KoiFishOrderService koiFishOrderService;
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder koiFishOrder = koiFishOrderService.create(koiFishOrderRequest);
+        simpMessagingTemplate.convertAndSend("topic/koiOrder","CREATE NEW ORDER");
             return ResponseEntity.ok(koiFishOrder);
     }
 

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,8 @@ import java.util.List;
 @SecurityRequirement(name = "api")
 @CrossOrigin("*")
 public class QuotationAPI {
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     QuotationService quotationService;
 
@@ -71,6 +74,7 @@ public class QuotationAPI {
     @PostMapping("/approve")
     public ResponseEntity<Quotation> post(Quotation1Request quotation1Request,long id){
         Quotation newQuotation = quotationService.setQuotationApprove(quotation1Request, id);
+        simpMessagingTemplate.convertAndSend("topic/quotation","APPROVED BOOKING");
         return  ResponseEntity.ok(newQuotation);
     }
 

@@ -9,9 +9,11 @@ import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,7 +28,8 @@ public class TourAPI {
     @Autowired
     private TourService tourService;
 
-
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody TourRequest tourRequest) {
@@ -42,12 +45,14 @@ public class TourAPI {
 
     @GetMapping("/manager/get/notOpen")
     public ResponseEntity<?> getTour(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = tourService.getAllTourNotOpen(page, size);
+        DataResponse<?> dataResponse = tourService.getAllTourNotOpen(page, size);
+        simpMessagingTemplate.convertAndSend("topic/tour","CLOSE TOUR");
         return ResponseEntity.ok(dataResponse);
     }
     @PostMapping("/setOpen")
     public ResponseEntity<Tour> setOpen (long id) throws SchedulerException {
         Tour tour = tourService.setOpen(id);
+        simpMessagingTemplate.convertAndSend("topic/tour","OPEN TOUR");
         return  ResponseEntity.ok(tour);
     }
 
@@ -103,6 +108,7 @@ public class TourAPI {
     @PostMapping("/schedule")
     public String scheduleTour(OpenTourRequest openTourRequest) {
         try {
+            simpMessagingTemplate.convertAndSend("topic/tour","OPEN TOUR");
             return tourService.scheduleTour(openTourRequest);
         } catch (Exception e) {
             return "Error during scheduling: " + e.getMessage();

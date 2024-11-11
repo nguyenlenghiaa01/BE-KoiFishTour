@@ -46,7 +46,8 @@ public class Filter extends OncePerRequestFilter {
             "/api/koi/guest/get",
             "/api/feedback/guest/get",
             "/api/tour/search/first",
-            "/api/tour"
+            "/api/tour",
+            "websocket/**"
     );
 
     public boolean checkIsPublicAPI(String uri) {

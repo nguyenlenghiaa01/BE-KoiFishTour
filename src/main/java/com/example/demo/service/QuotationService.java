@@ -45,6 +45,8 @@ public class QuotationService {
         Quotation quotation = new Quotation();
         CustomBooking booking = customBookingRepository.findById(quotationRequest.getCustomBookingId())
                 .orElseThrow(() -> new NotFoundException("Custom Booking not exist!"));
+        Quotation quotaions = quotationRepository.findById(quotationRequest.getCustomBookingId())
+                .orElseThrow(() -> new NotFoundException("Custom Booking not exist!"));
 
         Account account = accountRepository.findById(quotationRequest.getSaleId())
                 .orElseThrow(() -> new NotFoundException("Sale id not found!"));
@@ -53,7 +55,19 @@ public class QuotationService {
         quotation.setPerAdultPrice(quotationRequest.getPerAdultPrice());
         quotation.setPerChildPrice(quotationRequest.getPerChildPrice());
         quotation.setAccount(account);
-        return quotationRepository.save(quotation);
+        Quotation savedQuotation = quotationRepository.save(quotation);
+        QuotationProcess quotationProcess = new QuotationProcess();
+
+        Account accounts = accountRepository.findById(booking.getAccount().getId())
+                .orElseThrow(() -> new NotFoundException("Account not found!"));
+        quotationProcess.setCreatedAt(LocalDateTime.now());
+        quotationProcess.setStatus(QuotationEnum.PENDING);
+        quotationProcess.setNotes("Process created with initial quotation");
+        quotationProcess.setQuotation(savedQuotation);
+        quotationProcess.setAccount(accounts);
+
+        quotationProcessRepository.save(quotationProcess);
+        return savedQuotation;
     }
 
     public DataResponse<QuotationResponses> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {

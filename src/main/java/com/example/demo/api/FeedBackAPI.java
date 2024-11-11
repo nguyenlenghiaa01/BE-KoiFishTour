@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,16 @@ import java.util.List;
 public class FeedBackAPI {
 
     @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
     private FeedbackService feedbackService;
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody FeedbackRequest feedbackRequest) {
         Feedback newFeedback = feedbackService.createNewFeedback(feedbackRequest);
+        simpMessagingTemplate.convertAndSend("topic/feedback","CREATE NEW FEEDBACK");
         return ResponseEntity.ok(newFeedback);
     }
 
@@ -57,6 +62,7 @@ public class FeedBackAPI {
     public ResponseEntity<?> updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id) {
         try {
             Feedback updatedFeedback = feedbackService.updateFeedback(feedback, id);
+            simpMessagingTemplate.convertAndSend("topic/feedback","UPDATE FEEDBACK");
             return ResponseEntity.ok(updatedFeedback);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
@@ -68,6 +74,7 @@ public class FeedBackAPI {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteFeedback(@PathVariable long id) {
             Feedback deletedFeedback = feedbackService.deleteFeedback(id);
+        simpMessagingTemplate.convertAndSend("topic/feedback","DELETE FEEDBACK");
             return ResponseEntity.ok(deletedFeedback);
 
     }

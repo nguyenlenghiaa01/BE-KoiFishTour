@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.List;
 @CrossOrigin("*")
 @SecurityRequirement(name="api")
 public class BookingAPI {
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     BookingService bookingService;
     @PostMapping("/VNPay")
@@ -37,6 +40,7 @@ public class BookingAPI {
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody BookingRequest bookingRequest) {
         Booking newBooking =bookingService.createNewBooking(bookingRequest);
+        simpMessagingTemplate.convertAndSend("topic/booking","CREATE NEW BOOKING");
         return ResponseEntity.ok(newBooking);
     }
 //    @PostMapping("/total")
@@ -86,6 +90,7 @@ public class BookingAPI {
     @PutMapping("/setStatusAfterPayment")
     public ResponseEntity<Booking> updateStatus(String id){
         Booking booking =bookingService.updateStatus(id);
+        simpMessagingTemplate.convertAndSend("topic/booking","UPDATE BOOKING");
         return  ResponseEntity.ok(booking);
     }
 
@@ -114,6 +119,7 @@ public class BookingAPI {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable String id){
         Booking newBooking = bookingService.deleteBooking(id);
+        simpMessagingTemplate.convertAndSend("topic/booking","DELETE BOOKING");
         return ResponseEntity.ok(newBooking);
     }
 }

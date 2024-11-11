@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 @Data
 public class QuotationProcessRequest {
 
-    @Column(name = "created_at", nullable = false) // Thêm tên cột và yêu cầu không null
-    private LocalDateTime createdAt;
-
     @Enumerated(EnumType.STRING)
     private QuotationEnum status;
 

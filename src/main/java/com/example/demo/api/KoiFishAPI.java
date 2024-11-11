@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,15 @@ import java.util.List;
 public class KoiFishAPI {
 
     @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
     private KoiFishService koiService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
             KoiFish newKoiFish = koiService.createNewKoi(koiFishRequest);
+            simpMessagingTemplate.convertAndSend("topic/koi","CREATE NEW KOI");
             return ResponseEntity.ok(newKoiFish);
     }
 
@@ -50,6 +54,7 @@ public class KoiFishAPI {
     @PutMapping("{id}")
     public ResponseEntity<?> updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id) {
             KoiFish updatedKoiFish = koiService.updateKoiFish(koi, id);
+        simpMessagingTemplate.convertAndSend("topic/koi","UPDATE KOI");
             return ResponseEntity.ok(updatedKoiFish);
     }
 
@@ -58,6 +63,7 @@ public class KoiFishAPI {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteKoi(@PathVariable long id) {
             KoiFish deletedKoiFish = koiService.deleteKoi(id);
+        simpMessagingTemplate.convertAndSend("topic/koi","DELETE KOI");
             return ResponseEntity.ok(deletedKoiFish);
     }
 }

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,10 +24,13 @@ import org.springframework.web.bind.annotation.*;
 public class CustomBookingAPI {
     @Autowired
     CustomBookingService customBookingService;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
     public ResponseEntity<?>create(@Valid @RequestBody CustomBookingRequest customBookingRequests){
         CustomBooking customTour = customBookingService.createNewCusBooking(customBookingRequests);
+        simpMessagingTemplate.convertAndSend("topic/customBooking","CREATE NEW CUSTOM BOOKING");
         return ResponseEntity.ok(customTour);
     }
 
@@ -39,6 +43,7 @@ public class CustomBookingAPI {
     @PutMapping("{id}")
     public ResponseEntity<?> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
         CustomBooking cus = customBookingService.updateCus(customBookingRequests, id);
+        simpMessagingTemplate.convertAndSend("topic/customBooking","UPDATE CUSTOM BOOKING");
         return ResponseEntity.ok(cus);
     }
     @DeleteMapping("{id}")
