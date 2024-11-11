@@ -27,9 +27,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,10 +37,6 @@ public class TourService {
     TourRepository tourRepository;
     @Autowired
     FarmRepository farmRepository;
-    @Autowired
-    AuthenticationService authenticationService;
-    @Autowired
-    SearchHistoryRepository searchHistoryRepository;
     @Autowired
     ScheduleJob scheduleJob;
     @Autowired

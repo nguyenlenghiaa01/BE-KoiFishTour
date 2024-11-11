@@ -6,7 +6,6 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,35 +17,17 @@ import java.util.*;
 public class KoiFishOrderService {
 
     @Autowired
-    private KoiFishOrderRepository koiFishOrderRepository;
-
+    KoiRepository koiRepository;
     @Autowired
-    private KoiRepository koiRepository;
+    KoiFishOrderRepository koiFishOrderRepository;
 
     @Autowired
     AccountRepository accountRepository;
 
     @Autowired
-    PaymentRepository paymentRepository;
-
-    @Autowired
-    BreedRepository breedRepository;
-
-    @Autowired
-    TransactionsRepository transactionsRepository;
-
-    @Autowired
-    KoiRepository getKoiRepository;
-
-    @Autowired
     BookingRepository bookingRepository;
     @Autowired
     TourRepository tourRepository;
-
-
-    @Autowired
-    private AuthenticationService authenticationService;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
@@ -119,19 +100,16 @@ public class KoiFishOrderService {
         return orderResponse;
 
     }
-
     public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
         KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-
+            existingOrder.getShoppingCarts().clear();
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
         for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
             KoiFish koi = koiRepository.findById(koiFishId)
                     .orElseThrow(() -> new NotFoundException("KoiFish not found for ID: " + koiFishId));
 
-            boolean exists = orderDetailsList.stream()
-                    .anyMatch(orderDetails -> orderDetails.getKoiFish().getId()==koiFishId);
             ShoppingCart orderDetails = new ShoppingCart();
                 orderDetails.setKoiFish(koi);
                 orderDetails.setKoiFishOrder(existingOrder);
@@ -146,35 +124,6 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(existingOrder);
     }
-
-//    public List<KoiFishOrder> getKoiFishesFromOrders() {
-//        Account currentAccount = authenticationService.getCurrentAccount();
-//        Long customerId = currentAccount.getId(); // Lấy ID của customer hiện tại
-//
-//        List<KoiFishOrder> orders = koiFishOrderRepository.findByCustomerId(customerId);
-//
-//        if (orders.isEmpty()) {
-//            System.out.println("Không tìm thấy đơn hàng cho customer ID: " + customerId);
-//            return Collections.emptyList(); // Trả về danh sách rỗng nếu không có đơn hàng
-//        }
-//        Set<KoiFish> koiFishes = new HashSet<>();
-//        for (KoiFishOrder order : orders) {
-//            if (order.getShoppingCarts() != null) {
-//                for (ShoppingCart cart : order.getShoppingCarts()) {
-//                    if (cart.getKoiFish() != null) {
-//                        koiFishes.add(cart.getKoiFish());
-//                    }
-//                }
-//            }
-//        }
-//
-//        return new ArrayList<>(koiFishes);
-//    }
-
-//    public List<KoiFishOrder> getKoiFishesFromOrders() {
-//        Account currentAccount = authenticationService.getCurrentAccount();
-//        Long customerId = currentAccount.getId();
-//    }
 
     public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
         return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
@@ -206,6 +155,5 @@ public class KoiFishOrderService {
 
         return order;
     }
-
 }
 

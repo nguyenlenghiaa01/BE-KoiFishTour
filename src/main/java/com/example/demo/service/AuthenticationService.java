@@ -2,14 +2,12 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.Enum.Role;
-import com.example.demo.entity.Breed;
 import com.example.demo.exception.AuthException;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.*;
 import com.example.demo.model.Request.*;
 import com.example.demo.model.Response.AccountResponse;
-import com.example.demo.model.Response.BreedResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.UserResponse;
 import com.example.demo.repository.AccountRepository;
@@ -56,7 +54,6 @@ public class AuthenticationService implements UserDetailsService {
     public AccountResponse register(RegisterRequest registerRequest) {
         Account account = modelMapper.map(registerRequest, Account.class);
         try {
-            // hash pass
             String originPassword = account.getPassword();
             account.setPassword(passwordEncoder.encode(originPassword));
             //generate code account
@@ -66,7 +63,6 @@ public class AuthenticationService implements UserDetailsService {
             } while (accountRepository.findAccountByCode(getAccountCode) != null);
             account.setCode(getAccountCode);
             account.setImage("");
-            //save code account
             Account newAccount = accountRepository.save(account);
 //            String otp = otpService.generateOtp();
 //            emailService.sendOtp(account.getEmail(), otp);

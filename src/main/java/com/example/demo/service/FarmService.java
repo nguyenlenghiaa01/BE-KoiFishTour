@@ -1,15 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Booking;
 import com.example.demo.entity.Farm;
-import com.example.demo.entity.KoiFish;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
-import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
-import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.repository.FarmRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +26,6 @@ public class FarmService {
     private ModelMapper modelMapper = new ModelMapper();
 
     public Farm createNewFarm(FarmRequest farmRequest) {
-        //add farm vao database bang repsitory
         Farm farm = modelMapper.map(farmRequest, Farm.class);
         try {
             Farm newFarm = farmRepository.save(farm);

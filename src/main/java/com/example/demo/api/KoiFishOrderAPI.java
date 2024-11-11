@@ -35,54 +35,12 @@ public class KoiFishOrderAPI {
             return ResponseEntity.ok(koiFishOrder);
     }
 
-//    @PostMapping("/total")
-//    public ResponseEntity<Double> getTotalOrderAmount(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
-//        Integer month = orderTotalRequest.getMonth();
-//        Integer year = orderTotalRequest.getYear();
-//        Double totalAmount = koiFishOrderService.getTotalOrderAmountByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalAmount);
-//    }
-//
-//    public ResponseEntity<Double> calculateTotalOrderAmountForMonthAndYear(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest){
-//        Integer month = orderTotalRequest.getMonth();
-//        Integer year = orderTotalRequest.getYear();
-//        Double totalAmount = koiFishOrderService.getCalculateTotalOrderAmountForMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalAmount);
-//    }
-//
-//
-//    @PostMapping("/count")
-//    public ResponseEntity<Long> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
-//        int month = orderTotalRequest.getMonth();
-//        int year = orderTotalRequest.getYear();
-//        Long totalOrders = koiFishOrderService.getTotalOrdersByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalOrders);
-//    }
-//
-//    @PostMapping("/count/deleted")
-//    public ResponseEntity<Long> getTotalDeletedOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
-//        int month = orderTotalRequest.getMonth();
-//        int year = orderTotalRequest.getYear();
-//        Long totalDeletedOrders = koiFishOrderService.getTotalDeletedOrdersByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalDeletedOrders);
-//    }
-
-    // Get danh sách đơn hàng
     @GetMapping("customer/{id}")
     public ResponseEntity getCustomerOrder(@PathVariable long id, @RequestParam int page, @RequestParam int size){
         OrderResponse orders = koiFishOrderService.getCustomerOrder(id, page, size);
         return ResponseEntity.ok(orders);
     }
-//    @GetMapping("/history")
-//    public ResponseEntity<List<KoiFishOrder>> getHistory() {
-//        List<KoiFishOrder> orders = koiFishOrderService.getKoiFishesFromOrders();
-//        return ResponseEntity.ok(orders);
-//    }
 
-
-
-    // /api/order/{id} => id của đơn hàng mà mình muốn cập nhật
-//    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);

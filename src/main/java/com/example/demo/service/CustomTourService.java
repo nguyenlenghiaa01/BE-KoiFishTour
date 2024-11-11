@@ -24,7 +24,6 @@ import java.util.Set;
 @Service
 public class CustomTourService {
     private ModelMapper modelMapper = new ModelMapper();
-    // xu ly nhung logic lien qua
     @Autowired
     CustomerTourRepository customerTourRepository;
     @Autowired
@@ -70,7 +69,6 @@ public class CustomTourService {
 
         return dataResponse;
     }
-
 
     public CustomTour updateCus(CustomTourRequest customTourRequest, long id){
 

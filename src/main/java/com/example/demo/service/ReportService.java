@@ -6,9 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.ReportRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.ReportResponse;
-import com.example.demo.model.Response.TourResponse;
 import com.example.demo.repository.ReportRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +19,7 @@ import java.util.List;
 
 @Service
 public class ReportService {
-    private ModelMapper modelMapper = new ModelMapper();
+
 
     @Autowired
     ReportRepository reportRepository;

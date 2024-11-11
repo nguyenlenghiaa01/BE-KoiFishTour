@@ -28,7 +28,6 @@ import java.util.Map;
 @CrossOrigin("*")
 public class AuthenticationAPI {
 
-    // DI: Dependency Injection
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
     AuthenticationService authenticationService;

@@ -1,13 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.*;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.CustomBookingRequest;
 import com.example.demo.model.Request.CustomBookingRequests;
-import com.example.demo.model.Request.CustomTourRequest;
 import com.example.demo.model.Response.CustomBookingResponse;
-import com.example.demo.model.Response.CustomTourResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,11 +87,6 @@ public class CustomBookingService {
         oldCus.setStatus(customBookingRequests.getStatus());
         return customBookingRepository.save(oldCus);
     }
-
-
-
-
-
 
 
     public CustomBooking getQuotation(long id){

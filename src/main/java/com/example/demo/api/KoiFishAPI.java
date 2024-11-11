@@ -1,11 +1,9 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.KoiFish;
-import com.example.demo.exception.DuplicateEntity;
-import com.example.demo.exception.NotFoundException;
+
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
-import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

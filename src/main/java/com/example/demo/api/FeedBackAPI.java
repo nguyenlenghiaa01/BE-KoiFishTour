@@ -37,7 +37,6 @@ public class FeedBackAPI {
         return ResponseEntity.ok(newFeedback);
     }
 
-    // Lấy feedback
     @GetMapping("/get")
     public ResponseEntity<DataResponse<FeedbackResponse>> get(
             @RequestParam int page,
@@ -54,9 +53,6 @@ public class FeedBackAPI {
         return ResponseEntity.ok(feedbackResponse);
     }
 
-
-
-    // update feedback
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id) {
@@ -69,7 +65,6 @@ public class FeedBackAPI {
         }
     }
 
-    // Xóa feedback
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteFeedback(@PathVariable long id) {

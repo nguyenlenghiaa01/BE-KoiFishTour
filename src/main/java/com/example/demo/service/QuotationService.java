@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.Enum.QuotationEnum;
 import com.example.demo.entity.*;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.Quotation1Request;
 import com.example.demo.model.Request.QuotationRequest;
@@ -15,23 +14,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class QuotationService {
     @Autowired
     QuotationRepository quotationRepository;
-
-    @Autowired
-    BookingRepository bookingRepository;
     @Autowired
     QuotationProcessRepository quotationProcessRepository;
-    @Autowired
-    AuthenticationService authenticationService;
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -77,7 +69,9 @@ public class QuotationService {
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()!=QuotationEnum.PENDING) {
                 QuotationResponses quotationResponse = new QuotationResponses();
-                CustomTour customTour = customTourRepository.findById(quotation.getCustomBooking().getCustomTour().getId()).orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
+                CustomTour customTour = customTourRepository
+                        .findById(quotation.getCustomBooking().getCustomTour().getId())
+                        .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
                 quotationResponse.setAdultPrice(customTour.getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(customTour.getChild() *quotation.getPerChildPrice());
                 quotationResponse.setCustomBookingId(customTour.getCustomBooking().getId());
@@ -106,8 +100,12 @@ public class QuotationService {
             throw new NotFoundException("Not found booking code");
         }
 
-        Quotation quotation = quotationRepository.findById(customBooking.getQuotation().getId()).orElseThrow(() -> new NotFoundException("Quotation not found!"));
-        CustomTour customTour = customTourRepository.findById(quotation.getCustomBooking().getCustomTour().getId()).orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
+        Quotation quotation = quotationRepository
+                .findById(customBooking.getQuotation().getId())
+                .orElseThrow(() -> new NotFoundException("Quotation not found!"));
+        CustomTour customTour = customTourRepository
+                .findById(quotation.getCustomBooking().getCustomTour().getId())
+                .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
 
         QuotationResponse quotationResponse = new QuotationResponse();
         if (!quotation.getStatus().equals(QuotationEnum.CANCEL)) {
@@ -137,7 +135,9 @@ public class QuotationService {
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()==QuotationEnum.PENDING) {
                 QuotationResponses quotationResponse = new QuotationResponses();
-                CustomTour customTour = customTourRepository.findById(quotation.getCustomBooking().getCustomTour().getId()).orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
+                CustomTour customTour = customTourRepository
+                        .findById(quotation.getCustomBooking().getCustomTour().getId())
+                        .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
 
                 quotationResponse.setAdultPrice(customTour.getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(customTour.getChild() *quotation.getPerChildPrice());
@@ -167,7 +167,9 @@ public class QuotationService {
         List<QuotationResponses> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
                 QuotationResponses quotationResponse = new QuotationResponses();
-            CustomTour customTour = customTourRepository.findById(quotation.getCustomBooking().getCustomTour().getId()).orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
+            CustomTour customTour = customTourRepository
+                    .findById(quotation.getCustomBooking().getCustomTour().getId())
+                    .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
 
             quotationResponse.setAdultPrice(customTour.getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(customTour.getChild() *quotation.getPerChildPrice());
@@ -208,7 +210,9 @@ public class QuotationService {
         if(quotation == null) {
             throw new NotFoundException("Quotation not found!");
         }
-        CustomBooking customBooking = customBookingRepository.findById(quotation.getCustomBooking().getId()).orElseThrow(() -> new NotFoundException("Booking not found!"));
+        CustomBooking customBooking = customBookingRepository
+                .findById(quotation.getCustomBooking().getId())
+                .orElseThrow(() -> new NotFoundException("Booking not found!"));
         customBooking.setStatus("CANCEL");
         customBookingRepository.save(customBooking);
         quotation.setStatus(QuotationEnum.CANCEL);
@@ -224,7 +228,8 @@ public class QuotationService {
     }
     public Quotation setQuotationApprove(Quotation1Request quotation1Request,long id) {
         Quotation quotation = quotationRepository.findQuotationById(id);
-        CustomBooking customBooking = customBookingRepository.findById(quotation.getCustomBooking().getId())
+        CustomBooking customBooking = customBookingRepository
+                .findById(quotation.getCustomBooking().getId())
                 .orElseThrow(() -> new NotFoundException("Booking not found!"));
 
         if(quotation == null) {
@@ -250,7 +255,8 @@ public class QuotationService {
         if(quotation == null) {
             throw new NotFoundException("Quotation not found!");
         }
-        CustomBooking customBooking = customBookingRepository.findById(quotationRequest.getCustomBookingId()).
+        CustomBooking customBooking = customBookingRepository
+                .findById(quotationRequest.getCustomBookingId()).
                 orElseThrow(() -> new NotFoundException("Booking not exist!"));
         quotation.setStatus(QuotationEnum.CANCEL);
         quotation.setCustomBooking(customBooking);
@@ -262,7 +268,6 @@ public class QuotationService {
         if(oldQuotation == null) {
             throw new NotFoundException("Quotation not found!");
         }
-
         oldQuotation.setDeleted(true);
         return quotationRepository.save(oldQuotation);
     }

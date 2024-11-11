@@ -11,11 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking,Long> {
-    Booking findBookingById(long bookingId);
-    List<Booking> findBookingsByIsDeletedFalse();
 
     Page<Booking> findAll(Pageable pageable);
-    List<Booking>findBookingByIsDeletedTrue();
+
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE MONTH(b.tour.startDate) = :month AND YEAR(b.tour.startDate) = :year AND b.status = 'PAID'")
     Long countBookingsByTourStartDate(@Param("month") int month, @Param("year") int year);
@@ -34,8 +32,8 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 
     @Query("SELECT b FROM Booking b WHERE b.tour.id = :tourId AND b.isDeleted = false")
     Page<Booking> findByTourIdAndIsDeletedFalse(@Param("tourId") Long tourId, Pageable pageable);
-    Page<Booking> findByAccountCode(String id, Pageable pageable);
-//    Page<Booking> findAll(long id,Pageable pageable);
+    @Query("SELECT b FROM Booking b WHERE b.account.id = :id AND b.status = 'PAID' AND b.isDeleted = false")
+    Page<Booking> findPaidAndActiveBookingsByAccountCode(String id, Pageable pageable);
 
     Booking findBookingByBookingId(String bookingId);
 

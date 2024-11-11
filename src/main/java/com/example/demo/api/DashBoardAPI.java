@@ -1,7 +1,6 @@
 package com.example.demo.api;
 
 import com.example.demo.Enum.Role;
-import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.model.Request.BookingTotalRequest;
 import com.example.demo.model.Request.KoiFishOrderTotalRequest;
 import com.example.demo.repository.AccountRepository;
@@ -67,14 +66,6 @@ public class DashBoardAPI {
         Double totalAmount = koiFishOrderService.getTotalOrderAmountByMonthAndYear(month, year);
         return ResponseEntity.ok(totalAmount);
     }
-
-//    @PostMapping("/calculateTotalOrderAmount")
-//    public ResponseEntity<Double> calculateTotalOrderAmountForMonthAndYear(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest){
-//        Integer month = orderTotalRequest.getMonth();
-//        Integer year = orderTotalRequest.getYear();
-//        Double totalAmount = koiFishOrderService.countOrdersByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalAmount);
-//    }
 
     @GetMapping("/count-order")
     public ResponseEntity<Double> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {

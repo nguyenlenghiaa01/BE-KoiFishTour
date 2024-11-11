@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -26,10 +25,6 @@ public class Booking {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-//    @NotNull(message = "Start date cannot be null")
-//    @JsonFormat(pattern = "dd/MM/yyyy")
-//    private LocalDate startDate;
-
     @Pattern(regexp = "^[^\\d\\s].*", message = "Status cannot contain numbers and first character cannot be space!")
     private String status;
 
@@ -37,15 +32,11 @@ public class Booking {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double price;
 
-//    private String  duration;
-
     private Date bookingDate;
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
     private String fullName;
 
-//    @NotBlank(message = "Address cannot be blank")
-//    private String address;
     @Email(message = "Invalid Email!")
     private String email;
 

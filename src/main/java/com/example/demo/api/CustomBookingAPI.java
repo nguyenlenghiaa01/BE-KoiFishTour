@@ -1,13 +1,9 @@
 package com.example.demo.api;
 
-import com.example.demo.entity.Booking;
 import com.example.demo.entity.CustomBooking;
-import com.example.demo.entity.CustomTour;
 import com.example.demo.model.Request.CustomBookingRequest;
 import com.example.demo.model.Request.CustomBookingRequests;
-import com.example.demo.model.Request.CustomTourRequest;
 import com.example.demo.model.Response.CustomBookingResponse;
-import com.example.demo.model.Response.CustomTourResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.CustomBookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Quotation;
 import com.example.demo.entity.QuotationProcess;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.QuotationProcessRequest;
 import com.example.demo.model.Response.DataResponse;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -34,8 +32,7 @@ public class QuotationProcessService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+
 
     public QuotationProcess createNewQuotationProcess(QuotationProcessRequest quotationProcessRequest){
         QuotationProcess quotationProcess = new QuotationProcess();

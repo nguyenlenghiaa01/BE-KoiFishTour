@@ -1,7 +1,6 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
-import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.BreedRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BreedService;

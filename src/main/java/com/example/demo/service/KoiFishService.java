@@ -4,13 +4,11 @@ import com.example.demo.entity.Booking;
 import com.example.demo.entity.Farm;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.Tour;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.repository.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,10 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Service // danh dau day la mot lop xu ly logic
+@Service
 public class KoiFishService {
-    // xu ly nhung logic lien qua
-    private ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     KoiRepository koiRepository;
 
@@ -106,12 +103,10 @@ public class KoiFishService {
 
     }
     public KoiFish updateKoiFish(KoiFishRequest koi, long id){
-        // buoc 1: tim toi thang student co id nhu la FE cung cap
         KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){
-            throw new NotFoundException("Koi not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Koi not found !");
         }
-        //=> co farm co ton tai
         oldKoi.setFarm(farmRepository.findById(koi.getFarmId()).orElseThrow(() -> new NotFoundException("Farm not exist")));
         oldKoi.setBreed(breedRepository.findById(koi.getBreedId()).orElseThrow(() -> new NotFoundException("Breed not exist")));
         oldKoi.setImages(koi.getImage());
@@ -121,7 +116,7 @@ public class KoiFishService {
     public KoiFish deleteKoi(long id){
         KoiFish oldKoi = koiRepository.findKoiById(id);
         if(oldKoi ==null){
-            throw new NotFoundException("Koi not found !");//dung viec xu ly ngay tu day
+            throw new NotFoundException("Koi not found !");
         }
         oldKoi.setDeleted(true);
         return koiRepository.save(oldKoi);

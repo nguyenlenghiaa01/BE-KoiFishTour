@@ -21,7 +21,6 @@ public class EmailService {
 
     public void sendEmail(EmailDetail emailDetail) {
         try {
-            // Prepare the email template
             Context context = new Context();
             context.setVariable("name", emailDetail.getReceiver().getEmail());
             context.setVariable("button", "Go to home page");
@@ -33,13 +32,11 @@ public class EmailService {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            // Set email details
             mimeMessageHelper.setFrom("nghialncse170125@fpt.edu.vn");
             mimeMessageHelper.setTo(emailDetail.getReceiver().getEmail());
             mimeMessageHelper.setSubject(emailDetail.getSubject());
             mimeMessageHelper.setText(template, true);
 
-            // Send email
             javaMailSender.send(mimeMessage);
 
         } catch (MailAuthenticationException e) {

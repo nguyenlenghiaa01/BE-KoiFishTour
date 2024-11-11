@@ -1,13 +1,10 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.QuotationProcess;
-import com.example.demo.entity.Tour;
 import com.example.demo.model.Request.QuotationProcessRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.QuotationProcessService;
-import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +28,12 @@ public class QuotationProcessAPI {
         return ResponseEntity.ok(quotationProcessRequest);
     }
 
-    // Get danh sách quotation Process
     @GetMapping("/all")
     public ResponseEntity<?> get(int page , int size,long id){
         DataResponse<QuotationProcess> quotationProcesses = quotationProcessService.getAllQuotation(page, size, id);
         return ResponseEntity.ok(quotationProcesses);
     }
 
-
-    // /api/tour/{id} => id cua thang tour minh muon update
     @PutMapping("{id}")
     public ResponseEntity<?> updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation
         QuotationProcess newQuotationProcess = quotationProcessService.updateQuotationProcess(quotationProcess,id);

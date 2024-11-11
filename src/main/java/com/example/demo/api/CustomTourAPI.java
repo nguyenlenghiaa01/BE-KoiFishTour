@@ -1,8 +1,6 @@
 package com.example.demo.api;
 
-import com.example.demo.entity.Breed;
 import com.example.demo.entity.CustomTour;
-import com.example.demo.model.Request.BreedRequest;
 import com.example.demo.model.Request.CustomTourRequest;
 import com.example.demo.model.Response.CustomTourResponse;
 import com.example.demo.model.Response.DataResponse;

@@ -1,7 +1,6 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
-import com.example.demo.entity.KoiFishOrder;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.BookingResponse;
 import com.example.demo.model.Response.BookingResponses;
@@ -43,28 +42,6 @@ public class BookingAPI {
         simpMessagingTemplate.convertAndSend("topic/booking","CREATE NEW BOOKING");
         return ResponseEntity.ok(newBooking);
     }
-//    @PostMapping("/total")
-//    public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
-//        int month = bookingTotalRequest.getMonth();
-//        int year = bookingTotalRequest.getYear();
-//        Long totalBookings = bookingService.getTotalBookingsByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalBookings);
-//    }
-//    @PostMapping("/total-price")
-//    public ResponseEntity<Long> getTotalPrice(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
-//        int month = bookingTotalRequest.getMonth();
-//        int year = bookingTotalRequest.getYear();
-//        Long totalPrice = bookingService.getTotalPriceByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalPrice);
-//    }
-//    @PostMapping("/total/deleted")
-//    public ResponseEntity<Long> getTotalDeletedBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
-//        int month = bookingTotalRequest.getMonth();
-//        int year = bookingTotalRequest.getYear();
-//        Long totalDeletedBookings = bookingService.getTotalDeletedBookingsByMonthAndYear(month, year);
-//        return ResponseEntity.ok(totalDeletedBookings);
-//    }
-
 
     @GetMapping
     public ResponseEntity<DataResponse<BookingsResponse>> get(@RequestParam int page,
@@ -108,13 +85,6 @@ public class BookingAPI {
         DataResponse<BookingResponse> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
         return ResponseEntity.ok(bookingResponse);
     }
-
-//    @PutMapping("{id}")
-//    public ResponseEntity<?> updateBooking(@Valid @RequestBody BookingRequest booking, @PathVariable long id){//valid kich hoat co che vadilation
-//        Booking newBooking = bookingService.updateBooking(booking,id);
-//        return ResponseEntity.ok(newBooking);
-//    }
-
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable String id){

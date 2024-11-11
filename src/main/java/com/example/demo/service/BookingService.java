@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.Enum.PaymentEnum;
-import com.example.demo.Enum.QuotationEnum;
 import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
@@ -89,15 +88,10 @@ public class BookingService {
 
         List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-//            Tour tour = tourRepository.findById(booking.getTour().getId()).orElseThrow(() -> new NotFoundException("Tour not found!"));
-//            Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
-//            bookingResponse.setDuration(booking.getDuration());
-//            bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
-//            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
             bookingResponse.setAdult(booking.getAdult());
             bookingResponse.setInfant(booking.getInfant());
@@ -123,7 +117,7 @@ public class BookingService {
                                                                @RequestParam int size,
                                                                @RequestParam String id) {
         Account customer = accountRepository.findAccountByCode(id);
-        Page<Booking> bookingPage = bookingRepository.findByAccountCode(id, PageRequest.of(page, size));
+        Page<Booking> bookingPage = bookingRepository.findPaidAndActiveBookingsByAccountCode(id, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
 
         List<BookingResponses> activeBookings = new ArrayList<>();
@@ -138,16 +132,6 @@ public class BookingService {
                 bookingResponse.setInfant(booking.getInfant());
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
-
-//            Quotation quotation = quotationRepository.findById(booking.getId())
-//                    .orElseThrow(() -> new NotFoundException("Quotation not found for booking id: " + booking.getId()));
-//
-//            double totalPrice = quotation.getBooking().getAdult() * quotation.getPerAdultPrice() +
-//                    quotation.getBooking().getChild() * quotation.getPerChildPrice() +
-//                    quotation.getBooking().getPrice();
-//            bookingResponse.setTotalPrice(totalPrice);
-
-                // Thiết lập thông tin Tour vào BookingResponse
                 Tour tour = booking.getTour();
                 if (tour != null) {
                     Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
@@ -156,7 +140,6 @@ public class BookingService {
                     tourResponse.setTourName(tour.getTourName());
                     tourResponse.setDescription(tour.getDescription());
                     tourResponse.setStartDate(tour.getStartDate());
-//                tourResponse.setConsultingId(tour.getAccount().getId());
                     tourResponse.setPrice(tour.getPrice());
                     tourResponse.setImage(tour.getImage());
                     tourResponse.setDuration(tour.getDuration());
@@ -193,10 +176,7 @@ public class BookingService {
             BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
-//            bookingResponse.setDuration(booking.getDuration());
-//            bookingResponse.setAddress(booking.getAddress());
             bookingResponse.setFullName(booking.getFullName());
-//            bookingResponse.setStartDate(booking.getStartDate());
             bookingResponse.setStatus(booking.getStatus());
             bookingResponse.setAdult(booking.getAdult());
             bookingResponse.setInfant(booking.getInfant());
@@ -218,18 +198,6 @@ public class BookingService {
         return dataResponse;
     }
 
-
-    //    public DataResponse< Booking> getListKoiFish(@RequestParam int page, @RequestParam int size,long id){
-//        Page<Booking> bookingPage =bookingRepository.findAll(PageRequest.of(page,size));
-//        List<Booking> bookings= bookingPage.getContent();
-//        Booking booking = bookingRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Booking not found!"));
-//        Tour tour = tourRepository.findById(booking.getTour().getId())
-//                .orElseThrow(()-> new NotFoundException("Tour not found"));
-//        Farm farm = farmRepository.findById(tour.getFarms().)
-//                .orElseThrow(()-> new NotFoundException("Shopping Cart not found"));
-//
-//    }
     public DataResponse<BookingsResponse> getAllBooking(@RequestParam int page, @RequestParam int size) {
         Page<Booking> bookingPage = bookingRepository.findAll(PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
@@ -239,10 +207,7 @@ public class BookingService {
                 BookingsResponse bookingResponse = new BookingsResponse();
                 bookingResponse.setBookingId(booking.getId());
                 bookingResponse.setEmail(booking.getEmail());
-//                bookingResponse.setDuration(booking.getDuration());
-//                bookingResponse.setAddress(booking.getAddress());
                 bookingResponse.setFullName(booking.getFullName());
-//                bookingResponse.setStartDate(booking.getStartDate());
                 bookingResponse.setStatus(booking.getStatus());
                 bookingResponse.setAdult(booking.getAdult());
                 bookingResponse.setChild(booking.getChild());
@@ -288,29 +253,6 @@ public class BookingService {
         return totalPayments;
     }
 
-//    public Booking updateBooking(BookingRequest bookingRequest, long id) {
-//        // Tìm booking cũ theo ID
-//        Booking oldBooking = bookingRepository.findBookingById(id);
-//        if (oldBooking == null) {
-//            throw new NotFoundException("Booking not found !");
-//        }
-//
-//        // Cập nhật các thông tin từ bookingRequest
-//        oldBooking.setStatus(bookingRequest.getStatus());
-////        oldBooking.setDuration(bookingRequest.getDuration());
-////        oldBooking.setStartDate(bookingRequest.getStartDate());
-//        oldBooking.setPrice(bookingRequest.getPrice());
-//        oldBooking.setFullName(bookingRequest.getFullName());
-//        oldBooking.setEmail(bookingRequest.getEmail());
-//        oldBooking.setPhone(bookingRequest.getPhone());
-////        oldBooking.setAddress(bookingRequest.getAddress());
-//        oldBooking.setAdult(bookingRequest.getAdult());
-//        oldBooking.setInfant(bookingRequest.getInfant());
-//        oldBooking.setChild(bookingRequest.getChild());
-//
-//        // Lưu và trả về booking đã cập nhật
-//        return bookingRepository.save(oldBooking);
-//    }
 
     public Booking deleteBooking(String Id) {
         Booking oldBooking = bookingRepository.findBookingByBookingId(Id);
