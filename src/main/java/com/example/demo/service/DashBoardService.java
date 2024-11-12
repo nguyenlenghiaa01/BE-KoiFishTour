@@ -32,8 +32,8 @@ public class DashBoardService {
         List<Map<String, Object>> topProductList = new ArrayList<>();
         for (Object[] productsData : topProducts) {
             Map<String, Object> productInfo = new HashMap<>();
-            productInfo.put("productId", productsData[0]);
-            productInfo.put("productName", productsData[1]);
+            productInfo.put("bookingId", productsData[0]);
+            productInfo.put("tourName", productsData[1]);
             productInfo.put("totalSold", productsData[2]);
             topProductList.add(productInfo);
         }

@@ -87,25 +87,22 @@ public class DashBoardAPI {
     public ResponseEntity<Map<String, Object>> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();
 
-        // Đếm tổng số sản phẩm trong hệ thống
         long totalOrder = koiFishOrderRepository.count();
         stats.put("totalOrders", totalOrder);
 
-        // Đếm số lượng người dùng theo role "Customer"
         long customerCount = accountRepository.countByRole(Role.CUSTOMER);
         stats.put("customerCount", customerCount);
 
-        // Lấy top 5 sản phẩm bán chạy nhất
         List<Object[]> topTour = bookingRepository.findTop5ToursWithMostBookings();
         List<Map<String, Object>> topProductList = new ArrayList<>();
 
         for (Object[] productData : topTour) {
             Map<String, Object> productInfo = new HashMap<>();
-            productInfo.put("TourName", productData[0]);
-            productInfo.put("TotalPrice", productData[1]);
+            productInfo.put("TourName", productData[1]);
+            productInfo.put("TotalBooking", productData[2]);
             topProductList.add(productInfo);
         }
-        stats.put("topProducts", topProductList);
+        stats.put("topTour", topProductList);
 
         return ResponseEntity.ok(stats);
     }

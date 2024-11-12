@@ -164,13 +164,6 @@ public class TourService {
     }
 
     public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
-//        HistoryTourSearch searchHistory = new HistoryTourSearch();
-//        searchHistory.setStartDate(startDate);
-//        searchHistory.setDuration(duration);
-//        searchHistory.setFarm(farms);
-//        searchHistory.setSearchTime(LocalDateTime.now());
-//        searchHistoryRepository.save(searchHistory);
-
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             String[] farmArray = farms.split(",");
@@ -242,7 +235,6 @@ public class TourService {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String time) {
 
-        // Lấy trang các tour
         Page<Tour> tourPage = tourRepository.findAll(PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
