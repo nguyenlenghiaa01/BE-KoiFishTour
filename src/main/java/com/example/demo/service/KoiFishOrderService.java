@@ -29,6 +29,11 @@ public class KoiFishOrderService {
     @Autowired
     TourRepository tourRepository;
 
+    @Autowired
+    ShoppingCartRepository shoppingCartRepository;
+
+
+
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found!"));
@@ -88,23 +93,19 @@ public class KoiFishOrderService {
         return orderResponse;
     }
 
-    public OrderResponse getCustomerOrder(long customerId, int page, int size) {
-        Page orderPage = koiFishOrderRepository.findOrdersByCustomerId(customerId, PageRequest.of(page, size));
-
-        OrderResponse orderResponse = new OrderResponse();
-        orderResponse.setListKoiFishOrder(orderPage.getContent());
-        orderResponse.setPageNumber(orderPage.getNumber());
-        orderResponse.setTotalElements(orderPage.getTotalElements());
-        orderResponse.setTotalPages(orderPage.getTotalPages());
-
-        return orderResponse;
-
-    }
     public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
         KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
-            existingOrder.getShoppingCarts().clear();
+        List<ShoppingCart> oldCarts = new ArrayList<>(existingOrder.getShoppingCarts());
+        existingOrder.getShoppingCarts().clear();
+        koiFishOrderRepository.save(existingOrder); // Optional, but forces JPA to recognize changes
+
+        // Step 2: Delete the old shopping carts from the database
+        for (ShoppingCart cart : oldCarts) {
+            shoppingCartRepository.delete(cart);
+        }
+
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
         for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
             KoiFish koi = koiRepository.findById(koiFishId)

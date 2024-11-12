@@ -170,15 +170,15 @@ public class BookingService {
         return dataResponse;
     }
 
-    public DataResponse<BookingResponsess> getAllBookingByConsulting(@RequestParam int page,
+    public DataResponse<BookingResponse> getAllBookingByConsulting(@RequestParam int page,
                                                                    @RequestParam int size,
                                                                    @RequestParam long tourId) {
         Page<Booking> bookingPage = bookingRepository.findByTourIdAndIsDeletedFalse(tourId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
 
-        List<BookingResponsess> activeBookings = new ArrayList<>();
+        List<BookingResponse> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-            BookingResponsess bookingResponse = new BookingResponsess();
+            BookingResponse bookingResponse = new BookingResponse();
             bookingResponse.setBookingId(booking.getId());
             bookingResponse.setEmail(booking.getEmail());
             bookingResponse.setFullName(booking.getFullName());
@@ -188,13 +188,13 @@ public class BookingService {
             bookingResponse.setPrice(booking.getPrice());
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setTourId(booking.getTour().getId());
-            bookingResponse.setCustomerId(booking.getAccount().getCode());
+            bookingResponse.setCustomerId(booking.getAccount().getId());
             bookingResponse.setBookingDate(booking.getBookingDate());
 
             activeBookings.add(bookingResponse);
         }
 
-        DataResponse<BookingResponsess> dataResponse = new DataResponse<>();
+        DataResponse<BookingResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(activeBookings);
         dataResponse.setPageNumber(bookingPage.getNumber());
         dataResponse.setTotalElements(bookingPage.getTotalElements());

@@ -35,12 +35,6 @@ public class KoiFishOrderAPI {
             return ResponseEntity.ok(koiFishOrder);
     }
 
-    @GetMapping("customer/{id}")
-    public ResponseEntity getCustomerOrder(@PathVariable long id, @RequestParam int page, @RequestParam int size){
-        OrderResponse orders = koiFishOrderService.getCustomerOrder(id, page, size);
-        return ResponseEntity.ok(orders);
-    }
-
     @PutMapping("{id}")
     public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
