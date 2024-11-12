@@ -2,10 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Booking;
 import com.example.demo.model.Request.BookingRequest;
-import com.example.demo.model.Response.BookingResponse;
-import com.example.demo.model.Response.BookingResponses;
-import com.example.demo.model.Response.BookingsResponse;
-import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.*;
 import com.example.demo.service.BookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -79,10 +76,10 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
     @GetMapping("/Consulting")
-    public ResponseEntity<DataResponse<BookingResponse>> getBooking(@RequestParam int page,
+    public ResponseEntity<DataResponse<BookingResponsess>> getBooking(@RequestParam int page,
                                                                     @RequestParam int size,
                                                                     @RequestParam long id) {
-        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
+        DataResponse<BookingResponsess> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
         return ResponseEntity.ok(bookingResponse);
     }
 
