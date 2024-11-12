@@ -170,16 +170,16 @@ public class BookingService {
         return dataResponse;
     }
 
-    public DataResponse<BookingResponse> getAllBookingByConsulting(@RequestParam int page,
-                                                                   @RequestParam int size,
-                                                                   @RequestParam long tourId) {
+    public DataResponse<BookingResponsess> getAllBookingByConsulting(@RequestParam int page,
+                                                                     @RequestParam int size,
+                                                                     @RequestParam long tourId) {
         Page<Booking> bookingPage = bookingRepository.findByTourIdAndIsDeletedFalse(tourId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
 
-        List<BookingResponse> activeBookings = new ArrayList<>();
+        List<BookingResponsess> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
-            BookingResponse bookingResponse = new BookingResponse();
-            bookingResponse.setBookingId(booking.getId());
+            BookingResponsess bookingResponse = new BookingResponsess();
+            bookingResponse.setBookingId(booking.getBookingId());
             bookingResponse.setEmail(booking.getEmail());
             bookingResponse.setFullName(booking.getFullName());
             bookingResponse.setStatus(booking.getStatus());
@@ -188,13 +188,13 @@ public class BookingService {
             bookingResponse.setPrice(booking.getPrice());
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setTourId(booking.getTour().getId());
-            bookingResponse.setCustomerId(booking.getAccount().getId());
+            bookingResponse.setCustomerId(booking.getAccount().getCode());
             bookingResponse.setBookingDate(booking.getBookingDate());
 
             activeBookings.add(bookingResponse);
         }
 
-        DataResponse<BookingResponse> dataResponse = new DataResponse<>();
+        DataResponse<BookingResponsess> dataResponse = new DataResponse<>();
         dataResponse.setListData(activeBookings);
         dataResponse.setPageNumber(bookingPage.getNumber());
         dataResponse.setTotalElements(bookingPage.getTotalElements());

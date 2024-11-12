@@ -76,10 +76,10 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
     @GetMapping("/Consulting")
-    public ResponseEntity<DataResponse<BookingResponse>> getBooking(@RequestParam int page,
+    public ResponseEntity<DataResponse<BookingResponsess>> getBooking(@RequestParam int page,
                                                                     @RequestParam int size,
                                                                     @RequestParam long id) {
-        DataResponse<BookingResponse> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
+        DataResponse<BookingResponsess> bookingResponse = bookingService.getAllBookingByConsulting(page, size, id);
         return ResponseEntity.ok(bookingResponse);
     }
 

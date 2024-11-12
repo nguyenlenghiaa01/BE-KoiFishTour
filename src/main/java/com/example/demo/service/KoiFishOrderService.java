@@ -4,6 +4,7 @@ import com.example.demo.Enum.OrderEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderRequest;
+import com.example.demo.model.Request.KoiFishOrderUpdateRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class KoiFishOrderService {
         return orderResponse;
     }
 
-    public KoiFishOrder updateOrder(KoiFishOrderRequest koiFishOrderRequest, long id) {
+    public KoiFishOrder updateOrder(KoiFishOrderUpdateRequest koiFishOrderRequest, long id) {
         KoiFishOrder existingOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
 
