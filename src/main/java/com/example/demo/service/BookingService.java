@@ -117,12 +117,15 @@ public class BookingService {
                                                                @RequestParam int size,
                                                                @RequestParam String id) {
         Account customer = accountRepository.findAccountByCode(id);
-        Page<Booking> bookingPage = bookingRepository.findPaidAndActiveBookingsByAccountCode(id, PageRequest.of(page, size));
-        List<Booking> bookings = bookingPage.getContent();
+        if (customer == null) {
+            throw new NotFoundException("Customer not found!");
+        }
 
+        Page<Booking> bookingPage = bookingRepository.findByStatusAndAccount_Code("PAID", id, PageRequest.of(page, size));
         List<BookingResponses> activeBookings = new ArrayList<>();
-        for (Booking booking : bookings) {
-            if (!booking.isDeleted() && "PAID".equals(booking.getStatus())) {
+
+        for (Booking booking : bookingPage.getContent()) {
+            if (!booking.isDeleted()) {
                 BookingResponses bookingResponse = new BookingResponses();
                 bookingResponse.setBookingId(booking.getBookingId());
                 bookingResponse.setEmail(booking.getEmail());
@@ -132,9 +135,9 @@ public class BookingService {
                 bookingResponse.setInfant(booking.getInfant());
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
+
                 Tour tour = booking.getTour();
                 if (tour != null) {
-                    Account consulting = accountRepository.findById(tour.getAccount().getId()).orElseThrow(() -> new NotFoundException("Consulting not found!"));
                     TourResponses tourResponse = new TourResponses();
                     tourResponse.setId(tour.getId());
                     tourResponse.setTourName(tour.getTourName());
@@ -145,14 +148,17 @@ public class BookingService {
                     tourResponse.setDuration(tour.getDuration());
                     tourResponse.setTourId(tour.getTourId());
                     tourResponse.setTime(tour.getTime());
-                    tourResponse.setConsultingName(consulting.getFullName());
+
+                    Account consulting = tour.getAccount();
+                    if (consulting != null) {
+                        tourResponse.setConsultingName(consulting.getFullName());
+                    }
 
                     bookingResponse.setTourId(tourResponse);
                 }
 
                 activeBookings.add(bookingResponse);
             }
-
         }
 
         DataResponse<BookingResponses> dataResponse = new DataResponse<>();
@@ -163,7 +169,6 @@ public class BookingService {
 
         return dataResponse;
     }
-
 
     public DataResponse<BookingResponse> getAllBookingByConsulting(@RequestParam int page,
                                                                    @RequestParam int size,
