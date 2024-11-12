@@ -11,5 +11,7 @@ public interface FarmRepository extends JpaRepository<Farm, Long> {
     Farm findFarmById(long id);
     List<Farm> findFarmsByIsDeletedFalse();
 
+    Farm findByFarmId(String id);
+
     Page<Farm> findAll(Pageable pageable);
 }

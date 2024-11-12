@@ -16,10 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CustomTourService {
@@ -28,8 +25,34 @@ public class CustomTourService {
     CustomerTourRepository customerTourRepository;
     @Autowired
     FarmRepository farmRepository;
+
+    @Autowired
+    AuthenticationService authenticationService;
     public CustomTour createNewCus(CustomTourRequest customerTourRequest){
-        CustomTour customerTour = modelMapper.map(customerTourRequest, CustomTour.class);
+        Set<Farm> farms = new HashSet<>();
+        for (String farmId : customerTourRequest.getFarm()) {
+            Farm getFarm = farmRepository.findByFarmId(farmId);
+
+            if(getFarm != null) {
+                farms.add(getFarm);
+            }
+        }
+        CustomTour customerTour = new CustomTour();
+        customerTour.setStartDate(customerTourRequest.getStartDate());
+        customerTour.setDuration(customerTour.getDuration());
+        customerTour.setEmail(customerTour.getEmail());
+        customerTour.setPhone(customerTour.getPhone());
+        customerTour.setFullName(customerTour.getFullName());
+        customerTour.setAddress(customerTour.getAddress());
+        customerTour.setBudget(customerTour.getBudget());
+        customerTour.setCreateAt(new Date());
+        customerTour.setStatus("PENDING");
+        customerTour.setAdult(customerTour.getAdult());
+        customerTour.setChild(customerTour.getChild());
+        customerTour.setInfant(customerTour.getInfant());
+        customerTour.setAccount(authenticationService.getCurrentAccount());
+        customerTour.setFarms(farms);
+
         try {
             CustomTour newCustomerTour = customerTourRepository.save(customerTour);
             return newCustomerTour;
@@ -73,7 +96,13 @@ public class CustomTourService {
     public CustomTour updateCus(CustomTourRequest customTourRequest, long id){
 
         CustomTour oldCus = customerTourRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found!"));
-
+        Set<Farm> farms = new HashSet<>();
+        for(String farmCode : customTourRequest.getFarm()){
+            Farm getFarm = farmRepository.findByFarmId(farmCode);
+            if(getFarm != null) {
+                farms.add(getFarm);
+            }
+        }
         oldCus.setEmail(customTourRequest.getEmail());
         oldCus.setDuration(customTourRequest.getDuration());
         oldCus.setBudget(customTourRequest.getBudget());
@@ -83,7 +112,7 @@ public class CustomTourService {
         oldCus.setAdult(customTourRequest.getAdult());
         oldCus.setChild(customTourRequest.getChild());
         oldCus.setInfant(customTourRequest.getInfant());
-        oldCus.setFarms(customTourRequest.getFarm());
+        oldCus.setFarms(farms);
         oldCus.setStatus(customTourRequest.getStatus());
         return customerTourRepository.save(oldCus);
     }

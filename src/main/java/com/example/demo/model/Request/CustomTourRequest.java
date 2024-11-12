@@ -38,5 +38,5 @@ public class CustomTourRequest {
     private int adult;
     private int child;
     private int infant;
-    private Set<Farm> farm;
+    private Set<String> farm;
 }
