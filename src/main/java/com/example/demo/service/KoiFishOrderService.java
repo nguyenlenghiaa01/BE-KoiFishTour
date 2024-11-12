@@ -120,7 +120,7 @@ public class KoiFishOrderService {
         }
 
         existingOrder.setShoppingCarts(orderDetailsList);
-        existingOrder.setStatus(koiFishOrderRequest.getStatus());
+        existingOrder.setStatus(OrderEnum.UPDATED);
         existingOrder.setTotalPrice(koiFishOrderRequest.getTotalPrice());
         existingOrder.setPaidMoney(koiFishOrderRequest.getPaidMoney());
 
@@ -156,6 +156,15 @@ public class KoiFishOrderService {
         }
 
         return order;
+    }
+
+    public KoiFishOrder confirmOrder(long id) {
+        KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
+
+        oldOrder.setStatus(OrderEnum.CONFIRM);
+
+        return koiFishOrderRepository.save(oldOrder);
     }
 }
 
