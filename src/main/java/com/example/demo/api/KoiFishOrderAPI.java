@@ -5,6 +5,7 @@ import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.KoiFishOrder;
 
 import com.example.demo.model.Request.KoiFishOrderRequest;
+import com.example.demo.model.Request.KoiFishOrderUpdateRequest;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.service.KoiFishOrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -42,7 +43,7 @@ public class KoiFishOrderAPI {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest, @PathVariable long id) {
+    public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
             return ResponseEntity.ok(updatedOrder);
     }

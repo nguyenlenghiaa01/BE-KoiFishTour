@@ -179,7 +179,7 @@ public class BookingService {
         List<BookingResponsess> activeBookings = new ArrayList<>();
         for (Booking booking : bookings) {
             BookingResponsess bookingResponse = new BookingResponsess();
-            bookingResponse.setBookingId(booking.getId());
+            bookingResponse.setBookingId(booking.getBookingId());
             bookingResponse.setEmail(booking.getEmail());
             bookingResponse.setFullName(booking.getFullName());
             bookingResponse.setStatus(booking.getStatus());
