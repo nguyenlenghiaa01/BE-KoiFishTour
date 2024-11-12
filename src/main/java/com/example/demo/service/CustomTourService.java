@@ -113,7 +113,7 @@ public class CustomTourService {
         oldCus.setChild(customTourRequest.getChild());
         oldCus.setInfant(customTourRequest.getInfant());
         oldCus.setFarms(farms);
-        oldCus.setStatus(customTourRequest.getStatus());
+        oldCus.setStatus("UPDATED");
         return customerTourRepository.save(oldCus);
     }
     public CustomTour deleteCus(long id){
