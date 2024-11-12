@@ -405,4 +405,14 @@ public class BookingService {
         return "Payment transaction created successfully for booking ID: " + id;
     }
 
+    public Booking deleteBookings(String id) {
+        Booking booking = bookingRepository.findBookingByBookingId(id);
+        if (booking == null) {
+            throw new NotFoundException("Booking not found");
+        }
+        bookingRepository.delete(booking);
+        return booking;
+    }
+
+
 }

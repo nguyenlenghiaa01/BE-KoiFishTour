@@ -92,4 +92,11 @@ public class BookingAPI {
         simpMessagingTemplate.convertAndSend("topic/booking","DELETE BOOKING");
         return ResponseEntity.ok(newBooking);
     }
+
+    @DeleteMapping("delete/bookingId")
+    public ResponseEntity<Booking> delete(String id){
+        Booking newBooking = bookingService.deleteBookings(id);
+        return ResponseEntity.ok(newBooking );
+    }
+
 }
