@@ -14,6 +14,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/koi")
@@ -37,6 +39,11 @@ public class KoiFishAPI {
     @GetMapping("/guest/get")
     public ResponseEntity<DataResponse<KoiFishResponse>> get(@RequestParam int page, @RequestParam int size){
         DataResponse<KoiFishResponse>dataResponse = koiService.getAllKoi(page, size);
+        return ResponseEntity.ok(dataResponse);
+    }
+    @GetMapping("/list-koi/farm-id")
+    public ResponseEntity<List<KoiFish>> get(long id){
+        List<KoiFish>dataResponse = koiService.getKoiByFarmId(id);
         return ResponseEntity.ok(dataResponse);
     }
 

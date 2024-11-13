@@ -49,6 +49,14 @@ public class KoiFishService {
 
     }
 
+    public List<KoiFish> getKoiByFarmId(long id){
+        List<KoiFish> koiFish = koiRepository.findKoiFishesByFarmId(id);
+
+        if(koiFish ==null){
+            throw  new NotFoundException("Koi fish not found");
+        }
+        return koiFish;
+    }
 
     public DataResponse<KoiFishResponse> getAllKoi(@RequestParam int page, @RequestParam int size){
         Page fishPage = koiRepository.findAll(PageRequest.of(page, size));

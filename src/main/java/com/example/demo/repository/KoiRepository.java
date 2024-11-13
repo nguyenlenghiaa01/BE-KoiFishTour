@@ -16,4 +16,5 @@ public interface KoiRepository extends JpaRepository<KoiFish,Long> {
 
     Page<KoiFish> findAll(Pageable pageable);
     Page<KoiFish> findByIsDeletedFalse(Pageable pageable);
+    List<KoiFish> findKoiFishesByFarmId(long id);
 }

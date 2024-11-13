@@ -42,18 +42,24 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    public Schedule getSchedule(String id){
+    public Schedule getSchedule(String id) {
         Booking booking = bookingRepository.findBookingByBookingId(id);
-        if (booking == null || booking.getSchedule() == null) {
+        if (booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
+
+        Schedule schedule = booking.getSchedule();
+        if (schedule == null) {
             throw new NotFoundException("Schedule not found!");
         }
-        Schedule schedule = booking.getSchedule();
-        if(schedule.isDeleted()){
+
+        if (schedule.isDeleted()) {
             return schedule;
-        }else{
-            throw  new NotFoundException("Schedule not found!");
+        } else {
+            throw new NotFoundException("Schedule not found!");
         }
     }
+
 
     public Schedule getSchedules(String id){
         CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
