@@ -7,7 +7,8 @@ import java.util.Date;
 
 @Data
 public class BookingsResponse {
-    private long bookingId;
+    private long Id;
+    private String bookingId;
     private LocalDate startDate;
     private String status;
     private double price;

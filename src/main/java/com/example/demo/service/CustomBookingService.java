@@ -64,7 +64,7 @@ public class CustomBookingService {
         oldCus.setStatus(customBookingRequests.getStatus());
         return customBookingRepository.save(oldCus);
     }
-    public DataResponse<CustomBookingResponse> getAllCusBookingByCustomerId(@RequestParam int page, @RequestParam int size, String id){
+    public DataResponse<CustomBookingResponse>getAllCusBookingByCustomerId(@RequestParam int page, @RequestParam int size, String id){
         Account customer = accountRepository.findAccountByCode(id);
         if(customer ==null){
             throw  new NotFoundException("Customer not found");
@@ -105,6 +105,15 @@ public class CustomBookingService {
 
         return dataResponse;
     }
+
+    public CustomBooking getCusBooking(String id){
+        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
+        if(customBooking ==null){
+            throw  new NotFoundException("Customer not found");
+        }
+        return customBooking;
+    }
+
     public DataResponse<CustomBooking> getAllBooking(int page, int size) {
         Page bookingPage = customBookingRepository.findAll(PageRequest.of(page, size));
         List<CustomBooking> customBookingList = bookingPage.getContent();

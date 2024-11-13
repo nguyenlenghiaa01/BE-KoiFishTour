@@ -208,7 +208,7 @@ public class BookingService {
         for (Booking booking : bookings) {
             if (!booking.isDeleted()) {
                 BookingsResponse bookingResponse = new BookingsResponse();
-                bookingResponse.setBookingId(booking.getId());
+                bookingResponse.setId(booking.getId());
                 bookingResponse.setEmail(booking.getEmail());
                 bookingResponse.setFullName(booking.getFullName());
                 bookingResponse.setStatus(booking.getStatus());
@@ -219,6 +219,7 @@ public class BookingService {
                 bookingResponse.setPrice(booking.getPrice());
                 bookingResponse.setTourName(booking.getTour().getTourName());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
+                bookingResponse.setBookingId(booking.getBookingId());
 
                 activeBookings.add(bookingResponse);
             }

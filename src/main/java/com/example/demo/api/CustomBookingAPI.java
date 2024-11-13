@@ -40,11 +40,11 @@ public class CustomBookingAPI {
         DataResponse<CustomBookingResponse> dataResponse = customBookingService.getAllCusBookingByCustomerId(page,size,id);
         return ResponseEntity.ok(dataResponse);
     }
-//    @GetMapping("customBooking-id")
-//    public ResponseEntity<DataResponse<CustomBookingResponse>>get(@RequestParam int page,@RequestParam int size,String id ){
-//        DataResponse<CustomBookingResponse> dataResponse = customBookingService.getAllCusBookingByCustomerId(page,size,id);
-//        return ResponseEntity.ok(dataResponse);
-//    }
+    @GetMapping("customBooking-id")
+    public ResponseEntity<CustomBooking> get(String id ){
+        CustomBooking dataResponse = customBookingService.getCusBooking(id);
+        return ResponseEntity.ok(dataResponse);
+    }
 
     @PutMapping("{id}")
     public ResponseEntity<CustomBooking> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
