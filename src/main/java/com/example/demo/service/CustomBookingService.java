@@ -10,6 +10,7 @@ import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -94,7 +95,10 @@ public class CustomBookingService {
         if(customer ==null){
             throw  new NotFoundException("Customer not found");
         }
-        Page<CustomBooking> cusPage = customBookingRepository.findAll(PageRequest.of(page, size));
+        Page<CustomBooking> cusPage = customBookingRepository.findAll(
+                PageRequest.of(page, size, Sort.by(Sort.Order.asc("createAt")))
+        );
+
         List<CustomBooking> customTours = cusPage.getContent();
         List<CustomBookingResponse> customTourResponses = new ArrayList<>();
 
