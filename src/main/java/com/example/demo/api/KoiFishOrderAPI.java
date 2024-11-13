@@ -44,6 +44,7 @@ public class KoiFishOrderAPI {
     }
 
 
+
     @PutMapping("{id}")
     public ResponseEntity<KoiFishOrder> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
@@ -62,6 +63,11 @@ public class KoiFishOrderAPI {
     @GetMapping("booking/{id}")
     public ResponseEntity<KoiFishOrder> getOrderByBookingId(@PathVariable String id) {
         KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
+        return ResponseEntity.ok(order);
+    }
+    @GetMapping("all")
+    public ResponseEntity<OrderResponse> getAll(@RequestParam int page, @RequestParam int size) {
+        OrderResponse order = koiFishOrderService.getAllOrder(page,size);
         return ResponseEntity.ok(order);
     }
 
