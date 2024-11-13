@@ -6,6 +6,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishOrderBookingRequest;
 import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Request.KoiFishOrderUpdateRequest;
+import com.example.demo.model.Response.CustomBookingResponse;
 import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class KoiFishOrderService {
 
     @Autowired
     CustomTourRepository customTourRepository;
+
+
 
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
@@ -191,6 +194,11 @@ public class KoiFishOrderService {
 
         return order;
     }
+//    public KoiFishOrder getOrderByCustomBookingId(String id) {
+//        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
+//            return koiRepository.findKoiById(customBooking.getKoiFishOrder().getId());
+//    }
+
 
     public KoiFishOrder getCustomOrderByBookingId(String id) {
         KoiFishOrder order = koiFishOrderRepository.findByCustomBooking_CustomBookingId(id);

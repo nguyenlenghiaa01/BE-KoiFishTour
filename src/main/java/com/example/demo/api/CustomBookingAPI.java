@@ -1,5 +1,6 @@
 package com.example.demo.api;
 
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.CustomBooking;
 import com.example.demo.model.Request.CustomBookingRequest;
 import com.example.demo.model.Request.CustomBookingRequests;
@@ -22,6 +23,24 @@ public class CustomBookingAPI {
     CustomBookingService customBookingService;
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
+
+    @PostMapping("/VNPay")
+    public ResponseEntity<?> createVNPay(String id) {
+        String vnPayUrl = null;
+        try {
+            vnPayUrl = customBookingService.createUrl(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResponseEntity.ok(vnPayUrl);
+    }
+
+    @PutMapping("/setStatusAfterPayment")
+    public ResponseEntity<CustomBooking> updateStatus(String id){
+        CustomBooking booking =customBookingService.updateStatus(id);
+        simpMessagingTemplate.convertAndSend("topic/booking","UPDATE CUSTOM BOOKING");
+        return  ResponseEntity.ok(booking);
+    }
 
     @PostMapping
     public ResponseEntity<CustomBooking>create(@Valid @RequestBody CustomBookingRequest customBookingRequests){
