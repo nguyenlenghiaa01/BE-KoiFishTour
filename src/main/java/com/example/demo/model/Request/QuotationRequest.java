@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class QuotationRequest {
     long customBookingId;
-    long saleId;
     private double perAdultPrice;
     private double perChildPrice;
 }

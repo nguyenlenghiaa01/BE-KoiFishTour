@@ -30,6 +30,8 @@ public class QuotationService {
     CustomBookingRepository customBookingRepository;
     @Autowired
     CustomTourRepository customTourRepository;
+    @Autowired
+    AuthenticationService authenticationService;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -40,8 +42,7 @@ public class QuotationService {
         Quotation quotaions = quotationRepository.findById(quotationRequest.getCustomBookingId())
                 .orElseThrow(() -> new NotFoundException("Custom Booking not exist!"));
 
-        Account account = accountRepository.findById(quotationRequest.getSaleId())
-                .orElseThrow(() -> new NotFoundException("Sale id not found!"));
+        Account account = authenticationService.getCurrentAccount();
         quotation.setCustomBooking(booking);
         quotation.setStatus(QuotationEnum.PENDING);
         quotation.setPerAdultPrice(quotationRequest.getPerAdultPrice());
