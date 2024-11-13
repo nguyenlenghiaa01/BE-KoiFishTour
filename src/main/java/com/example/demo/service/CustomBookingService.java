@@ -143,7 +143,7 @@ public class CustomBookingService {
             customTourResponse.setCustomTour(booking.getCustomTour());
         }
 
-        DataResponse<CustomBookingResponses> dataResponse = new DataResponse<CustomBookingResponses>();
+        DataResponse<CustomBookingResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(customBookingList1);
         dataResponse.setTotalElements(bookingPage.getTotalElements());
         dataResponse.setPageNumber(bookingPage.getNumber());
