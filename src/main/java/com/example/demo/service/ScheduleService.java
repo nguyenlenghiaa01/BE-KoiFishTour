@@ -31,7 +31,7 @@ public class ScheduleService {
         CustomBooking customBooking = customBookingRepository.
                 findCustomBookingByCustomBookingId(scheduleRequest.getCustomBookingId());
 
-        if ((booking != null && customBooking != null) || (booking == null && customBooking == null)) {
+        if ((booking == null && customBooking != null) || (booking != null && customBooking == null)) {
             throw new IllegalArgumentException("Only one of Booking or CustomBooking must be non-null!");
         }
         schedule.setCreateAt(new Date());

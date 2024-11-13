@@ -109,7 +109,7 @@ public class CustomBookingService {
     public CustomBooking getCusBooking(String id){
         CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
         if(customBooking ==null){
-            throw  new NotFoundException("Customer not found");
+            throw  new NotFoundException("Custom booking not found");
         }
         return customBooking;
     }
