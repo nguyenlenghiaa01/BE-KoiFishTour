@@ -54,9 +54,9 @@ public class ScheduleService {
         }
 
         if (schedule.isDeleted()) {
-            return schedule;
-        } else {
             throw new NotFoundException("Schedule not found!");
+        } else {
+            return schedule;
         }
     }
 
