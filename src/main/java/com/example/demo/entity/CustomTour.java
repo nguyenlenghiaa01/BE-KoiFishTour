@@ -51,6 +51,7 @@ public class CustomTour {
     private boolean isDeleted = false;
 
     @OneToOne(mappedBy = "customTour")
+    @JsonIgnore
     private CustomBooking customBooking;
 
     @ManyToOne
