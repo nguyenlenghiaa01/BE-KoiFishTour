@@ -14,6 +14,7 @@ public class Schedule {
 
     private String file;
 
+    boolean isDeleted = false;
     @OneToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;

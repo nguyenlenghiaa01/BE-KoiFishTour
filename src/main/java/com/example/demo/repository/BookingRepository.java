@@ -44,5 +44,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             "ORDER BY bookingCount DESC")
     List<Object[]> findTop5ToursWithMostBookings();
 
+//    @Query("SELECT YEAR(t.createAt) as year ,MONTH(t.createAt) , SUM(t.price) as month " +
+//            "FROM Booking t" +
+//            " WHERE t.status='SUCCESS' AND t.to.id =:userId " +
+//            "GROUP BY YEAR(t.createAt) , MONTH(t.createAt) " +
+//            "ORDER BY YEAR(t.createAt) , MONTH(t.createAt)")
+//    List<Object[]> calculateMonthlyRevenue(@Param("userId") Long userID);
 
 }

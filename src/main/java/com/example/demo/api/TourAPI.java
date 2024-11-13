@@ -5,6 +5,7 @@ import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.TourResponse;
+import com.example.demo.model.Response.TourResponses;
 import com.example.demo.service.TourService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -29,20 +30,20 @@ public class TourAPI {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody TourRequest tourRequest) {
+    public ResponseEntity<Tour> create(@Valid @RequestBody TourRequest tourRequest) {
             Tour newTour = tourService.createNewTour(tourRequest);
             return ResponseEntity.ok(newTour);
     }
 
     @GetMapping("/guest/get")
-    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = tourService.getAllTour(page, size);
+    public ResponseEntity<DataResponse<TourResponse>> get(@RequestParam int page, @RequestParam int size){
+        DataResponse<TourResponse> dataResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @GetMapping("/manager/get/notOpen")
-    public ResponseEntity<?> getTour(@RequestParam int page, @RequestParam int size){
-        DataResponse<?> dataResponse = tourService.getAllTourNotOpen(page, size);
+    public ResponseEntity<DataResponse<TourResponse>> getTour(@RequestParam int page, @RequestParam int size){
+        DataResponse<TourResponse> dataResponse = tourService.getAllTourNotOpen(page, size);
         simpMessagingTemplate.convertAndSend("topic/tour","CLOSE TOUR");
         return ResponseEntity.ok(dataResponse);
     }
@@ -54,13 +55,13 @@ public class TourAPI {
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<?> getAll(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = tourService.getAll(page, size);
+    public ResponseEntity<DataResponse<TourResponses>> getAll(@RequestParam int page, @RequestParam int size){
+        DataResponse<TourResponses> dataResponse = tourService.getAll(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @GetMapping
-    public ResponseEntity<?>getTourById(String id){
+    public ResponseEntity<Tour>getTourById(String id){
         Tour newTour = tourService.getTourId(id);
         return ResponseEntity.ok(newTour);
     }
@@ -89,14 +90,14 @@ public class TourAPI {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
+    public ResponseEntity<Tour> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
     }
 
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteTour(@PathVariable long id) {
+    public ResponseEntity<Tour> deleteTour(@PathVariable long id) {
             Tour deletedTour = tourService.deleteTour(id);
             return ResponseEntity.ok(deletedTour);
     }

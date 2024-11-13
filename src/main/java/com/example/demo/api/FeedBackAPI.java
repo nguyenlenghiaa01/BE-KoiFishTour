@@ -15,7 +15,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/feedback")
@@ -31,7 +30,7 @@ public class FeedBackAPI {
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody FeedbackRequest feedbackRequest) {
+    public ResponseEntity<Feedback> create(@Valid @RequestBody FeedbackRequest feedbackRequest) {
         Feedback newFeedback = feedbackService.createNewFeedback(feedbackRequest);
         simpMessagingTemplate.convertAndSend("topic/feedback","CREATE NEW FEEDBACK");
         return ResponseEntity.ok(newFeedback);
@@ -55,19 +54,15 @@ public class FeedBackAPI {
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("{id}")
-    public ResponseEntity<?> updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id) {
-        try {
+    public ResponseEntity<Feedback> updateFeedback(@Valid @RequestBody FeedbackRequest feedback, @PathVariable long id) {
             Feedback updatedFeedback = feedbackService.updateFeedback(feedback, id);
             simpMessagingTemplate.convertAndSend("topic/feedback","UPDATE FEEDBACK");
             return ResponseEntity.ok(updatedFeedback);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
     }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteFeedback(@PathVariable long id) {
+    public ResponseEntity<Feedback> deleteFeedback(@PathVariable long id) {
             Feedback deletedFeedback = feedbackService.deleteFeedback(id);
         simpMessagingTemplate.convertAndSend("topic/feedback","DELETE FEEDBACK");
             return ResponseEntity.ok(deletedFeedback);

@@ -30,14 +30,14 @@ public class KoiFishOrderAPI {
     private KoiFishOrderService koiFishOrderService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
+    public ResponseEntity<KoiFishOrder> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder koiFishOrder = koiFishOrderService.create(koiFishOrderRequest);
         simpMessagingTemplate.convertAndSend("topic/koiOrder","CREATE NEW ORDER");
             return ResponseEntity.ok(koiFishOrder);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {
+    public ResponseEntity<KoiFishOrder> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
             return ResponseEntity.ok(updatedOrder);
     }
@@ -50,8 +50,14 @@ public class KoiFishOrderAPI {
             return ResponseEntity.ok(deletedOrder);
     }
 
+
+    @PutMapping("confirm-order/{id}")
+    public ResponseEntity<KoiFishOrder> updateStatusConfirm(long id){
+        KoiFishOrder newKoi = koiFishOrderService.confirmOrder(id);
+        return  ResponseEntity.ok(newKoi);
+    }
     @GetMapping("booking/{id}")
-    public ResponseEntity getOrderByBookingId(@PathVariable String id) {
+    public ResponseEntity<KoiFishOrder> getOrderByBookingId(@PathVariable String id) {
         KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
         return ResponseEntity.ok(order);
     }

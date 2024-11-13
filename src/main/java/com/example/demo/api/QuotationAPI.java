@@ -27,40 +27,40 @@ public class QuotationAPI {
     QuotationService quotationService;
 
     @PostMapping
-    public ResponseEntity<?> createQuotation(@Valid @RequestBody QuotationRequest quotationRequest) {
+    public ResponseEntity<Quotation> createQuotation(@Valid @RequestBody QuotationRequest quotationRequest) {
         Quotation newQuotation = quotationService.createQuotation(quotationRequest);
         return ResponseEntity.ok(newQuotation);
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllQuotation(int page, int size) {
+    public ResponseEntity<DataResponse<QuotationResponses>> getAllQuotation(int page, int size) {
         DataResponse<QuotationResponses> quotations = quotationService.getAllQuotation(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/cancel")
-    public ResponseEntity<?> getAllQuotationCancel(int page, int size) {
+    public ResponseEntity<DataResponse<QuotationResponses>> getAllQuotationCancel(int page, int size) {
         DataResponse<QuotationResponses> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/bookingCode")
-    public ResponseEntity<?> getQuotationByBookingCode(String id){
+    public ResponseEntity<QuotationResponse> getQuotationByBookingCode(String id){
         QuotationResponse quotationResponse = quotationService.getQuotationByBookingId(id);
         return ResponseEntity.ok(quotationResponse);
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<?> get(int page , int size){
+    public ResponseEntity<DataResponse<QuotationResponses>> get(int page , int size){
         DataResponse<QuotationResponses> quotationProcesses = quotationService.getAllQuotations(page, size);
         return ResponseEntity.ok(quotationProcesses);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
+    public ResponseEntity<Quotation> updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotation(quotationRequest, id);
         return ResponseEntity.ok(newQuotation);
     }
     @PutMapping("/cancel/{id}")
-    public ResponseEntity<?> updateQuotationCancel(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
+    public ResponseEntity<Quotation> updateQuotationCancel(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotationCancel(quotationRequest, id);
         return ResponseEntity.ok(newQuotation);
     }
@@ -77,7 +77,7 @@ public class QuotationAPI {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteQuotation(@PathVariable long id) {
+    public ResponseEntity<Quotation> deleteQuotation(@PathVariable long id) {
         Quotation quotation = quotationService.deleteQuotation(id);
         return ResponseEntity.ok(quotation);
     }

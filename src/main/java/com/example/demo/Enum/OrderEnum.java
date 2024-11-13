@@ -4,6 +4,6 @@ public enum OrderEnum {
     PENDING,
     UPDATED,
     CONFIRM,
-    DONE,
-    DELIVERING
+    DELIVERING,
+    CANCEL
 }

@@ -24,26 +24,26 @@ public class CustomBookingAPI {
     SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
-    public ResponseEntity<?>create(@Valid @RequestBody CustomBookingRequest customBookingRequests){
+    public ResponseEntity<CustomBooking>create(@Valid @RequestBody CustomBookingRequest customBookingRequests){
         CustomBooking customTour = customBookingService.createNewCusBooking(customBookingRequests);
         simpMessagingTemplate.convertAndSend("topic/customBooking","CREATE NEW CUSTOM BOOKING");
         return ResponseEntity.ok(customTour);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?>get(@RequestParam int page,@RequestParam int size ){
+    public ResponseEntity<DataResponse<CustomBookingResponse>>get(@RequestParam int page,@RequestParam int size ){
         DataResponse<CustomBookingResponse> dataResponse = customBookingService.getAllCusBooking(page,size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
+    public ResponseEntity<CustomBooking> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
         CustomBooking cus = customBookingService.updateCus(customBookingRequests, id);
         simpMessagingTemplate.convertAndSend("topic/customBooking","UPDATE CUSTOM BOOKING");
         return ResponseEntity.ok(cus);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteCustomBooking(@PathVariable long id) {
+    public ResponseEntity<CustomBooking> deleteCustomBooking(@PathVariable long id) {
         CustomBooking customBooking = customBookingService.deleteCusBooking(id);
         return ResponseEntity.ok(customBooking);
     }

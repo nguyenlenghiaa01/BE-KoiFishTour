@@ -22,25 +22,24 @@ public class QuotationProcessAPI {
     @Autowired
     QuotationProcessService quotationProcessService;
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody QuotationProcessRequest quotationProcessRequest) {
+    public ResponseEntity<QuotationProcess> create(@Valid @RequestBody QuotationProcessRequest quotationProcessRequest) {
         QuotationProcess newQuotationProcess = quotationProcessService.createNewQuotationProcess(quotationProcessRequest);
-        //return ve font end
-        return ResponseEntity.ok(quotationProcessRequest);
+        return ResponseEntity.ok(newQuotationProcess);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> get(int page , int size,long id){
+    public ResponseEntity<DataResponse<QuotationProcess>> get(int page , int size,long id){
         DataResponse<QuotationProcess> quotationProcesses = quotationProcessService.getAllQuotation(page, size, id);
         return ResponseEntity.ok(quotationProcesses);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation
+    public ResponseEntity<QuotationProcess> updateQuotationProcess(@Valid @RequestBody QuotationProcessRequest quotationProcess, @PathVariable long id){//valid kich hoat co che vadilation
         QuotationProcess newQuotationProcess = quotationProcessService.updateQuotationProcess(quotationProcess,id);
         return ResponseEntity.ok(newQuotationProcess);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteQuotationProcess(@PathVariable long id){
+    public ResponseEntity<QuotationProcess> deleteQuotationProcess(@PathVariable long id){
         QuotationProcess newQuotationProcess = quotationProcessService.deleteQuotationProcess(id);
         return ResponseEntity.ok(newQuotationProcess);
     }

@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.entity.Breed;
 import com.example.demo.model.Request.BreedRequest;
+import com.example.demo.model.Response.BreedResponse;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.BreedService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,37 +22,33 @@ import java.util.List;
 public class BreedAPI {
 
     @Autowired
-    private BreedService breedService;
+    BreedService breedService;
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody BreedRequest breedRequest) {
+    public ResponseEntity<Breed> create(@Valid @RequestBody BreedRequest breedRequest) {
         Breed newBreed = breedService.createNewBreed(breedRequest);
         simpMessagingTemplate.convertAndSend("topic/breed","CREATE NEW BREED");
         return ResponseEntity.ok(newBreed);
     }
 
-    // Lấy danh sách breed
     @GetMapping("/guest/get")
-    public ResponseEntity get(@RequestParam int page, @RequestParam int size){
-        DataResponse dataResponse = breedService.getAllBreed(page, size);
+    public ResponseEntity<DataResponse<BreedResponse>> get(@RequestParam int page, @RequestParam int size){
+        DataResponse<BreedResponse> dataResponse = breedService.getAllBreed(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
-    // Cập nhật breed
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity<?> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable long id) {
+    public ResponseEntity<Breed> updateBreed(@Valid @RequestBody BreedRequest breedRequest, @PathVariable long id) {
             Breed updatedBreed = breedService.updateBreed(breedRequest, id);
             return ResponseEntity.ok(updatedBreed);
     }
-
-    // Xóa breed
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteBreed(@PathVariable long id) {
+    public ResponseEntity<Breed> deleteBreed(@PathVariable long id) {
             Breed deletedBreed = breedService.deleteBreed(id);
             return ResponseEntity.ok(deletedBreed);
     }

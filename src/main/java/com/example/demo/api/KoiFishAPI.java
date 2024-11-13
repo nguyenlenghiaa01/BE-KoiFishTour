@@ -4,6 +4,7 @@ import com.example.demo.entity.KoiFish;
 
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/koi")
@@ -28,38 +28,35 @@ public class KoiFishAPI {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
+    public ResponseEntity<KoiFish> create(@Valid @RequestBody KoiFishRequest koiFishRequest) {
             KoiFish newKoiFish = koiService.createNewKoi(koiFishRequest);
             simpMessagingTemplate.convertAndSend("topic/koi","CREATE NEW KOI");
             return ResponseEntity.ok(newKoiFish);
     }
 
-    // Get danh sách cá Koi
     @GetMapping("/guest/get")
-    public ResponseEntity<?> get(@RequestParam int page, @RequestParam int size){
-        DataResponse<?> dataResponse = koiService.getAllKoi(page, size);
+    public ResponseEntity<DataResponse<KoiFishResponse>> get(@RequestParam int page, @RequestParam int size){
+        DataResponse<KoiFishResponse>dataResponse = koiService.getAllKoi(page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @GetMapping("/listKoiFish")
-    public ResponseEntity<?> getList(@RequestParam int page,@RequestParam int size ,String id){
+    public ResponseEntity<DataResponse<KoiFish>> getList(@RequestParam int page,@RequestParam int size ,String id){
         DataResponse<KoiFish> koiFishDataResponse = koiService.getListKoiFish(page, size, id);
         return ResponseEntity.ok(koiFishDataResponse);
     }
 
-    // Cập nhật cá Koi
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
-    public ResponseEntity<?> updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id) {
+    public ResponseEntity<KoiFish> updateKoiFish(@Valid @RequestBody KoiFishRequest koi, @PathVariable long id) {
             KoiFish updatedKoiFish = koiService.updateKoiFish(koi, id);
         simpMessagingTemplate.convertAndSend("topic/koi","UPDATE KOI");
             return ResponseEntity.ok(updatedKoiFish);
     }
 
-    // Xóa cá Koi
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteKoi(@PathVariable long id) {
+    public ResponseEntity<KoiFish> deleteKoi(@PathVariable long id) {
             KoiFish deletedKoiFish = koiService.deleteKoi(id);
         simpMessagingTemplate.convertAndSend("topic/koi","DELETE KOI");
             return ResponseEntity.ok(deletedKoiFish);

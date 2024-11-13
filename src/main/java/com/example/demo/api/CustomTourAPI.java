@@ -22,26 +22,26 @@ public class CustomTourAPI {
     @Autowired
     CustomTourService customTourService;
     @PostMapping
-    public ResponseEntity<?>create(@Valid @RequestBody CustomTourRequest customTourRequest){
+    public ResponseEntity<CustomTour>create(@Valid @RequestBody CustomTourRequest customTourRequest){
         CustomTour customTour = customTourService.createNewCus(customTourRequest);
         simpMessagingTemplate.convertAndSend("topic/customTour","CREATE NEW CUSTOM TOUR");
         return ResponseEntity.ok(customTour);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?>get(@RequestParam int page,@RequestParam int size ){
+    public ResponseEntity<DataResponse<CustomTourResponse>>get(@RequestParam int page,@RequestParam int size ){
         DataResponse<CustomTourResponse> dataResponse = customTourService.getAllCus(page,size);
         return ResponseEntity.ok(dataResponse);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateCustom(@Valid @RequestBody CustomTourRequest customTourRequest, @PathVariable long id) {
+    public ResponseEntity<CustomTour> updateCustom(@Valid @RequestBody CustomTourRequest customTourRequest, @PathVariable long id) {
         CustomTour cus = customTourService.updateCus(customTourRequest, id);
         simpMessagingTemplate.convertAndSend("topic/customTour","UPDATE CUSTOM TOUR");
         return ResponseEntity.ok(cus);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteCustom(@PathVariable long id) {
+    public ResponseEntity<CustomTour> deleteCustom(@PathVariable long id) {
         CustomTour customTour = customTourService.deleteCus(id);
         simpMessagingTemplate.convertAndSend("topic/customTour","DELETE CUSTOM TOUR");
         return ResponseEntity.ok(customTour);
