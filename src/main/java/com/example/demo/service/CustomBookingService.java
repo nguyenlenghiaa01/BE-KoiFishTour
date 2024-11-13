@@ -236,6 +236,7 @@ public class CustomBookingService {
         }
         booking.setStatus("PAID");
         quotation.setStatus(QuotationEnum.PAID);
+        quotationRepository.save(quotation);
         return customBookingRepository.save(booking);
     }
 
