@@ -30,11 +30,11 @@ public class CustomBookingAPI {
         return ResponseEntity.ok(customTour);
     }
 
-//    @GetMapping("/get")
-//    public ResponseEntity<DataResponse<CustomBookingResponse>>get(@RequestParam int page,@RequestParam int size ){
-//        DataResponse<CustomBookingResponse> dataResponse = customBookingService.get(page,size);
-//        return ResponseEntity.ok(dataResponse);
-//    }
+    @GetMapping("/get")
+    public ResponseEntity<DataResponse<CustomBooking>>get(@RequestParam int page,@RequestParam int size ){
+        DataResponse<CustomBooking>dataResponse = customBookingService.getAllBooking(page,size);
+        return ResponseEntity.ok(dataResponse);
+    }
     @GetMapping("customer-id")
     public ResponseEntity<DataResponse<CustomBookingResponse>>get(@RequestParam int page,@RequestParam int size,String id ){
         DataResponse<CustomBookingResponse> dataResponse = customBookingService.getAllCusBookingByCustomerId(page,size,id);

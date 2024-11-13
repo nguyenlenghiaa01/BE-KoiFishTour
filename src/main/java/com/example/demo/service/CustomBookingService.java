@@ -6,6 +6,8 @@ import com.example.demo.model.Request.CustomBookingRequest;
 import com.example.demo.model.Request.CustomBookingRequests;
 import com.example.demo.model.Response.CustomBookingResponse;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.FarmResponse;
+import com.example.demo.model.Response.OrderResponse;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -103,7 +105,25 @@ public class CustomBookingService {
 
         return dataResponse;
     }
+    public DataResponse<CustomBooking> getAllBooking(int page, int size) {
+        Page bookingPage = customBookingRepository.findAll(PageRequest.of(page, size));
+        List<CustomBooking> customBookingList = bookingPage.getContent();
+        List<CustomBooking> customBookingList1 = new ArrayList<>();
 
+        for (CustomBooking booking : customBookingList) {
+            if (!booking.isDeleted()) {
+                customBookingList1.add(booking);
+            }
+        }
+
+        DataResponse<CustomBooking> dataResponse = new DataResponse<CustomBooking>();
+        dataResponse.setListData(customBookingList1);
+        dataResponse.setTotalElements(bookingPage.getTotalElements());
+        dataResponse.setPageNumber(bookingPage.getNumber());
+        dataResponse.setTotalPages(bookingPage.getTotalPages());;
+
+        return dataResponse;
+    }
 
     public CustomBooking getQuotation(long id){
         Quotation quotation = quotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Quotation not found!"));
