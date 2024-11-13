@@ -42,6 +42,7 @@ public class CustomBookingService {
         }
 
         CustomBooking customBooking= new CustomBooking();
+        customBooking.setAccount(sale);
         customBooking.setConsulting(consulting);
         customBooking.setPrice(customBookingRequest.getPrice());
         customBooking.setStatus("PENDING");
