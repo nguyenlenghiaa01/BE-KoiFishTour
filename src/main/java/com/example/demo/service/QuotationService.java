@@ -61,19 +61,19 @@ public class QuotationService {
         return savedQuotation;
     }
 
-    public DataResponse<QuotationCancelResponse> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<QuotationResponses> getAllQuotationsCancel(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
-        List<QuotationCancelResponse> pendingQuotations = new ArrayList<>();
+        List<QuotationResponses> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()!=QuotationEnum.PENDING) {
-                QuotationCancelResponse quotationResponse = new QuotationCancelResponse();
+                QuotationResponses quotationResponse = new QuotationResponses();
                 CustomTour customTour = customTourRepository
                         .findById(quotation.getCustomBooking().getCustomTour().getId())
                         .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
                 quotationResponse.setAdultPrice(customTour.getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(customTour.getChild() *quotation.getPerChildPrice());
-                quotationResponse.setCustomBookingId(customTour.getCustomBooking().getCustomBookingId());
+                quotationResponse.setCustomBookingId(customTour.getCustomBooking().getId());
                 quotationResponse.setQuotationId(quotation.getId());
                 quotationResponse.setStatus(quotation.getStatus());
 
@@ -85,7 +85,7 @@ public class QuotationService {
             }
         }
 
-        DataResponse<QuotationCancelResponse> dataResponse = new DataResponse<>();
+        DataResponse<QuotationResponses> dataResponse = new DataResponse<>();
         dataResponse.setListData(pendingQuotations);
         dataResponse.setTotalElements(pendingQuotations.size());
         dataResponse.setPageNumber(quotationPage.getNumber());
@@ -127,20 +127,20 @@ public class QuotationService {
     }
 
 
-    public DataResponse<QuotationResponses> getAllQuotations(@RequestParam int page, @RequestParam int size) {
+    public DataResponse<QuotationCancelResponse> getAllQuotations(@RequestParam int page, @RequestParam int size) {
         Page<Quotation> quotationPage = quotationRepository.findAll(PageRequest.of(page, size));
         List<Quotation> quotations = quotationPage.getContent();
-        List<QuotationResponses> pendingQuotations = new ArrayList<>();
+        List<QuotationCancelResponse> pendingQuotations = new ArrayList<>();
         for (Quotation quotation : quotations) {
             if (quotation.getStatus()==QuotationEnum.PENDING) {
-                QuotationResponses quotationResponse = new QuotationResponses();
+                QuotationCancelResponse quotationResponse = new QuotationCancelResponse();
                 CustomTour customTour = customTourRepository
                         .findById(quotation.getCustomBooking().getCustomTour().getId())
                         .orElseThrow(() -> new NotFoundException("Custom Tour not found!"));
 
                 quotationResponse.setAdultPrice(customTour.getAdult() * quotation.getPerAdultPrice());
                 quotationResponse.setChildPrice(customTour.getChild() *quotation.getPerChildPrice());
-                quotationResponse.setCustomBookingId(customTour.getCustomBooking().getId());
+                quotationResponse.setCustomBookingId(customTour.getCustomBooking().getCustomBookingId());
                 quotationResponse.setQuotationId(quotation.getId());
 
                 double totalPrice = customTour.getAdult() * quotation.getPerAdultPrice()+
@@ -151,7 +151,7 @@ public class QuotationService {
             }
         }
 
-        DataResponse<QuotationResponses> dataResponse = new DataResponse<>();
+        DataResponse<QuotationCancelResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(pendingQuotations);
         dataResponse.setTotalElements(pendingQuotations.size());
         dataResponse.setPageNumber(quotationPage.getNumber());

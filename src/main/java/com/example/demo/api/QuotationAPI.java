@@ -40,8 +40,8 @@ public class QuotationAPI {
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/cancel")
-    public ResponseEntity<DataResponse<QuotationCancelResponse>> getAllQuotationCancel(int page, int size) {
-        DataResponse<QuotationCancelResponse> quotations = quotationService.getAllQuotationsCancel(page, size);
+    public ResponseEntity<DataResponse<QuotationResponses>> getAllQuotationCancel(int page, int size) {
+        DataResponse<QuotationResponses> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/bookingCode")
@@ -51,8 +51,8 @@ public class QuotationAPI {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<DataResponse<QuotationResponses>> get(int page , int size){
-        DataResponse<QuotationResponses> quotationProcesses = quotationService.getAllQuotations(page, size);
+    public ResponseEntity<DataResponse<QuotationCancelResponse>> get(int page , int size){
+        DataResponse<QuotationCancelResponse> quotationProcesses = quotationService.getAllQuotations(page, size);
         return ResponseEntity.ok(quotationProcesses);
     }
 
