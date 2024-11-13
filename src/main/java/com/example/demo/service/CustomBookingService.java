@@ -175,10 +175,10 @@ public class CustomBookingService {
             throw new NotFoundException("Not found booking");
         }
 
-        double money = booking.getQuotation().getPerAdultPrice()
+        double money = (booking.getQuotation().getPerAdultPrice()
                 *booking.getCustomTour().getAdult()
                 +booking.getQuotation().getPerChildPrice()* booking.getCustomTour().getChild()
-                +booking.getPrice();
+                +booking.getPrice()) * 100;
         String amount = String.valueOf((int) money);
 
         String tmnCode = "V3LITBWK";
