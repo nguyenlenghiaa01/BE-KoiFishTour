@@ -157,6 +157,15 @@ public class KoiFishOrderService {
 
         return order;
     }
+    public KoiFishOrder cancelOrder(String notes,long id) {
+        KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
+        oldOrder.setStatus(OrderEnum.CANCEL);
+        oldOrder.setNotes(notes);
+
+        return koiFishOrderRepository.save(oldOrder);
+    }
+
 
     public KoiFishOrder confirmOrder(long id) {
         KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)

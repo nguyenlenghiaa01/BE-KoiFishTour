@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Farm;
+import com.example.demo.entity.KoiFish;
+import com.example.demo.entity.ShoppingCart;
 import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FarmRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FarmResponse;
 import com.example.demo.repository.FarmRepository;
+import com.example.demo.repository.KoiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,17 +25,29 @@ public class FarmService {
     // xu ly nhung logic lien qua
     @Autowired
     FarmRepository farmRepository;
+    @Autowired
+    KoiRepository koiRepository;
 
     private ModelMapper modelMapper = new ModelMapper();
 
     public Farm createNewFarm(FarmRequest farmRequest) {
-        Farm farm = modelMapper.map(farmRequest, Farm.class);
-        try {
-            Farm newFarm = farmRepository.save(farm);
-            return newFarm;
-        } catch (Exception e) {
-            throw new DuplicateEntity("Duplicate farm id !");
+        Farm farm = new Farm();
+        farm.setFarmName(farmRequest.getFarmName());
+        farm.setOwner(farmRequest.getOwner());
+        farm.setImage(farmRequest.getImage());
+        farm.setImage1(farmRequest.getImage1());
+        farm.setImage2(farmRequest.getImage2());
+        farm.setLocation(farmRequest.getLocation());
+        farm.setDescription(farmRequest.getDescription());
+        List<KoiFish> koi = new ArrayList<>();
+        for (Long koiFishId : farmRequest.getKoi()) {
+            KoiFish koiFish = koiRepository.findById(koiFishId)
+                    .orElseThrow(() -> new NotFoundException("KoiFish not found for ID: " + koiFishId));
+            koi.add(koiFish);
         }
+
+        farm.setKoiFishes(koi);
+        return farmRepository.save(farm);
 
     }
 

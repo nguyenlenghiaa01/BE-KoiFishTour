@@ -33,4 +33,5 @@ public class FarmRequest {
     private boolean isDeleted;
     private String description;
 
+    private List<Long>koi;
 }

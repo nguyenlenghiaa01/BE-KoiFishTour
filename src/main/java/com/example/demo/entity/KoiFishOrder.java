@@ -31,6 +31,7 @@ public class KoiFishOrder {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
+    private String notes;
     @Enumerated(EnumType.STRING)
     private OrderEnum status;
     Date createAt;

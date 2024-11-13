@@ -69,4 +69,10 @@ public class KoiFishOrderAPI {
         return ResponseEntity.ok(confirmedOrder);
     }
 
+    @PutMapping("cancel/{id}")
+    public ResponseEntity confirmOrder(@PathVariable String notes, long id) {
+        KoiFishOrder cancelOrder = koiFishOrderService.cancelOrder(notes,id);
+        return ResponseEntity.ok(cancelOrder);
+    }
+
 }
