@@ -175,5 +175,17 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(oldOrder);
     }
+    public KoiFishOrder deliveringOrder(long id) {
+        KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
+        oldOrder.setStatus(OrderEnum.DELIVERING);
+        return koiFishOrderRepository.save(oldOrder);
+    }
+    public KoiFishOrder doneOrder(long id) {
+        KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
+        oldOrder.setStatus(OrderEnum.DONE);
+        return koiFishOrderRepository.save(oldOrder);
+    }
 }
 
