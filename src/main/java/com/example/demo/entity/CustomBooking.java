@@ -22,6 +22,10 @@ public class CustomBooking {
     @Column(unique = true)
     private String customBookingId;
 
+    @PrePersist
+    private void prePersist() {
+        this.customBookingId = generateBookingId();
+    }
     private String generateBookingId() {
         Random random = new Random();
         int number = random.nextInt(10000000);
