@@ -26,7 +26,7 @@ public class CustomBookingAPI {
     @PostMapping
     public ResponseEntity<CustomBooking>create(@Valid @RequestBody CustomBookingRequest customBookingRequests){
         CustomBooking customTour = customBookingService.createNewCusBooking(customBookingRequests);
-        simpMessagingTemplate.convertAndSend("topic/customBooking","CREATE NEW CUSTOM BOOKING");
+        simpMessagingTemplate.convertAndSend("/topic/customBooking","CREATE NEW CUSTOM BOOKING");
         return ResponseEntity.ok(customTour);
     }
 
@@ -49,7 +49,7 @@ public class CustomBookingAPI {
     @PutMapping("{id}")
     public ResponseEntity<CustomBooking> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
         CustomBooking cus = customBookingService.updateCus(customBookingRequests, id);
-        simpMessagingTemplate.convertAndSend("topic/customBooking","UPDATE CUSTOM BOOKING");
+        simpMessagingTemplate.convertAndSend("/topic/customBooking","UPDATE CUSTOM BOOKING");
         return ResponseEntity.ok(cus);
     }
     @DeleteMapping("{id}")

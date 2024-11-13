@@ -29,6 +29,7 @@ public class QuotationAPI {
     @PostMapping
     public ResponseEntity<Quotation> createQuotation(@Valid @RequestBody QuotationRequest quotationRequest) {
         Quotation newQuotation = quotationService.createQuotation(quotationRequest);
+        simpMessagingTemplate.convertAndSend("/topic/quotation","CREATE QUOTATION");
         return ResponseEntity.ok(newQuotation);
     }
 
@@ -57,22 +58,27 @@ public class QuotationAPI {
     @PutMapping("{id}")
     public ResponseEntity<Quotation> updateQuotation(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotation(quotationRequest, id);
+        simpMessagingTemplate.convertAndSend("/topic/quotation","UPDATE QUOTATION");
         return ResponseEntity.ok(newQuotation);
     }
     @PutMapping("/cancel/{id}")
     public ResponseEntity<Quotation> updateQuotationCancel(@Valid @RequestBody QuotationRequest quotationRequest, @PathVariable long id) {
         Quotation newQuotation = quotationService.updateQuotationCancel(quotationRequest, id);
+        simpMessagingTemplate.convertAndSend("/topic/quotation","CANCEL QUOTATION");
+
         return ResponseEntity.ok(newQuotation);
     }
     @PostMapping("/cancel")
     public ResponseEntity<Quotation> postId(Quotation1Request quotation1Request,String id){
         Quotation newQuotation = quotationService.setQuotationCancel(quotation1Request, id);
+        simpMessagingTemplate.convertAndSend("/topic/quotation","CANCEL QUOTATION");
+
         return  ResponseEntity.ok(newQuotation);
     }
     @PostMapping("/approve")
     public ResponseEntity<Quotation> post(Quotation1Request quotation1Request,long id){
         Quotation newQuotation = quotationService.setQuotationApprove(quotation1Request, id);
-        simpMessagingTemplate.convertAndSend("topic/quotation","APPROVED BOOKING");
+        simpMessagingTemplate.convertAndSend("/topic/quotation","APPROVED BOOKING");
         return  ResponseEntity.ok(newQuotation);
     }
 

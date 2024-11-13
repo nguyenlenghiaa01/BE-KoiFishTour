@@ -36,7 +36,7 @@ public class BookingAPI {
     @PostMapping
     public ResponseEntity<Booking> create(@Valid @RequestBody BookingRequest bookingRequest) {
         Booking newBooking =bookingService.createNewBooking(bookingRequest);
-        simpMessagingTemplate.convertAndSend("topic/booking","CREATE NEW BOOKING");
+        simpMessagingTemplate.convertAndSend("/topic/booking","CREATE NEW BOOKING");
         return ResponseEntity.ok(newBooking);
     }
 

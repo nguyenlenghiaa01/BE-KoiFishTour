@@ -32,6 +32,8 @@ public class TourAPI {
     @PostMapping
     public ResponseEntity<Tour> create(@Valid @RequestBody TourRequest tourRequest) {
             Tour newTour = tourService.createNewTour(tourRequest);
+        simpMessagingTemplate.convertAndSend("/topic/tour","CREATE SCHEDULE");
+
             return ResponseEntity.ok(newTour);
     }
 
@@ -50,7 +52,7 @@ public class TourAPI {
     @PostMapping("/setOpen")
     public ResponseEntity<Tour> setOpen (long id) throws SchedulerException {
         Tour tour = tourService.setOpen(id);
-        simpMessagingTemplate.convertAndSend("topic/tour","OPEN TOUR");
+        simpMessagingTemplate.convertAndSend("/topic/tour","OPEN TOUR");
         return  ResponseEntity.ok(tour);
     }
 
@@ -106,7 +108,7 @@ public class TourAPI {
     @PostMapping("/schedule")
     public String scheduleTour(OpenTourRequest openTourRequest) {
         try {
-            simpMessagingTemplate.convertAndSend("topic/tour","OPEN TOUR");
+            simpMessagingTemplate.convertAndSend("/topic/tour","SET SCHEDULE OPEN TOUR");
             return tourService.scheduleTour(openTourRequest);
         } catch (Exception e) {
             return "Error during scheduling: " + e.getMessage();

@@ -6,6 +6,7 @@ import com.example.demo.service.ScheduleService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,10 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleAPI {
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
     public ResponseEntity< Schedule> create(ScheduleRequest scheduleRequest){
         Schedule schedule = scheduleService.createSchedule(scheduleRequest);
+        simpMessagingTemplate.convertAndSend("/topic/schedule","CREATE SCHEDULE");
         return  ResponseEntity.ok(schedule);
     }
 
@@ -37,11 +41,14 @@ public class ScheduleAPI {
     @PutMapping
     public ResponseEntity<Schedule> update(String file, long id){
         Schedule schedule = scheduleService.update(file,id);
+        simpMessagingTemplate.convertAndSend("/topic/schedule","UPDATE SCHEDULE");
         return ResponseEntity.ok(schedule);
     }
     @DeleteMapping
     public ResponseEntity<Schedule> delete(long id){
         Schedule schedule = scheduleService.delete(id);
+        simpMessagingTemplate.convertAndSend("/topic/schedule","DELETE SCHEDULE");
+
         return ResponseEntity.ok(schedule);
     }
 }
