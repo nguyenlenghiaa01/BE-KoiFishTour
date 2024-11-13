@@ -54,7 +54,6 @@ public class KoiFishOrder {
 
     @ManyToOne
     @JoinColumn(name = "consulting_id")
-    @JsonIgnore
     private Account consulting;
 
     @ManyToOne
@@ -62,6 +61,7 @@ public class KoiFishOrder {
     private Account customer;
 
     @OneToMany(mappedBy = "koiFishOrder",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ShoppingCart> shoppingCarts;
 
     @OneToOne
