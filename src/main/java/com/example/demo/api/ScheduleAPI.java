@@ -4,6 +4,7 @@ import com.example.demo.entity.Schedule;
 import com.example.demo.model.Request.ScheduleRequest;
 import com.example.demo.service.ScheduleService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,7 +21,7 @@ public class ScheduleAPI {
     SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
-    public ResponseEntity< Schedule> create(@RequestBody ScheduleRequest scheduleRequest){
+    public ResponseEntity<Schedule> create(@Valid @RequestBody ScheduleRequest scheduleRequest){
         Schedule schedule = scheduleService.createSchedule(scheduleRequest);
         simpMessagingTemplate.convertAndSend("/topic/schedule","CREATE SCHEDULE");
         return  ResponseEntity.ok(schedule);
