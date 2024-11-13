@@ -51,8 +51,8 @@ public class CustomBookingAPI {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<DataResponse<CustomBookingResponses>> getCustom(@RequestParam int page, @RequestParam int size) {
-        DataResponse<CustomBookingResponses> dataResponse = customBookingService.getAllBooking(page, size);
+    public ResponseEntity<DataResponse<CustomBooking>> getCustom(@RequestParam int page, @RequestParam int size) {
+        DataResponse<CustomBooking>dataResponse = customBookingService.getAllBooking(page, size);
         return ResponseEntity.ok(dataResponse);
     }
     @GetMapping("customer-id")

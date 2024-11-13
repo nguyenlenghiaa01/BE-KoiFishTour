@@ -117,39 +117,24 @@ public class CustomBookingService {
         return customBooking;
     }
 
-    public DataResponse<CustomBookingResponses> getAllBooking(int page, int size) {
-        Page<CustomBooking> bookingPage = customBookingRepository.findAll(PageRequest.of(page, size));
-        List<CustomBookingResponses> customBookingList1 = new ArrayList<>();
+    public DataResponse<CustomBooking> getAllBooking(int page, int size) {
+        Page bookingPage = customBookingRepository.findAll(PageRequest.of(page, size));
+        List<CustomBooking> customBookingList = bookingPage.getContent();
+        List<CustomBooking> customBookingList1 = new ArrayList<>();
 
-        for (CustomBooking booking : bookingPage.getContent()) {
-            CustomTour customTour = customTourRepository.findCustomTourById(booking.getCustomTour().getId());
-            Account customer = accountRepository.findAccountById(customTour.getCustomer().getId());
-
-            CustomBookingResponses customTourResponse = new CustomBookingResponses();
-            customTourResponse.setCustomerId(customer.getId());
-            customTourResponse.setCusBookingId(booking.getCustomBookingId());
-            customTourResponse.setPrice(booking.getPrice());
-            customTourResponse.setAddress(customTour.getAddress());
-            customTourResponse.setDuration(customTour.getDuration());
-            customTourResponse.setStartDate(customTour.getStartDate());
-            customTourResponse.setEmail(customTour.getEmail());
-            customTourResponse.setPhone(customTour.getPhone());
-            customTourResponse.setAdult(customTour.getAdult());
-            customTourResponse.setChild(customTour.getChild());
-            customTourResponse.setInfant(customTour.getInfant());
-            customTourResponse.setFarm(customTour.getFarms());
-            customTourResponse.setStatus(booking.getStatus());
-            customTourResponse.setFullName(customer.getFullName());
-            customTourResponse.setCustomTour(customTour);
-
-            customBookingList1.add(customTourResponse);
+        for (CustomBooking booking : customBookingList) {
+            CustomTour customBooking = customTourRepository.findCustomTourById(booking.getCustomTour().getId());
+            Account customer = accountRepository.findAccountById(customBooking.getCustomer().getId());
+            if (!booking.isDeleted()) {
+                customBookingList1.add(booking);
+            }
         }
 
-        DataResponse<CustomBookingResponses> dataResponse = new DataResponse<>();
+        DataResponse<CustomBooking> dataResponse = new DataResponse<CustomBooking>();
         dataResponse.setListData(customBookingList1);
         dataResponse.setTotalElements(bookingPage.getTotalElements());
         dataResponse.setPageNumber(bookingPage.getNumber());
-        dataResponse.setTotalPages(bookingPage.getTotalPages());
+        dataResponse.setTotalPages(bookingPage.getTotalPages());;
 
         return dataResponse;
     }

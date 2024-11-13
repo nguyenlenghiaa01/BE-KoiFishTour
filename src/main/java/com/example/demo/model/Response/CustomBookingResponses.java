@@ -11,6 +11,7 @@ import java.util.Set;
 public class CustomBookingResponses {
     private long customerId;
     private String cusBookingId;
+    private long saleId;
     private LocalDate startDate;
     private String duration;
     private String email;
