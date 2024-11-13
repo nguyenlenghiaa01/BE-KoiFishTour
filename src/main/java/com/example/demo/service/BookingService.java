@@ -237,13 +237,6 @@ public class BookingService {
         return bookingRepository.countBookingsByTourStartDate(month, year);
     }
 
-    public Long getTotalPriceByMonthAndYear(int month, int year) {
-        return bookingRepository.sumPriceByTourStartDate(month, year);
-    }
-
-    public Long getTotalDeletedBookingsByMonthAndYear(int month, int year) {
-        return bookingRepository.countFailedBookingsByTourStartDate(month, year);
-    }
 
     public float getTotalBookingPayments() {
         List<Booking> bookings = bookingRepository.findAll();

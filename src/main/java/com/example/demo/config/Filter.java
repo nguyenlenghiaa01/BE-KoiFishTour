@@ -46,6 +46,7 @@ public class Filter extends OncePerRequestFilter {
             "/api/koi/guest/get",
             "/api/feedback/guest/get",
             "/api/tour/search/first",
+            "/api/farm",
             "/api/tour",
             "/websocket/**"
     );

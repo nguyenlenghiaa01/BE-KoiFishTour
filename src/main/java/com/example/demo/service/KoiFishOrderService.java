@@ -170,18 +170,9 @@ public class KoiFishOrderService {
     }
 
 
-    public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
-        return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
-    }
-
     public Double countOrdersByMonthAndYear(int month, int year) {
         return koiFishOrderRepository.countOrdersByMonthAndYear(month, year);
     }
-
-    public Long countDeletedOrdersByMonthAndYear(int month, int year) {
-        return koiFishOrderRepository.countDeletedOrdersByMonthAndYear(month, year);
-    }
-
 
     public KoiFishOrder deleteOrderCart(long id) {
         KoiFishOrder oldKoiFishOrder = koiFishOrderRepository.findById(id)
