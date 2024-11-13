@@ -20,7 +20,6 @@ import java.util.*;
 
 @Service
 public class CustomTourService {
-    private ModelMapper modelMapper = new ModelMapper();
     @Autowired
     CustomerTourRepository customerTourRepository;
     @Autowired
@@ -80,6 +79,7 @@ public class CustomTourService {
             customTourResponse.setInfant(customTour.getInfant());
             customTourResponse.setStatus(customTour.getStatus());
             customTourResponse.setFarms(customTour.getFarms());
+            customTourResponse.setCustomerName(customTour.getFullName());
 
             customTourResponses.add(customTourResponse);
         }

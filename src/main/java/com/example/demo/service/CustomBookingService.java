@@ -68,6 +68,7 @@ public class CustomBookingService {
             customTourResponse.setInfant(customBooking.getCustomTour().getInfant());
             customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
             customTourResponse.setStatus(customBooking.getStatus());
+            customTourResponse.setFullName(customTourResponse.getFullName());
 
             customTourResponses.add(customTourResponse);
         }
@@ -86,6 +87,43 @@ public class CustomBookingService {
         oldCus.setPrice(customBookingRequests.getPrice());
         oldCus.setStatus(customBookingRequests.getStatus());
         return customBookingRepository.save(oldCus);
+    }
+    public DataResponse<CustomBookingResponse> getAllCusBookingByCustomerId(@RequestParam int page, @RequestParam int size, String id){
+        Account customer = accountRepository.findAccountByCode(id);
+        if(customer ==null){
+            throw  new NotFoundException("Customer not found");
+        }
+        Page<CustomBooking> cusPage = customBookingRepository.findAll(PageRequest.of(page, size));
+        List<CustomBooking> customTours = cusPage.getContent();
+        List<CustomBookingResponse> customTourResponses = new ArrayList<>();
+
+        for(CustomBooking customBooking : customTours) {
+            CustomBookingResponse customTourResponse = new CustomBookingResponse();
+            customTourResponse.setId(customBooking.getId());
+            customTourResponse.setCusBookingId(customBooking.getCustomBookingId());
+            customTourResponse.setPrice(customBooking.getPrice());
+            customTourResponse.setAddress(customBooking.getCustomTour().getAddress());
+            customTourResponse.setDuration(customBooking.getCustomTour().getDuration());
+            customTourResponse.setStartDate(customBooking.getCustomTour().getStartDate());
+            customTourResponse.setEmail(customBooking.getCustomTour().getEmail());
+            customTourResponse.setPhone(customBooking.getCustomTour().getPhone());
+            customTourResponse.setAdult(customBooking.getCustomTour().getAdult());
+            customTourResponse.setChild(customBooking.getCustomTour().getChild());
+            customTourResponse.setInfant(customBooking.getCustomTour().getInfant());
+            customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
+            customTourResponse.setStatus(customBooking.getStatus());
+            customTourResponse.setFullName(customer.getFullName());
+
+            customTourResponses.add(customTourResponse);
+        }
+
+        DataResponse<CustomBookingResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(customTourResponses);
+        dataResponse.setTotalElements(cusPage.getTotalElements());
+        dataResponse.setPageNumber(cusPage.getNumber());
+        dataResponse.setTotalPages(cusPage.getTotalPages());
+
+        return dataResponse;
     }
 
 

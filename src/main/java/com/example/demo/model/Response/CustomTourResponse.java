@@ -21,7 +21,7 @@ public class CustomTourResponse {
     private String phone;
     private String status;
     private String fullName;
-
+    private String customerName;
     private String address;
     private double budget;
     private int adult;

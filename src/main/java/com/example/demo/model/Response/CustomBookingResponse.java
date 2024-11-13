@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Data
 public class CustomBookingResponse {
+    private String cusBookingId;
     private long id;
     private LocalDate startDate;
     private String duration;
@@ -25,6 +26,5 @@ public class CustomBookingResponse {
     private int infant;
     private double price;
     private Set<Farm> farm;
-    private String consultingName;
-    private String saleName;
+
 }
