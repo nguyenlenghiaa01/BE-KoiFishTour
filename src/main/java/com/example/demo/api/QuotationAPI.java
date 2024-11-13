@@ -4,6 +4,7 @@ import com.example.demo.entity.Quotation;
 import com.example.demo.model.Request.Quotation1Request;
 import com.example.demo.model.Request.QuotationRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.QuotationCancelResponse;
 import com.example.demo.model.Response.QuotationResponse;
 import com.example.demo.model.Response.QuotationResponses;
 import com.example.demo.service.QuotationService;
@@ -39,8 +40,8 @@ public class QuotationAPI {
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/cancel")
-    public ResponseEntity<DataResponse<QuotationResponses>> getAllQuotationCancel(int page, int size) {
-        DataResponse<QuotationResponses> quotations = quotationService.getAllQuotationsCancel(page, size);
+    public ResponseEntity<DataResponse<QuotationCancelResponse>> getAllQuotationCancel(int page, int size) {
+        DataResponse<QuotationCancelResponse> quotations = quotationService.getAllQuotationsCancel(page, size);
         return ResponseEntity.ok(quotations);
     }
     @GetMapping("/bookingCode")
