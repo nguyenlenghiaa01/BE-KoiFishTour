@@ -5,6 +5,7 @@ import com.example.demo.entity.CustomBooking;
 import com.example.demo.model.Request.CustomBookingRequest;
 import com.example.demo.model.Request.CustomBookingRequests;
 import com.example.demo.model.Response.CustomBookingResponse;
+import com.example.demo.model.Response.CustomBookingResponses;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.service.CustomBookingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -50,8 +51,8 @@ public class CustomBookingAPI {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<DataResponse<CustomBooking>>get(@RequestParam int page,@RequestParam int size ){
-        DataResponse<CustomBooking>dataResponse = customBookingService.getAllBooking(page,size);
+    public ResponseEntity<DataResponse<CustomBookingResponses>>get(@RequestParam int page, @RequestParam int size ){
+        DataResponse<CustomBookingResponses>dataResponse = customBookingService.getAllBooking(page,size);
         return ResponseEntity.ok(dataResponse);
     }
     @GetMapping("customer-id")

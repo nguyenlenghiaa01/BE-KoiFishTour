@@ -194,10 +194,10 @@ public class KoiFishOrderService {
 
         return order;
     }
-//    public KoiFishOrder getOrderByCustomBookingId(String id) {
-//        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
-//            return koiRepository.findKoiById(customBooking.getKoiFishOrder().getId());
-//    }
+    public KoiFishOrder getOrderByCustomBookingId(String id) {
+        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
+            return koiFishOrderRepository.findOrderById(customBooking.getKoiFishOrder().getId());
+    }
 
 
     public KoiFishOrder getCustomOrderByBookingId(String id) {
