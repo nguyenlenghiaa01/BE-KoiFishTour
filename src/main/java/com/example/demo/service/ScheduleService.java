@@ -12,6 +12,8 @@ import com.example.demo.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class ScheduleService {
     @Autowired
@@ -32,6 +34,7 @@ public class ScheduleService {
         if ((booking != null && customBooking != null) || (booking == null && customBooking == null)) {
             throw new IllegalArgumentException("Only one of Booking or CustomBooking must be non-null!");
         }
+        schedule.setCreateAt(new Date());
         schedule.setFile(scheduleRequest.getFile());
         schedule.setBooking(booking);
         schedule.setCustomBooking(customBooking);

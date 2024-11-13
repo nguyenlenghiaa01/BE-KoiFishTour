@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 public class Schedule {
@@ -14,6 +16,7 @@ public class Schedule {
 
     private String file;
 
+    private Date createAt;
     boolean isDeleted = false;
     @OneToOne
     @JoinColumn(name = "booking_id")

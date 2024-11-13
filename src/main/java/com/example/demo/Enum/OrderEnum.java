@@ -5,5 +5,6 @@ public enum OrderEnum {
     UPDATED,
     CONFIRM,
     DELIVERING,
-    CANCEL
+    CANCEL,
+    DONE
 }
