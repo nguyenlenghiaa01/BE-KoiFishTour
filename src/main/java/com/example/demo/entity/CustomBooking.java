@@ -44,12 +44,14 @@ public class CustomBooking {
     private KoiFishOrder koiFishOrder;
 
     @OneToOne(mappedBy = "customBooking")
+    @JsonIgnore
     private Quotation quotation;
     @OneToOne
     @JoinColumn(name = "customTour_id")
     private CustomTour customTour;
 
     @OneToOne(mappedBy = "customBooking")
+    @JsonIgnore
     private Schedule schedule;
 
     @ManyToOne

@@ -156,6 +156,7 @@ public class Account implements UserDetails {
     @OneToMany(mappedBy = "consulting")
     @JsonIgnore
     private List<Schedule> schedules;
+
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<CustomTour> customTours;

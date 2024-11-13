@@ -42,46 +42,18 @@ public class CustomBookingService {
             throw  new NotFoundException("Consulting not found");
         }
 
+        CustomTour newCustomTour = customTourRepository.findById(customBookingRequest.getCustomTourId())
+                .orElseThrow(() -> new NotFoundException("Customize Tour not found!"));
+
         CustomBooking customBooking= new CustomBooking();
         customBooking.setAccount(sale);
         customBooking.setConsulting(consulting);
         customBooking.setPrice(customBookingRequest.getPrice());
         customBooking.setStatus("PENDING");
         customBooking.setCreateAt(new Date());
+        customBooking.setCustomTour(newCustomTour);
+
         return customBookingRepository.save(customBooking);
-    }
-
-    public DataResponse<CustomBookingResponse> getAllCusBooking(@RequestParam int page, @RequestParam int size){
-        Page<CustomBooking> cusPage = customBookingRepository.findAll(PageRequest.of(page, size));
-        List<CustomBooking> customTours = cusPage.getContent();
-        List<CustomBookingResponse> customTourResponses = new ArrayList<>();
-
-        for(CustomBooking customBooking : customTours) {
-            CustomBookingResponse customTourResponse = new CustomBookingResponse();
-            customTourResponse.setId(customBooking.getId());
-            customTourResponse.setPrice(customBooking.getPrice());
-            customTourResponse.setAddress(customBooking.getCustomTour().getAddress());
-            customTourResponse.setDuration(customBooking.getCustomTour().getDuration());
-            customTourResponse.setStartDate(customBooking.getCustomTour().getStartDate());
-            customTourResponse.setEmail(customBooking.getCustomTour().getEmail());
-            customTourResponse.setPhone(customBooking.getCustomTour().getPhone());
-            customTourResponse.setAdult(customBooking.getCustomTour().getAdult());
-            customTourResponse.setChild(customBooking.getCustomTour().getChild());
-            customTourResponse.setInfant(customBooking.getCustomTour().getInfant());
-            customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
-            customTourResponse.setStatus(customBooking.getStatus());
-            customTourResponse.setFullName(customTourResponse.getFullName());
-
-            customTourResponses.add(customTourResponse);
-        }
-
-        DataResponse<CustomBookingResponse> dataResponse = new DataResponse<>();
-        dataResponse.setListData(customTourResponses);
-        dataResponse.setTotalElements(cusPage.getTotalElements());
-        dataResponse.setPageNumber(cusPage.getNumber());
-        dataResponse.setTotalPages(cusPage.getTotalPages());
-
-        return dataResponse;
     }
 
     public CustomBooking updateCus(CustomBookingRequests customBookingRequests, long id){

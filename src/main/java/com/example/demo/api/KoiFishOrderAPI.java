@@ -4,6 +4,7 @@ package com.example.demo.api;
 import com.example.demo.entity.KoiFish;
 import com.example.demo.entity.KoiFishOrder;
 
+import com.example.demo.model.Request.KoiFishOrderBookingRequest;
 import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Request.KoiFishOrderUpdateRequest;
 import com.example.demo.model.Response.OrderResponse;
@@ -35,6 +36,13 @@ public class KoiFishOrderAPI {
         simpMessagingTemplate.convertAndSend("topic/koiOrder","CREATE NEW ORDER");
             return ResponseEntity.ok(koiFishOrder);
     }
+    @PostMapping("order-customer")
+    public ResponseEntity<KoiFishOrder> createCus(@Valid @RequestBody KoiFishOrderBookingRequest koiFishOrderRequest) {
+        KoiFishOrder koiFishOrder = koiFishOrderService.createCus(koiFishOrderRequest);
+        simpMessagingTemplate.convertAndSend("topic/koiOrder","CREATE NEW ORDER");
+        return ResponseEntity.ok(koiFishOrder);
+    }
+
 
     @PutMapping("{id}")
     public ResponseEntity<KoiFishOrder> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {

@@ -78,7 +78,7 @@ public class KoiFishOrderService {
         return koiFishOrderRepository.save(order);
     }
 
-    public KoiFishOrder create(KoiFishOrderBookingRequest koiFishOrderBookingRequest) {
+    public KoiFishOrder createCus(KoiFishOrderBookingRequest koiFishOrderBookingRequest) {
         Account customer = accountRepository.findById(koiFishOrderBookingRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found!"));
         CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(koiFishOrderBookingRequest.getCustomBookingId());
