@@ -28,8 +28,6 @@ import java.util.*;
 
 @Service
 public class BookingService {
-    private ModelMapper modelMapper = new ModelMapper();
-    // xu ly nhung logic lien qua
     @Autowired
     BookingRepository bookingRepository;
     @Autowired
@@ -325,7 +323,6 @@ public class BookingService {
             urlBuilder.append("&");
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
-
         return urlBuilder.toString();
     }
 
@@ -335,9 +332,9 @@ public class BookingService {
             throw new NotFoundException("Booking not found!");
         }
         booking.setStatus("PAID");
-        bookingRepository.save(booking);
+        return bookingRepository.save(booking);
 
-        return booking;
+
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {

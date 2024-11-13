@@ -51,11 +51,6 @@ public class KoiFishOrderAPI {
     }
 
 
-    @PutMapping("confirm-order/{id}")
-    public ResponseEntity<KoiFishOrder> updateStatusConfirm(long id){
-        KoiFishOrder newKoi = koiFishOrderService.confirmOrder(id);
-        return  ResponseEntity.ok(newKoi);
-    }
     @GetMapping("booking/{id}")
     public ResponseEntity<KoiFishOrder> getOrderByBookingId(@PathVariable String id) {
         KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
