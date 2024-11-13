@@ -54,6 +54,7 @@ public class KoiFishOrder {
 
     @ManyToOne
     @JoinColumn(name = "consulting_id")
+    @JsonIgnore
     private Account consulting;
 
     @ManyToOne
