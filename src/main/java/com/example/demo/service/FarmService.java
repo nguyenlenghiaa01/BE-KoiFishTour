@@ -39,14 +39,6 @@ public class FarmService {
         farm.setImage2(farmRequest.getImage2());
         farm.setLocation(farmRequest.getLocation());
         farm.setDescription(farmRequest.getDescription());
-        List<KoiFish> koi = new ArrayList<>();
-        for (Long koiFishId : farmRequest.getKoi()) {
-            KoiFish koiFish = koiRepository.findById(koiFishId)
-                    .orElseThrow(() -> new NotFoundException("KoiFish not found for ID: " + koiFishId));
-            koi.add(koiFish);
-        }
-
-        farm.setKoiFishes(koi);
         return farmRepository.save(farm);
 
     }
