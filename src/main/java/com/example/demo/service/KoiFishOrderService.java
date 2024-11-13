@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.Enum.OrderEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Request.KoiFishOrderBookingRequest;
 import com.example.demo.model.Request.KoiFishOrderRequest;
 import com.example.demo.model.Request.KoiFishOrderUpdateRequest;
 import com.example.demo.model.Response.OrderResponse;
@@ -33,7 +34,11 @@ public class KoiFishOrderService {
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
 
+    @Autowired
+    CustomBookingRepository customBookingRepository;
 
+    @Autowired
+    CustomTourRepository customTourRepository;
 
     public KoiFishOrder create(KoiFishOrderRequest koiFishOrderRequest) {
         Account customer = accountRepository.findById(koiFishOrderRequest.getCustomerId())
@@ -57,6 +62,44 @@ public class KoiFishOrderService {
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
 
         for (Long koiFishId : koiFishOrderRequest.getShoppingCart()) {
+            KoiFish koi = koiRepository.findById(koiFishId)
+                    .orElseThrow(() -> new RuntimeException("KoiFish not found for ID: " + koiFishId));
+
+            ShoppingCart orderDetails = new ShoppingCart();
+            orderDetails.setKoiFish(koi);
+            orderDetails.setKoiFishOrder(order);
+
+            orderDetailsList.add(orderDetails);
+        }
+
+        order.setShoppingCarts(orderDetailsList);
+
+
+        return koiFishOrderRepository.save(order);
+    }
+
+    public KoiFishOrder create(KoiFishOrderBookingRequest koiFishOrderBookingRequest) {
+        Account customer = accountRepository.findById(koiFishOrderBookingRequest.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found!"));
+        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(koiFishOrderBookingRequest.getCustomBookingId());
+        if(customBooking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
+        CustomTour tour = customTourRepository.findById(customBooking.getCustomTour().getId())
+                .orElseThrow(() -> new RuntimeException("Tour not found!"));
+        Account account = accountRepository.findById(tour.getAccount().getId())
+                .orElseThrow(() -> new RuntimeException("Consulting account not found!"));
+        KoiFishOrder order = new KoiFishOrder();
+        order.setCreateAt(new Date());
+        order.setCustomer(customer);
+        order.setCustomBooking(customBooking);
+        order.setTotalPrice(0);
+        order.setPaidMoney(0);
+        order.setStatus(OrderEnum.PENDING);
+        order.setConsulting(account);
+        List<ShoppingCart> orderDetailsList = new ArrayList<>();
+
+        for (Long koiFishId : koiFishOrderBookingRequest.getShoppingCart()) {
             KoiFish koi = koiRepository.findById(koiFishId)
                     .orElseThrow(() -> new RuntimeException("KoiFish not found for ID: " + koiFishId));
 
@@ -100,9 +143,8 @@ public class KoiFishOrderService {
 
         List<ShoppingCart> oldCarts = new ArrayList<>(existingOrder.getShoppingCarts());
         existingOrder.getShoppingCarts().clear();
-        koiFishOrderRepository.save(existingOrder); // Optional, but forces JPA to recognize changes
+        koiFishOrderRepository.save(existingOrder);
 
-        // Step 2: Delete the old shopping carts from the database
         for (ShoppingCart cart : oldCarts) {
             shoppingCartRepository.delete(cart);
         }
@@ -126,6 +168,7 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(existingOrder);
     }
+
 
     public Double getTotalOrderAmountByMonthAndYear(int month, int year) {
         return koiFishOrderRepository.findTotalOrderAmountByMonthAndYear(month, year);
@@ -157,6 +200,17 @@ public class KoiFishOrderService {
 
         return order;
     }
+
+    public KoiFishOrder getCustomOrderByBookingId(String id) {
+        KoiFishOrder order = koiFishOrderRepository.findByCustomBooking_CustomBookingId(id);
+
+        if(order == null) {
+            throw new NotFoundException("Order with this booking id not found!");
+        }
+
+        return order;
+    }
+
     public KoiFishOrder cancelOrder(String notes,long id) {
         KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));

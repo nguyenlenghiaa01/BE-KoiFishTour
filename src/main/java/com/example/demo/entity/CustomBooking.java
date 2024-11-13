@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -34,6 +35,9 @@ public class CustomBooking {
 
     private double price;
 
+    @OneToOne(mappedBy = "customBooking")
+    @JsonIgnore
+    private KoiFishOrder koiFishOrder;
 
     @OneToOne(mappedBy = "customBooking")
     private Quotation quotation;

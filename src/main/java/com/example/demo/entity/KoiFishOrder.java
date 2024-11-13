@@ -68,4 +68,8 @@ public class KoiFishOrder {
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
+    @OneToOne
+    @JoinColumn(name = "customBooking_id")
+    private CustomBooking customBooking;
+
 }

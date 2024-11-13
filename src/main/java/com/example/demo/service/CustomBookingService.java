@@ -113,6 +113,7 @@ public class CustomBookingService {
             customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
             customTourResponse.setStatus(customBooking.getStatus());
             customTourResponse.setFullName(customer.getFullName());
+            customTourResponse.setCustomTour(customBooking.getCustomTour());
 
             customTourResponses.add(customTourResponse);
         }

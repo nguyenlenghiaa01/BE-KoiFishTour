@@ -27,4 +27,6 @@ public interface KoiFishOrderRepository extends JpaRepository<KoiFishOrder,Long>
     Page<KoiFishOrder> findOrdersByCustomerId(long customerId, Pageable pageable);
 
     KoiFishOrder findByBooking_BookingId(String id);
+    KoiFishOrder findByCustomBooking_CustomBookingId(String id);
+
 }

@@ -30,8 +30,9 @@ public class Feedback {
     @JoinColumn(name = "customer_id")
     private Account customer;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
+
 
 }

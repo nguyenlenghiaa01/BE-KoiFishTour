@@ -1,6 +1,7 @@
 package com.example.demo.model.Response;
 
 import com.example.demo.entity.CustomBooking;
+import com.example.demo.entity.CustomTour;
 import com.example.demo.entity.Farm;
 import com.example.demo.entity.Quotation;
 import jakarta.mail.Quota;
@@ -26,5 +27,6 @@ public class CustomBookingResponse {
     private int infant;
     private double price;
     private Set<Farm> farm;
+    private CustomTour customTour;
 
 }

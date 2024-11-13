@@ -59,9 +59,9 @@ public class Booking {
         return String.format("BOK%07d", number);
     }
 
-    @OneToMany(mappedBy = "booking")
+    @OneToOne(mappedBy = "booking")
     @JsonIgnore
-    private List<Feedback> feedbacks;
+    private Feedback feedback;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
