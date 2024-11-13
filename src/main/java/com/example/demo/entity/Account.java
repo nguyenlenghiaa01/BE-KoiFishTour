@@ -137,10 +137,6 @@ public class Account implements UserDetails {
     @JsonIgnore
     Set<Transactions> transactionsTo;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<CustomTour> customerTours;
-
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
     private Tour tour;

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.CustomTour;
 import com.example.demo.entity.Farm;
 import com.example.demo.exception.DuplicateEntity;
@@ -29,6 +30,7 @@ public class CustomTourService {
     AuthenticationService authenticationService;
     public CustomTour createNewCus(CustomTourRequest customerTourRequest){
         Set<Farm> farms = new HashSet<>();
+        Account account = authenticationService.getCurrentAccount();
         for (String farmId : customerTourRequest.getFarm()) {
             Farm getFarm = farmRepository.findByFarmId(farmId);
 
@@ -38,27 +40,20 @@ public class CustomTourService {
         }
         CustomTour customerTour = new CustomTour();
         customerTour.setStartDate(customerTourRequest.getStartDate());
-        customerTour.setDuration(customerTour.getDuration());
-        customerTour.setEmail(customerTour.getEmail());
-        customerTour.setPhone(customerTour.getPhone());
-        customerTour.setFullName(customerTour.getFullName());
-        customerTour.setAddress(customerTour.getAddress());
-        customerTour.setBudget(customerTour.getBudget());
+        customerTour.setDuration(customerTourRequest.getDuration());
+        customerTour.setEmail(customerTourRequest.getEmail());
+        customerTour.setPhone(customerTourRequest.getPhone());
+        customerTour.setFullName(customerTourRequest.getFullName());
+        customerTour.setAddress(customerTourRequest.getAddress());
+        customerTour.setBudget(customerTourRequest.getBudget());
         customerTour.setCreateAt(new Date());
         customerTour.setStatus("PENDING");
-        customerTour.setAdult(customerTour.getAdult());
-        customerTour.setChild(customerTour.getChild());
-        customerTour.setInfant(customerTour.getInfant());
-        customerTour.setAccount(authenticationService.getCurrentAccount());
+        customerTour.setAdult(customerTourRequest.getAdult());
+        customerTour.setChild(customerTourRequest.getChild());
+        customerTour.setInfant(customerTourRequest.getInfant());
+        customerTour.setCustomer(account);
         customerTour.setFarms(farms);
-
-        try {
-            CustomTour newCustomerTour = customerTourRepository.save(customerTour);
-            return newCustomerTour;
-        }catch (Exception  e){
-            throw new DuplicateEntity("Duplicate Custom Tour id !");
-        }
-
+        return customerTourRepository.save(customerTour);
     }
     public DataResponse<CustomTourResponse> getAllCus(@RequestParam int page, @RequestParam int size){
         Page<CustomTour> cusPage = customerTourRepository.findAll(PageRequest.of(page, size));

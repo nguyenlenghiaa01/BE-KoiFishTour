@@ -24,26 +24,25 @@ public class CustomTour {
     private LocalDate startDate;
 
     private Date createAt;
-
     private String status;
-
-
     private String duration;
+
+    @NotBlank(message = "Name cannot be blank")
+    private String fullName;
+
+    @NotBlank(message = "Address cannot be blank")
+    private String address;
+
+    @Positive(message = "Price must be greater than 0")
+    private Double budget;
+
     @Email(message = "Invalid Email!")
     @Column(unique = true)
     private String email;
+
     @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone!")
     @Column(unique = true)
     private String phone;
-    @NotBlank(message = "Name cannot be blank")
-    @Pattern(regexp = "^[^\\d]*$", message = "Name cannot contain numbers!")
-    private String fullName;
-    @NotBlank(message = "Address cannot be blank")
-    @NotBlank(message = "Address cannot be blank")
-    private String address;
-    @NotNull(message = "Price cannot be null")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    private double budget;
 
     private int adult;
     private int child;
@@ -58,9 +57,6 @@ public class CustomTour {
     @JoinColumn(name = "customer_id")
     private Account customer;
 
-    @ManyToOne
-    @JoinColumn(name = "sale_id")
-    private Account account;
 
     @ManyToMany
     @JoinTable(

@@ -87,7 +87,7 @@ public class KoiFishOrderService {
         }
         CustomTour tour = customTourRepository.findById(customBooking.getCustomTour().getId())
                 .orElseThrow(() -> new RuntimeException("Tour not found!"));
-        Account account = accountRepository.findById(tour.getAccount().getId())
+        Account account = accountRepository.findById(tour.getCustomer().getId())
                 .orElseThrow(() -> new RuntimeException("Consulting account not found!"));
         KoiFishOrder order = new KoiFishOrder();
         order.setCreateAt(new Date());
