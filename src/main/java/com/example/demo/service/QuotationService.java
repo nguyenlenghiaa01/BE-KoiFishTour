@@ -39,8 +39,6 @@ public class QuotationService {
         Quotation quotation = new Quotation();
         CustomBooking booking = customBookingRepository.findById(quotationRequest.getCustomBookingId())
                 .orElseThrow(() -> new NotFoundException("Custom Booking not exist!"));
-        Quotation quotaions = quotationRepository.findById(quotationRequest.getCustomBookingId())
-                .orElseThrow(() -> new NotFoundException("Custom Booking not exist!"));
 
         Account account = authenticationService.getCurrentAccount();
         quotation.setCustomBooking(booking);
