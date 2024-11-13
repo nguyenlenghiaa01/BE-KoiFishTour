@@ -20,7 +20,7 @@ public class CustomTour {
     private long id;
 
     @NotNull(message = "Start date cannot be null")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
 
     private Date createAt;
