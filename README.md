@@ -6,6 +6,9 @@
 # <img width="501" alt="Ảnh màn hình 2024-11-13 lúc 15 55 43" src="https://github.com/user-attachments/assets/f9ed6208-44c3-41a2-ac40-0fc1d1660708">
 # User Case
 # <img width="658" alt="Ảnh màn hình 2024-11-13 lúc 20 24 05" src="https://github.com/user-attachments/assets/084d2d7f-3230-4925-9054-d587ba6704e1">
+# ERD
+# <img width="847" alt="Ảnh màn hình 2024-11-14 lúc 00 37 59" src="https://github.com/user-attachments/assets/3eb2f647-a98d-43bd-a04d-8b9eb3174e75">
+
 
 
 
