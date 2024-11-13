@@ -229,10 +229,11 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(oldOrder);
     }
-    public KoiFishOrder deliveringOrder(long id) {
+    public KoiFishOrder deliveringOrder(String notes,long id) {
         KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
         oldOrder.setStatus(OrderEnum.DELIVERING);
+        oldOrder.setNotes(notes);
         return koiFishOrderRepository.save(oldOrder);
     }
     public KoiFishOrder doneOrder(long id) {

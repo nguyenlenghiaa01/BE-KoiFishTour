@@ -78,9 +78,8 @@ public class KoiFishOrderAPI {
         return ResponseEntity.ok(confirmedOrder);
     }
     @PutMapping("delivering/{id}")
-    public ResponseEntity updateDeliveringOrder(@PathVariable long id) {
-        KoiFishOrder confirmedOrder = koiFishOrderService.deliveringOrder(id);
-
+    public ResponseEntity updateDeliveringOrder(@RequestBody String notes,@PathVariable long id) {
+        KoiFishOrder confirmedOrder = koiFishOrderService.deliveringOrder(notes,id);
         return ResponseEntity.ok(confirmedOrder);
     }
     @PutMapping("done/{id}")
