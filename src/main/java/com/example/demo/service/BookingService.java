@@ -186,7 +186,7 @@ public class BookingService {
             bookingResponse.setPrice(booking.getPrice());
             bookingResponse.setPhone(booking.getPhone());
             bookingResponse.setTourId(booking.getTour().getId());
-            bookingResponse.setCustomerId(booking.getAccount().getCode());
+            bookingResponse.setCustomerId(booking.getAccount().getId());
             bookingResponse.setBookingDate(booking.getBookingDate());
 
             activeBookings.add(bookingResponse);

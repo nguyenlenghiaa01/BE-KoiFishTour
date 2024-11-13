@@ -20,6 +20,6 @@ public class BookingResponsess {
     private int adult;
     private int child;
     private int infant;
-    private String customerId;
+    private long customerId;
     private long tourId;
 }
