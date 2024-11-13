@@ -20,7 +20,7 @@ public class ScheduleAPI {
     SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping
-    public ResponseEntity< Schedule> create(ScheduleRequest scheduleRequest){
+    public ResponseEntity< Schedule> create(@RequestBody ScheduleRequest scheduleRequest){
         Schedule schedule = scheduleService.createSchedule(scheduleRequest);
         simpMessagingTemplate.convertAndSend("/topic/schedule","CREATE SCHEDULE");
         return  ResponseEntity.ok(schedule);
