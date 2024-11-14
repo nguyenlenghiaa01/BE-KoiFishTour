@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/tour")
@@ -71,13 +74,30 @@ public class TourAPI {
     @GetMapping("/search/first")
     public DataResponse<TourResponse> searchTours(
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) String duration,
+            @RequestParam(required = false) Double min,  // Changed to Double (object wrapper)
+            @RequestParam(required = false) Double max,  // Changed to Double (object wrapper)
             @RequestParam(required = false) String farm,
             @RequestParam int page,
             @RequestParam int size
     ) {
-        return tourService.searchTours(startDate, duration, farm, page, size);
+        // Convert the min and max prices from Double to BigDecimal
+        BigDecimal minPrice = (min != null && min != 0) ? BigDecimal.valueOf(min) : null;
+        BigDecimal maxPrice = (max != null && max != 0) ? BigDecimal.valueOf(max) : null;
+
+        // Convert the farm parameter into a set of farm names if it's not null
+        Set<String> farmSet = new HashSet<>();
+        if (farm != null && !farm.isEmpty()) {
+            String[] farms = farm.split(",");
+            for (String f : farms) {
+                farmSet.add(f.trim());
+            }
+        }
+
+        // Call the service method with all the necessary parameters
+        return tourService.searchTours(page, size, startDate, minPrice, maxPrice, farmSet);
     }
+
+
 
     @GetMapping("/search/second")
     public DataResponse<TourResponse> getAllTourPrice(

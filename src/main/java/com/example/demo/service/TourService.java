@@ -22,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -163,70 +164,82 @@ public class TourService {
         return dataResponse;
     }
 
-    public DataResponse<TourResponse> searchTours(LocalDate startDate, String duration, String farms, int page, int size) {
-        Set<String> farmSet = new HashSet<>();
-        if (farms != null && !farms.isEmpty()) {
-            String[] farmArray = farms.split(",");
-            for (String farm : farmArray) {
-                farmSet.add(farm.trim());
-            }
-        }
-        if (farmSet.isEmpty() && (duration == null || duration.isEmpty()) && startDate == null) {
-            return new DataResponse<>();
+    public DataResponse<TourResponse> searchTours(int page, int size, LocalDate startDate, BigDecimal min, BigDecimal max, Set<String> farms) {
+        // Check if all the input parameters are null or empty
+        if (startDate == null && min == null && max == null && (farms == null || farms.isEmpty())) {
+            // Return empty response if all inputs are null or empty
+            DataResponse<TourResponse> emptyResponse = new DataResponse<>();
+            emptyResponse.setListData(new ArrayList<>());  // Empty list
+            emptyResponse.setTotalElements(0);  // No elements
+            emptyResponse.setPageNumber(page);  // Current page
+            emptyResponse.setTotalPages(0);  // No pages
+            return emptyResponse;
         }
 
+        // Set of farm names
+        Set<String> farmSet = new HashSet<>();
+        if (farms != null && !farms.isEmpty()) {
+            farmSet.addAll(farms);
+        }
+
+        // Specification to filter based on different criteria
         Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"));
+
         if (startDate != null) {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
-        if (duration != null && !duration.isEmpty()) {
-            Pattern pattern = Pattern.compile("^(\\d+)\\s*days$");
-            Matcher matcher = pattern.matcher(duration.trim());
 
-            if (matcher.matches()) {
-                int inputDays = Integer.parseInt(matcher.group(1));
-                specification = specification.and(TourSpecification.hasDurationDays(inputDays));
-            } else {
-                return new DataResponse<>();
-            }
+        if (min != null || max != null) {
+            specification = specification.and(TourSpecification.hasPriceBetween(min, max));
         }
+
         if (!farmSet.isEmpty()) {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
+
+        // Paginate and retrieve the filtered tours
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
+
+        // Process the filtered tours
         for (Tour tour : tourPage.getContent()) {
-            if(tour.getStatus().equals("OPEN")) {
-                if(!tour.isDeleted()) {
-                    TourResponse tourResponse = new TourResponse();
-                    tourResponse.setId(tour.getId());
-                    tourResponse.setTourId(tour.getTourId());
-                    tourResponse.setDeleted(tour.isDeleted());
-                    tourResponse.setTourName(tour.getTourName());
-                    tourResponse.setStartDate(tour.getStartDate());
-                    tourResponse.setDuration(tour.getDuration());
-                    tourResponse.setImage(tour.getImage());
-                    tourResponse.setStatus(tour.getStatus());
-                    tourResponse.setPrice(tour.getPrice());
-                    tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
-                    tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
-                    tourResponse.setTime(tour.getTime());
-                    tourResponse.setFarms(tour.getFarms());
-                    tourResponse.setDescription(tour.getDescription());
-                    if (tour.getAccount() != null) {
-                        tourResponse.setConsultingId(tour.getAccount().getId());
-                    }
-                    tourResponses.add(tourResponse);
+            if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
+                tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
+                tourResponse.setTime(tour.getTime());
+                tourResponse.setDescription(tour.getDescription());
+                tourResponse.setFarms(tour.getFarms());
+
+                if (tour.getAccount() != null) {
+                    tourResponse.setConsultingId(tour.getAccount().getId());
                 }
+
+                tourResponses.add(tourResponse);
             }
         }
+
+        // Prepare the response object
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourResponses.size());
         dataResponse.setPageNumber(tourPage.getNumber());
         dataResponse.setTotalPages(tourPage.getTotalPages());
+
         return dataResponse;
     }
+
+
+
+
 
     public DataResponse<TourResponse> getAllTourPrice(
             @RequestParam int page,
