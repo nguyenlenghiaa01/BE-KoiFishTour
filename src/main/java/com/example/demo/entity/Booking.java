@@ -67,6 +67,8 @@ public class Booking {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    private int numberMax = 4;
+
     @OneToOne(mappedBy = "booking")
     @JsonIgnore
     Payment payment;
@@ -78,12 +80,6 @@ public class Booking {
     @OneToOne(mappedBy = "booking")
     @JsonIgnore
     private KoiFishOrder koiFishOrder;
-
-
-    @OneToOne(mappedBy = "booking")
-    @JsonIgnore
-    private Schedule schedule;
-
 
 
 }

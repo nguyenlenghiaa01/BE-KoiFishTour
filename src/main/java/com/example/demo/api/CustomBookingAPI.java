@@ -50,6 +50,7 @@ public class CustomBookingAPI {
         return ResponseEntity.ok(customTour);
     }
 
+
     @GetMapping("/get")
     public ResponseEntity<DataResponse<CustomBooking>> getCustom(@RequestParam int page, @RequestParam int size) {
         DataResponse<CustomBooking>dataResponse = customBookingService.getAllBooking(page, size);
@@ -69,6 +70,12 @@ public class CustomBookingAPI {
     @PutMapping("{id}")
     public ResponseEntity<CustomBooking> updateCustom(@Valid @RequestBody CustomBookingRequests customBookingRequests, @PathVariable long id) {
         CustomBooking cus = customBookingService.updateCus(customBookingRequests, id);
+        simpMessagingTemplate.convertAndSend("/topic/customBooking","UPDATE CUSTOM BOOKING");
+        return ResponseEntity.ok(cus);
+    }
+    @PutMapping("/set-done")
+    public ResponseEntity<CustomBooking> updateCustom( @PathVariable String id) {
+        CustomBooking cus = customBookingService.updateStatusCusBooking(id);
         simpMessagingTemplate.convertAndSend("/topic/customBooking","UPDATE CUSTOM BOOKING");
         return ResponseEntity.ok(cus);
     }

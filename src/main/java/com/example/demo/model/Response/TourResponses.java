@@ -19,6 +19,7 @@ public class TourResponses {
     private double price;
     private String time;
     private String description;
+    private String schedule;
     private double perAdultPrice;
     private double perChildrenPrice;
     private String consultingName;

@@ -40,26 +40,37 @@ public class CustomBookingService {
     @Autowired
     FarmRepository farmRepository;
 
-    public CustomBooking createNewCusBooking(CustomBookingRequest customBookingRequest){
+    public CustomBooking createNewCusBooking(CustomBookingRequest customBookingRequest) {
         CustomTour customTour = customTourRepository.findById(customBookingRequest.getCustomTourId()).orElseThrow(() -> new NotFoundException("Custom tour id not found!"));
         Account sale = authenticationService.getCurrentAccount();
         Account consulting = accountRepository.findAccountById(customBookingRequest.getConsultingId());
-        if(consulting == null){
-            throw  new NotFoundException("Consulting not found");
+        if (consulting == null) {
+            throw new NotFoundException("Consulting not found");
+        }
+        Account customer = accountRepository.findAccountById(customTour.getCustomer().getId());
+        if (customer == null) {
+            throw new NotFoundException("Customer not found");
         }
 
         CustomTour newCustomTour = customTourRepository.findById(customBookingRequest.getCustomTourId())
                 .orElseThrow(() -> new NotFoundException("Customize Tour not found!"));
 
-        CustomBooking customBooking= new CustomBooking();
-        customBooking.setAccount(sale);
-        customBooking.setConsulting(consulting);
-        customBooking.setPrice(customBookingRequest.getPrice());
-        customBooking.setStatus("PENDING");
-        customBooking.setCreateAt(new Date());
-        customBooking.setCustomTour(newCustomTour);
+        boolean hasActiveBooking = customer.getCustomBookings().stream()
+                .anyMatch(booking -> !"DONE".equals(booking.getStatus()));
 
-        return customBookingRepository.save(customBooking);
+        if (!customer.getCustomerBookings().isEmpty() && hasActiveBooking) {
+            throw new IllegalStateException("Customer already has an active custom booking.");
+        } else {
+            CustomBooking customBooking = new CustomBooking();
+            customBooking.setAccount(sale);
+            customBooking.setConsulting(consulting);
+            customBooking.setPrice(customBookingRequest.getPrice());
+            customBooking.setStatus("PENDING");
+            customBooking.setCreateAt(new Date());
+            customBooking.setCustomTour(customTour);
+
+            return customBookingRepository.save(customBooking);
+        }
     }
 
     public CustomBooking updateCus(CustomBookingRequests customBookingRequests, long id){
@@ -213,6 +224,14 @@ public class CustomBookingService {
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
         return urlBuilder.toString();
+    }
+    public CustomBooking updateStatusCusBooking(String id) {
+        CustomBooking booking = customBookingRepository.findCustomBookingByCustomBookingId(id);
+        if (booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
+        booking.setStatus("DONE");
+        return customBookingRepository.save(booking);
     }
 
     public CustomBooking updateStatus(String id) {

@@ -32,14 +32,13 @@ public class ScheduleService {
                 findCustomBookingByCustomBookingId(scheduleRequest.getCustomBookingId());
         schedule.setCreateAt(new Date());
         schedule.setFile(scheduleRequest.getFile());
-        schedule.setBooking(booking);
         schedule.setCustomBooking(customBooking);
         schedule.setConsulting(consulting);
         return scheduleRepository.save(schedule);
     }
 
     public Schedule getSchedule(String id) {
-        Booking booking = bookingRepository.findBookingByBookingId(id);
+        CustomBooking booking = customBookingRepository.findCustomBookingByCustomBookingId(id);
         if (booking == null) {
             throw new NotFoundException("Booking not found!");
         }
@@ -57,18 +56,6 @@ public class ScheduleService {
     }
 
 
-    public Schedule getSchedules(String id){
-        CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
-        if (customBooking == null || customBooking.getSchedule() == null) {
-            throw new NotFoundException("Schedule not found!");
-        }
-        Schedule schedule = customBooking.getSchedule();
-        if(schedule.isDeleted()){
-            return schedule;
-        }else{
-            throw  new NotFoundException("Schedule not found!");
-        }
-    }
     public Schedule update(String file, long id){
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Schedule not found!"));

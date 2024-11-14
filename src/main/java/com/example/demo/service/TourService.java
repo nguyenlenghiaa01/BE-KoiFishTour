@@ -59,8 +59,10 @@ public class TourService {
         newTour.setDescription(tourRequest.getDescription());
         newTour.setImage(tourRequest.getImage());
         newTour.setAccount(consultingAccount);
+        newTour.setSchedule(tourRequest.getSchedule());
         newTour.setPerAdultPrice(tourRequest.getPerAdultPrice());
         newTour.setPerChildrenPrice(tourRequest.getPerChildrenPrice());
+
 
         Set<Farm> farms = new HashSet<>();
         for (Long farmId : tourRequest.getFarmId()) {
@@ -105,6 +107,7 @@ public class TourService {
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
+                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
@@ -143,6 +146,7 @@ public class TourService {
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
+                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
                 tourResponse.setTime(tour.getTime());
@@ -210,6 +214,7 @@ public class TourService {
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
                 tourResponse.setTime(tour.getTime());
+                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setDescription(tour.getDescription());
                 tourResponse.setFarms(tour.getFarms());
 
@@ -321,6 +326,7 @@ public class TourService {
         oldTour.setDescription(tour.getDescription());
         oldTour.setAccount(consultingAccount);
         oldTour.setDeleted(tour.isDeleted());
+        oldTour.setSchedule(tour.getSchedule());
         oldTour.setPerAdultPrice(tour.getPerAdultPrice());
         oldTour.setPerChildrenPrice(tour.getPerChildrenPrice());
         return tourRepository.save(oldTour);
@@ -340,7 +346,7 @@ public class TourService {
         if(oldTour ==null){
             throw new NotFoundException("Tour not found !");
         }
-        oldTour.setStatus("NOT OPEN");
+        oldTour.setStatus("OPEN");
         scheduleJob.cancelScheduledJob(TourId);
         return tourRepository.save(oldTour);
     }
@@ -411,6 +417,7 @@ public class TourService {
             tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
             tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
             tourResponse.setTime(tour.getTime());
+            tourResponse.setSchedule(tour.getSchedule());
             tourResponse.setDescription(tour.getDescription());
             tourResponse.setConsultingName(tour.getAccount().getFullName());
             tourResponses.add(tourResponse);

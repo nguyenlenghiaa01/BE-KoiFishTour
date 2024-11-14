@@ -27,15 +27,9 @@ public class ScheduleAPI {
         return  ResponseEntity.ok(schedule);
     }
 
-    @GetMapping("/booking")
+    @GetMapping("/custom-booking")
     public ResponseEntity<Schedule> getBooking(String id){
         Schedule schedule = scheduleService.getSchedule(id);
-        return  ResponseEntity.ok(schedule);
-    }
-
-    @GetMapping("/custom-booking")
-    public ResponseEntity<Schedule> getCustomBooking(String id){
-        Schedule schedule = scheduleService.getSchedules(id);
         return  ResponseEntity.ok(schedule);
     }
 

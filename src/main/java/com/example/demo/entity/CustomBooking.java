@@ -57,7 +57,12 @@ public class CustomBooking {
     @ManyToOne
     @JoinColumn(name = "sale_id")
     private Account account;
+
     @ManyToOne
     @JoinColumn(name = "consulting_id")
     private Account consulting;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Account customer;
 }

@@ -18,9 +18,7 @@ public class Schedule {
 
     private Date createAt;
     boolean isDeleted = false;
-    @OneToOne
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
+
 
     @OneToOne
     @JoinColumn(name = "custom_booking_id")

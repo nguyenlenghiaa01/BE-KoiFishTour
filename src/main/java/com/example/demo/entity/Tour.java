@@ -49,6 +49,7 @@ public class Tour {
 
     private double price;
 
+    private String schedule;
 
     private String time;
 

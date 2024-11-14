@@ -5,6 +5,7 @@ import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DateException;
+import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
@@ -77,7 +78,13 @@ public class BookingService {
             }
         }
 
+
+
         Booking booking = new Booking();
+        int totalPeople = bookingRequest.getAdult() + bookingRequest.getChild() + bookingRequest.getInfant();
+        if (totalPeople > booking.getNumberMax()) {
+            throw new IllegalArgumentException("The total number of people cannot exceed " + booking.getNumberMax());
+        }
         booking.setBookingDate(new Date());
         booking.setStatus("PENDING");
         booking.setPrice(bookingRequest.getPrice());
@@ -118,7 +125,7 @@ public class BookingService {
                 return number * 7;
             case "month":
             case "months":
-                return number * 30;  // Coi mỗi tháng có 30 ngày
+                return number * 30;
             default:
                 throw new IllegalArgumentException("Unknown time unit in duration");
         }

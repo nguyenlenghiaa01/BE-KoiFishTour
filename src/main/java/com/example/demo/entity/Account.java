@@ -151,16 +151,19 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy = "consulting")
     @JsonIgnore
-    private List<CustomBooking> customBooking;
-
-    @OneToMany(mappedBy = "consulting")
-    @JsonIgnore
     private List<Schedule> schedules;
 
     @OneToMany(mappedBy = "customer")
     @JsonIgnore
     private List<CustomTour> customTours;
 
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnore
+    private List<CustomBooking> customerBookings;
+
+    @OneToMany(mappedBy = "consulting")
+    @JsonIgnore
+    private List<CustomBooking> consultingBookings;
 
 }
 

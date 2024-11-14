@@ -22,6 +22,7 @@ public class TourResponse {
     private double perAdultPrice;
     private double perChildrenPrice;
     private String time;
+    private String schedule;
     private String description;
     private long consultingId;
     private Set<Farm> farms;
