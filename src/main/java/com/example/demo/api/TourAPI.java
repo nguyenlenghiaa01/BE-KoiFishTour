@@ -74,17 +74,15 @@ public class TourAPI {
     @GetMapping("/search/first")
     public DataResponse<TourResponse> searchTours(
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) Double min,  // Changed to Double (object wrapper)
-            @RequestParam(required = false) Double max,  // Changed to Double (object wrapper)
+            @RequestParam(required = false) Double min,
+            @RequestParam(required = false) Double max,
             @RequestParam(required = false) String farm,
             @RequestParam int page,
             @RequestParam int size
     ) {
-        // Convert the min and max prices from Double to BigDecimal
         BigDecimal minPrice = (min != null && min != 0) ? BigDecimal.valueOf(min) : null;
         BigDecimal maxPrice = (max != null && max != 0) ? BigDecimal.valueOf(max) : null;
 
-        // Convert the farm parameter into a set of farm names if it's not null
         Set<String> farmSet = new HashSet<>();
         if (farm != null && !farm.isEmpty()) {
             String[] farms = farm.split(",");
@@ -93,7 +91,6 @@ public class TourAPI {
             }
         }
 
-        // Call the service method with all the necessary parameters
         return tourService.searchTours(page, size, startDate, minPrice, maxPrice, farmSet);
     }
 

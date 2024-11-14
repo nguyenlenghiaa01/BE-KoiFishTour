@@ -11,14 +11,6 @@ import java.time.LocalDate;
 @Data
 public class BookingRequest {
 
-//    @NotNull(message = "Start date cannot be null")
-
-//    private LocalDate startDate; // Sử dụng LocalDate thay vì Date
-
-//    @Pattern(regexp = "^[^\\d]*$", message = "Status cannot have numbers!")
-//    @Pattern(regexp = "^[^\\s].*", message = "First character cannot have space!")
-//    private String status;
-
     @NotNull(message = "Price cannot be null")
     private double price;
 

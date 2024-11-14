@@ -165,24 +165,20 @@ public class TourService {
     }
 
     public DataResponse<TourResponse> searchTours(int page, int size, LocalDate startDate, BigDecimal min, BigDecimal max, Set<String> farms) {
-        // Check if all the input parameters are null or empty
         if (startDate == null && min == null && max == null && (farms == null || farms.isEmpty())) {
-            // Return empty response if all inputs are null or empty
             DataResponse<TourResponse> emptyResponse = new DataResponse<>();
-            emptyResponse.setListData(new ArrayList<>());  // Empty list
-            emptyResponse.setTotalElements(0);  // No elements
-            emptyResponse.setPageNumber(page);  // Current page
-            emptyResponse.setTotalPages(0);  // No pages
+            emptyResponse.setListData(new ArrayList<>());
+            emptyResponse.setTotalElements(0);
+            emptyResponse.setPageNumber(page);
+            emptyResponse.setTotalPages(0);
             return emptyResponse;
         }
 
-        // Set of farm names
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             farmSet.addAll(farms);
         }
 
-        // Specification to filter based on different criteria
         Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"));
 
         if (startDate != null) {
@@ -197,11 +193,9 @@ public class TourService {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
 
-        // Paginate and retrieve the filtered tours
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<TourResponse> tourResponses = new ArrayList<>();
 
-        // Process the filtered tours
         for (Tour tour : tourPage.getContent()) {
             if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
                 TourResponse tourResponse = new TourResponse();
@@ -227,7 +221,6 @@ public class TourService {
             }
         }
 
-        // Prepare the response object
         DataResponse<TourResponse> dataResponse = new DataResponse<>();
         dataResponse.setListData(tourResponses);
         dataResponse.setTotalElements(tourResponses.size());

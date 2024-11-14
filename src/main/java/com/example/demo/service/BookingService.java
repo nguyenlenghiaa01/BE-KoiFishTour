@@ -4,6 +4,7 @@ import com.example.demo.Enum.PaymentEnum;
 import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
+import com.example.demo.exception.DateException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
@@ -22,6 +23,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -57,6 +59,23 @@ public class BookingService {
         if (customer == null) {
             throw new NotFoundException("Not found customer");
         }
+        LocalDate tourStartDate = tour.getStartDate();
+        String durationString = tour.getDuration();
+
+        int tourDurationInDays = parseDurationToDays(durationString);
+
+        LocalDate tourEndDate = tourStartDate.plusDays(tourDurationInDays);
+
+        for (Booking existingBooking : customer.getBookings()) {
+            LocalDate existingBookingStartDate = existingBooking.getTour().getStartDate();
+            String existingDurationString = existingBooking.getTour().getDuration();
+            int existingTourDurationInDays = parseDurationToDays(existingDurationString);
+            LocalDate existingBookingEndDate = existingBookingStartDate.plusDays(existingTourDurationInDays);
+
+            if (tourStartDate.isBefore(existingBookingEndDate.plusDays(1))) {
+                throw new DateException("You cannot book a tour on the same day as your previous booking. Please wait at when done old booking");
+            }
+        }
 
         Booking booking = new Booking();
         booking.setBookingDate(new Date());
@@ -74,6 +93,35 @@ public class BookingService {
 
         return bookingRepository.save(booking);
 
+    }
+
+    private int parseDurationToDays(String duration) {
+        if (duration == null || duration.isEmpty()) {
+            throw new IllegalArgumentException("Invalid duration format");
+        }
+
+        duration = duration.toLowerCase().trim();
+        String[] parts = duration.split(" ");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid duration format");
+        }
+
+        int number = Integer.parseInt(parts[0]);
+        String unit = parts[1];
+
+        switch (unit) {
+            case "day":
+            case "days":
+                return number;
+            case "week":
+            case "weeks":
+                return number * 7;
+            case "month":
+            case "months":
+                return number * 30;  // Coi mỗi tháng có 30 ngày
+            default:
+                throw new IllegalArgumentException("Unknown time unit in duration");
+        }
     }
 
 
