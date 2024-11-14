@@ -185,6 +185,7 @@ public class BookingService {
                 bookingResponse.setFullName(booking.getFullName());
                 bookingResponse.setStatus(booking.getStatus());
                 bookingResponse.setAdult(booking.getAdult());
+                bookingResponse.setChild(booking.getChild());
                 bookingResponse.setInfant(booking.getInfant());
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
