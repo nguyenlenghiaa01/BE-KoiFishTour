@@ -20,5 +20,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long> {
 
     Page<Feedback> findAll(Pageable pageable);
 
+    Feedback findFeedbackByBooking_BookingId(String bookingId);
+
 
 }

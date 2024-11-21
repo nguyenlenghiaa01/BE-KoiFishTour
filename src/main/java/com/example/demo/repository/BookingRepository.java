@@ -26,7 +26,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     Page<Booking> findByTourIdAndIsDeletedFalse(@Param("tourId") Long tourId, Pageable pageable);
 
 
-    Page<Booking> findByStatusAndAccount_Code(String status, String accountCode, Pageable pageable);
+    Page<Booking> findAllByAccount_Code(String accountCode, Pageable pageable);
 
     Booking findBookingByBookingId(String bookingId);
 
@@ -44,5 +44,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 //    List<Object[]> calculateMonthlyRevenue(@Param("userId") Long userID);
 
     Page<Booking> findAllByTour_TourId(String tourId, Pageable pageable);
+
+    List<Booking> findAllByTour_TourId(String tourId);
 
 }

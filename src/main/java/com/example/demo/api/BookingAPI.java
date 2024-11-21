@@ -68,6 +68,11 @@ public class BookingAPI {
         return  ResponseEntity.ok(booking);
     }
 
+    @PutMapping("/endTour")
+    public String endTour(@RequestParam String tourId){
+        return bookingService.handleEndTour(tourId);
+    }
+
     @GetMapping("/history")
     public ResponseEntity<DataResponse<BookingResponse>> getHistory(@RequestParam int page,
                                                                     @RequestParam int size,

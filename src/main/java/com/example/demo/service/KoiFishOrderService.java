@@ -57,8 +57,9 @@ public class KoiFishOrderService {
         order.setCreateAt(new Date());
         order.setCustomer(customer);
         order.setBooking(booking);
-        order.setTotalPrice(0);
-        order.setPaidMoney(0);
+        order.setTotalPrice(koiFishOrderRequest.getTotalPrice());
+        order.setPaidMoney(koiFishOrderRequest.getPaidMoney());
+        order.setDeliveringDate(null);
         order.setStatus(OrderEnum.PENDING);
         order.setConsulting(account);
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
@@ -95,8 +96,8 @@ public class KoiFishOrderService {
         order.setCreateAt(new Date());
         order.setCustomer(customer);
         order.setCustomBooking(customBooking);
-        order.setTotalPrice(0);
-        order.setPaidMoney(0);
+        order.setTotalPrice(koiFishOrderBookingRequest.getTotalPrice());
+        order.setPaidMoney(koiFishOrderBookingRequest.getPaidMoney());
         order.setStatus(OrderEnum.PENDING);
         order.setConsulting(account);
         List<ShoppingCart> orderDetailsList = new ArrayList<>();
@@ -193,6 +194,16 @@ public class KoiFishOrderService {
 
         return order;
     }
+
+    public KoiFishOrder getOrderByOrderId(String orderId) {
+        KoiFishOrder order = koiFishOrderRepository.findByKoiFishOrderId(orderId);
+
+        if(order == null) {
+            throw new NotFoundException("Order not found!");
+        }
+
+        return order;
+    }
     public KoiFishOrder getOrderByCustomBookingId(String id) {
         CustomBooking customBooking = customBookingRepository.findCustomBookingByCustomBookingId(id);
             return koiFishOrderRepository.findOrderById(customBooking.getKoiFishOrder().getId());
@@ -227,11 +238,11 @@ public class KoiFishOrderService {
 
         return koiFishOrderRepository.save(oldOrder);
     }
-    public KoiFishOrder deliveringOrder(String notes,long id) {
+    public KoiFishOrder deliveringOrder(Date date,long id) {
         KoiFishOrder oldOrder = koiFishOrderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found!"));
         oldOrder.setStatus(OrderEnum.DELIVERING);
-        oldOrder.setNotes(notes);
+        oldOrder.setDeliveringDate(date);
         return koiFishOrderRepository.save(oldOrder);
     }
     public KoiFishOrder doneOrder(long id) {

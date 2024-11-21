@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -69,6 +70,14 @@ public class KoiFishOrderAPI {
         KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
         return ResponseEntity.ok(order);
     }
+
+    @GetMapping("{orderId}")
+    public ResponseEntity<KoiFishOrder> getOrderByOrderId(@PathVariable String orderId) {
+        KoiFishOrder order = koiFishOrderService.getOrderByOrderId(orderId);
+
+        return ResponseEntity.ok(order);
+    }
+
     @GetMapping("all")
     public ResponseEntity<OrderResponse> getAll(@RequestParam int page, @RequestParam int size) {
         OrderResponse order = koiFishOrderService.getAllOrder(page,size);
@@ -82,8 +91,8 @@ public class KoiFishOrderAPI {
         return ResponseEntity.ok(confirmedOrder);
     }
     @PutMapping("delivering/{id}")
-    public ResponseEntity updateDeliveringOrder(@RequestBody String notes,@PathVariable long id) {
-        KoiFishOrder confirmedOrder = koiFishOrderService.deliveringOrder(notes,id);
+    public ResponseEntity updateDeliveringOrder(@RequestBody Date deliveringDate, @PathVariable long id) {
+        KoiFishOrder confirmedOrder = koiFishOrderService.deliveringOrder(deliveringDate,id);
         return ResponseEntity.ok(confirmedOrder);
     }
     @PutMapping("done/{id}")

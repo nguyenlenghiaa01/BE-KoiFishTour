@@ -15,6 +15,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/feedback")
@@ -50,6 +52,13 @@ public class FeedBackAPI {
             @RequestParam int size) {
         DataResponse<FeedbackResponse> feedbackResponse = feedbackService.getAllFeedback(page, size);
         return ResponseEntity.ok(feedbackResponse);
+    }
+
+    @GetMapping("/bookingId")
+    public ResponseEntity<Feedback> getFeedBackByBookingId(@RequestParam String bookingId) {
+        Feedback feedback = feedbackService.getFeedBackByBookingId(bookingId);
+
+        return ResponseEntity.ok(feedback);
     }
 
     @PreAuthorize("hasAuthority('CUSTOMER')")

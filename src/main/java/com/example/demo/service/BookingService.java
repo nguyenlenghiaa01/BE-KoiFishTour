@@ -174,11 +174,11 @@ public class BookingService {
             throw new NotFoundException("Customer not found!");
         }
 
-        Page<Booking> bookingPage = bookingRepository.findByStatusAndAccount_Code("PAID", id, PageRequest.of(page, size));
+        Page<Booking> bookingPage = bookingRepository.findAllByAccount_Code(id, PageRequest.of(page, size));
         List<BookingResponses> activeBookings = new ArrayList<>();
 
         for (Booking booking : bookingPage.getContent()) {
-            if (!booking.isDeleted()) {
+            if (booking.getStatus().equals("PAID") || booking.getStatus().equals("DONE")) {
                 BookingResponses bookingResponse = new BookingResponses();
                 bookingResponse.setBookingId(booking.getBookingId());
                 bookingResponse.setEmail(booking.getEmail());
@@ -258,6 +258,22 @@ public class BookingService {
         dataResponse.setTotalPages(bookingPage.getTotalPages());
 
         return dataResponse;
+    }
+
+    public String handleEndTour(String tourId) {
+        List<Booking> bookings = bookingRepository.findAllByTour_TourId(tourId);
+
+        if (bookings.isEmpty()) {
+            return "No bookings found for the given tour.";
+        }
+
+        for (Booking booking : bookings) {
+            booking.setStatus("DONE");
+        }
+
+        bookingRepository.saveAll(bookings);
+
+        return "End this trip successfully!";
     }
 
     public DataResponse<BookingsResponse> getAllBooking(@RequestParam int page, @RequestParam int size) {

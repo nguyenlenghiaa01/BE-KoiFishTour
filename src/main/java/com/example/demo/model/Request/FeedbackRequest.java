@@ -14,5 +14,5 @@ public class FeedbackRequest {
 
     long accountId;
 
-    private long bookingId;
+    private String bookingId;
 }

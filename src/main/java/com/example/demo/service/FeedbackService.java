@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Account;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Feedback;
 import com.example.demo.exception.DuplicateEntity;
@@ -7,6 +8,7 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.FeedbackRequest;
 import com.example.demo.model.Response.DataResponse;
 import com.example.demo.model.Response.FeedbackResponse;
+import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.FeedbackRepository;
 import org.modelmapper.ModelMapper;
@@ -31,14 +33,23 @@ public class FeedbackService {
     @Autowired
     BookingRepository bookingRepository;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     public Feedback createNewFeedback(FeedbackRequest feedbackRequest) {
         Feedback feedback = new Feedback();
-        Booking booking = bookingRepository.findById(feedbackRequest.getBookingId())
-                .orElseThrow(() -> new NotFoundException("Booking Id not exist!"));
+        Booking booking = bookingRepository.findBookingByBookingId(feedbackRequest.getBookingId());
+        if(booking == null) {
+            throw new NotFoundException("Booking not found!");
+        }
+        Account customer = accountRepository.findAccountById(feedbackRequest.getAccountId());
+        if(customer == null) {
+            throw new NotFoundException("Customer not found!");
+        }
 
         feedback.setComment(feedbackRequest.getComment());
         feedback.setRating(feedbackRequest.getRating());
-        feedback.setCustomer(authenticationService.getCurrentAccount());
+        feedback.setCustomer(customer);
         feedback.setBooking(booking);
         try {
             return feedbackRepository.save(feedback);
@@ -74,7 +85,10 @@ public class FeedbackService {
         return dataResponse;
     }
 
-
+    public Feedback getFeedBackByBookingId(String bookingId) {
+        Feedback feedback = feedbackRepository.findFeedbackByBooking_BookingId(bookingId);
+        return feedback;
+    }
 
     public DataResponse<FeedbackResponse> getFeedBack(@RequestParam int page,@RequestParam int size) {
         Page<FeedbackResponse> feedbackResponsePage = feedbackRepository.findAllFeedbackResponses(PageRequest.of(page, size));
