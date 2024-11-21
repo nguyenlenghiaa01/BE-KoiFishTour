@@ -43,4 +43,6 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 //            "ORDER BY YEAR(t.createAt) , MONTH(t.createAt)")
 //    List<Object[]> calculateMonthlyRevenue(@Param("userId") Long userID);
 
+    Page<Booking> findAllByTour_TourId(String tourId, Pageable pageable);
+
 }

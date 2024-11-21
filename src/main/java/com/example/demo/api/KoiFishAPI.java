@@ -1,9 +1,11 @@
 package com.example.demo.api;
 
+import com.example.demo.entity.Farm;
 import com.example.demo.entity.KoiFish;
 
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.KoiFishByFarmResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.service.KoiFishService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -45,6 +48,19 @@ public class KoiFishAPI {
     public ResponseEntity<List<KoiFish>> get(long id){
         List<KoiFish>dataResponse = koiService.getKoiByFarmId(id);
         return ResponseEntity.ok(dataResponse);
+    }
+
+    @GetMapping("/list-koi/tour-id")
+    public ResponseEntity<Set<KoiFish>> getKoiFish(String tourId) {
+        Set<KoiFish> getFishes = koiService.getKoiByTourId(tourId);
+
+        return ResponseEntity.ok(getFishes);
+    }
+
+    @GetMapping("/list-koi/booking-id")
+    public ResponseEntity<List<KoiFishByFarmResponse>> getKoiFishByBooking(String bookingId) {
+        List<KoiFishByFarmResponse> getFishes = koiService.getKoiByBookingId(bookingId);
+        return ResponseEntity.ok(getFishes);
     }
 
     @GetMapping("/listKoiFish")

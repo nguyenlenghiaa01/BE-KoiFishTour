@@ -22,5 +22,5 @@ public interface TourRepository extends JpaRepository<Tour,Long> , JpaSpecificat
 
     List<Tour> findToursByStartDate(LocalDate startDate);
 
-
+    Page<Tour> findToursByAccount_Code(String id, Pageable pageable);
 }

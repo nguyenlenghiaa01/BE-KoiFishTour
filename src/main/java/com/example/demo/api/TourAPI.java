@@ -15,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -58,6 +60,13 @@ public class TourAPI {
         simpMessagingTemplate.convertAndSend("/topic/tour","OPEN TOUR");
         return  ResponseEntity.ok(tour);
     }
+
+    @GetMapping("/consulting")
+    public ResponseEntity<DataResponse<TourResponse>> getTourByConsulting(@RequestParam String consulId, @RequestParam int page, @RequestParam int size) {
+        DataResponse<TourResponse> dataResponse = tourService.getTourByConsulting(consulId, page, size);
+        return ResponseEntity.ok(dataResponse);
+    }
+
 
     @GetMapping("/get/all")
     public ResponseEntity<DataResponse<TourResponses>> getAll(@RequestParam int page, @RequestParam int size){

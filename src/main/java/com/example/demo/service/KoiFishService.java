@@ -7,6 +7,7 @@ import com.example.demo.entity.Tour;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.KoiFishByFarmResponse;
 import com.example.demo.model.Response.KoiFishResponse;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +58,50 @@ public class KoiFishService {
             throw  new NotFoundException("Koi fish not found");
         }
         return koiFish;
+    }
+
+    public Set<KoiFish> getKoiByTourId(String tourId) {
+        Tour tour = tourRepository.findTourByTourId(tourId);
+        if(tour == null) {
+            throw new NotFoundException("Tour not found!");
+        }
+        Set<Farm> farms = tour.getFarms();
+        if (farms == null || farms.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        Set<KoiFish> uniqueKoiFishes = new HashSet<>();
+
+        for (Farm farm : farms) {
+            List<KoiFish> fishFromFarm = farm.getKoiFishes();
+            if (fishFromFarm != null) {
+                uniqueKoiFishes.addAll(fishFromFarm); // Add all fish to the list
+            }
+        }
+
+        return uniqueKoiFishes;
+    }
+
+    public List<KoiFishByFarmResponse> getKoiByBookingId(String bookingId) {
+        Booking booking = bookingRepository.findBookingByBookingId(bookingId);
+        Tour tour = booking.getTour();
+        if(tour == null) {
+            throw new NotFoundException("Tour not found!");
+        }
+        Set<Farm> farms = tour.getFarms();
+        if (farms == null || farms.isEmpty()) {
+            throw new NotFoundException("Farm of this tour not found!");
+        }
+
+        List<KoiFishByFarmResponse> responseData = new ArrayList<>();
+        for(Farm farm : farms) {
+            KoiFishByFarmResponse koiFishByFarmResponse = new KoiFishByFarmResponse();
+            koiFishByFarmResponse.setFarmName(farm.getFarmName());
+            koiFishByFarmResponse.setKoiFishList(farm.getKoiFishes());
+
+            responseData.add(koiFishByFarmResponse);
+        }
+        return responseData;
     }
 
     public DataResponse<KoiFishResponse> getAllKoi(@RequestParam int page, @RequestParam int size){

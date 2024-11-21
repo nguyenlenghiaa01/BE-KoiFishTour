@@ -224,31 +224,34 @@ public class BookingService {
         return dataResponse;
     }
 
-    public DataResponse<BookingResponsess> getAllBookingByConsulting(@RequestParam int page,
+    public DataResponse<BookingForConsulting> getBookingByConsultingTour(@RequestParam int page,
                                                                      @RequestParam int size,
-                                                                     @RequestParam long tourId) {
-        Page<Booking> bookingPage = bookingRepository.findByTourIdAndIsDeletedFalse(tourId, PageRequest.of(page, size));
+                                                                     @RequestParam String tourId) {
+        Page<Booking> bookingPage = bookingRepository.findAllByTour_TourId(tourId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
+        List<BookingForConsulting> activeBookings = new ArrayList<>();
 
-        List<BookingResponsess> activeBookings = new ArrayList<>();
-        for (Booking booking : bookings) {
-            BookingResponsess bookingResponse = new BookingResponsess();
-            bookingResponse.setBookingId(booking.getBookingId());
-            bookingResponse.setEmail(booking.getEmail());
-            bookingResponse.setFullName(booking.getFullName());
-            bookingResponse.setStatus(booking.getStatus());
-            bookingResponse.setAdult(booking.getAdult());
-            bookingResponse.setInfant(booking.getInfant());
-            bookingResponse.setPrice(booking.getPrice());
-            bookingResponse.setPhone(booking.getPhone());
-            bookingResponse.setTourId(booking.getTour().getId());
-            bookingResponse.setCustomerId(booking.getAccount().getId());
-            bookingResponse.setBookingDate(booking.getBookingDate());
+        for(Booking booking : bookings) {
+            if(!booking.getStatus().equals("DONE")) {
+                BookingForConsulting bookingResponse = new BookingForConsulting();
+                Account customer = accountRepository.findAccountById(booking.getAccount().getId());
 
-            activeBookings.add(bookingResponse);
+                bookingResponse.setBookingId(booking.getBookingId());
+                bookingResponse.setStatus(booking.getStatus());
+                bookingResponse.setPrice(booking.getPrice());
+                bookingResponse.setBookingDate(booking.getBookingDate());
+                bookingResponse.setAdult(booking.getAdult());
+                bookingResponse.setChild(booking.getChild());
+                bookingResponse.setInfant(booking.getInfant());
+                bookingResponse.setCustomer(customer);
+
+
+
+                activeBookings.add(bookingResponse);
+            }
         }
 
-        DataResponse<BookingResponsess> dataResponse = new DataResponse<>();
+        DataResponse<BookingForConsulting> dataResponse = new DataResponse<>();
         dataResponse.setListData(activeBookings);
         dataResponse.setPageNumber(bookingPage.getNumber());
         dataResponse.setTotalElements(bookingPage.getTotalElements());

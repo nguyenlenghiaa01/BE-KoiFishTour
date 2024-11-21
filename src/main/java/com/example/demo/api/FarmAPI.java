@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "api")
 public class FarmAPI {
 
-    @Autowired
-    SimpMessagingTemplate simpMessagingTemplate;
+//    @Autowired
+//    SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     FarmService farmService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<Farm> create(@Valid @RequestBody FarmRequest farmRequest) {
         Farm newFarm = farmService.createNewFarm(farmRequest);
-        simpMessagingTemplate.convertAndSend("/topic/farm","CREATE NEW FARM");
+//        simpMessagingTemplate.convertAndSend("/topic/farm","CREATE NEW FARM");
 
         return ResponseEntity.ok(newFarm);
     }
@@ -44,20 +44,20 @@ public class FarmAPI {
         return ResponseEntity.ok(farm);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("{id}")
     public ResponseEntity<Farm> updateFarm(@Valid @RequestBody FarmRequest farm, @PathVariable long id) {
             Farm updatedFarm = farmService.updateFarm(farm, id);
-        simpMessagingTemplate.convertAndSend("/topic/farm","UPDATE FARM");
+//        simpMessagingTemplate.convertAndSend("/topic/farm","UPDATE FARM");
 
             return ResponseEntity.ok(updatedFarm);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<Farm> deleteFarm(@PathVariable long id) {
             Farm deletedFarm = farmService.deleteFarm(id);
-        simpMessagingTemplate.convertAndSend("/topic/farm","DELETE FARM");
+//        simpMessagingTemplate.convertAndSend("/topic/farm","DELETE FARM");
             return ResponseEntity.ok(deletedFarm);
     }
 }

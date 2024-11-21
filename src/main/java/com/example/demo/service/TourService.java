@@ -87,7 +87,44 @@ public class TourService {
         return tour1;
     }
 
+    public DataResponse<TourResponse> getTourByConsulting(String consulId, int page, int size) {
+        Page<Tour> tourPage = tourRepository.findToursByAccount_Code(consulId, PageRequest.of(page, size));
+        List<Tour> tours = tourPage.getContent();
+        List<TourResponse> tourResponses = new ArrayList<>();
 
+        for (Tour tour : tours) {
+            if(!tour.isDeleted()) {
+                TourResponse tourResponse = new TourResponse();
+                tourResponse.setId(tour.getId());
+                tourResponse.setTourId(tour.getTourId());
+                tourResponse.setDeleted(tour.isDeleted());
+                tourResponse.setTourName(tour.getTourName());
+                tourResponse.setStartDate(tour.getStartDate());
+                tourResponse.setDuration(tour.getDuration());
+                tourResponse.setImage(tour.getImage());
+                tourResponse.setStatus(tour.getStatus());
+                tourResponse.setFarms(tour.getFarms());
+                tourResponse.setPrice(tour.getPrice());
+                tourResponse.setSchedule(tour.getSchedule());
+                tourResponse.setTime(tour.getTime());
+                tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
+                tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
+                tourResponse.setDescription(tour.getDescription());
+                if (tour.getAccount() != null) {
+                    tourResponse.setConsultingId(tour.getAccount().getId());
+                }
+                tourResponses.add(tourResponse);
+            }
+        }
+
+
+        DataResponse<TourResponse> dataResponse = new DataResponse<TourResponse>();
+        dataResponse.setListData(tourResponses);
+        dataResponse.setTotalElements(tourPage.getTotalElements());
+        dataResponse.setPageNumber(tourPage.getNumber());
+        dataResponse.setTotalPages(tourPage.getTotalPages());
+        return dataResponse;
+    }
 
     public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
         Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("OPEN", PageRequest.of(page, size));
