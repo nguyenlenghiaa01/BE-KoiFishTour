@@ -33,7 +33,6 @@ public class QuotationService {
     @Autowired
     AuthenticationService authenticationService;
 
-    private ModelMapper modelMapper = new ModelMapper();
 
     public Quotation createQuotation(QuotationRequest quotationRequest) {
         Quotation quotation = new Quotation();

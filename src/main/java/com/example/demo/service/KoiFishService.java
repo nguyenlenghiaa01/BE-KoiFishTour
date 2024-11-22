@@ -36,6 +36,11 @@ public class KoiFishService {
     @Autowired
     OpenTourRepository openTourRepository;
 
+    @Autowired
+    CustomBookingRepository customBookingRepository;
+    @Autowired
+    CustomTourRepository customTourRepository;
+
 
     public KoiFish createNewKoi(KoiFishRequest koiFishRequest) {
         KoiFish koiFish = new KoiFish();
@@ -95,6 +100,30 @@ public class KoiFishService {
             throw new NotFoundException("Tour not found!");
         }
         Set<Farm> farms = tour.getFarms();
+        if (farms == null || farms.isEmpty()) {
+            throw new NotFoundException("Farm of this tour not found!");
+        }
+
+        List<KoiFishByFarmResponse> responseData = new ArrayList<>();
+        for(Farm farm : farms) {
+            KoiFishByFarmResponse koiFishByFarmResponse = new KoiFishByFarmResponse();
+            koiFishByFarmResponse.setFarmName(farm.getFarmName());
+            koiFishByFarmResponse.setKoiFishList(farm.getKoiFishes());
+
+            responseData.add(koiFishByFarmResponse);
+        }
+        return responseData;
+    }
+
+    public List<KoiFishByFarmResponse> getKoiByCustomBookingId(String id) {
+        CustomBooking booking = customBookingRepository.findCustomBookingByCustomBookingId(id);
+        if(booking == null){
+            throw new NotFoundException("Custom Booking not found");
+        }
+        CustomTour customTour = customTourRepository.findById(booking.getCustomTour().getId()).orElseThrow(() -> new NotFoundException("Custom tour not found!"));
+
+
+        Set<Farm> farms = customTour.getFarms();
         if (farms == null || farms.isEmpty()) {
             throw new NotFoundException("Farm of this tour not found!");
         }
