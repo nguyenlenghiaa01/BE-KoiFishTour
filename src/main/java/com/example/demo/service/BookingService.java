@@ -201,7 +201,7 @@ public class BookingService {
                     tourResponse.setPrice(tour.getPrice());
                     tourResponse.setImage(tour.getImage());
                     tourResponse.setDuration(tour.getDuration());
-                    tourResponse.setTourId(tour.getTour().getId());
+                    tourResponse.setTourId(tour.getTour().getTourId());
                     tourResponse.setTime(tour.getTime());
                     tourResponse.setSaleId(tour.getSale().getId());
                     tourResponse.setPerAdultPrice(tour.getPerAdultPrice());

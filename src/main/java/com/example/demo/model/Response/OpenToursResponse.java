@@ -9,7 +9,7 @@ import java.util.Set;
 @Data
 public class OpenToursResponse {
     private long id;
-    private long tourId;
+    private String tourId;
     private long saleId;
     private String tourName;
     private LocalDate startDate;

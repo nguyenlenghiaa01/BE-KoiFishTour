@@ -61,7 +61,7 @@ public class OpenTourService {
             if (openTour.getStatus().equals("OPEN")) {
                 OpenToursResponse openTourResponse = new OpenToursResponse();
                 openTourResponse.setId(openTour.getId());
-                openTourResponse.setTourId(openTour.getTour().getId());
+                openTourResponse.setTourId(openTour.getTour().getTourId());
                 openTourResponse.setDescription(openTour.getDescription());
                 openTourResponse.setDuration(openTour.getDuration());
                 openTourResponse.setPrice(openTour.getPrice());
