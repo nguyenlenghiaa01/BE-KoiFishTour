@@ -126,7 +126,7 @@ public class TourService {
     }
 
     public DataResponse<TourResponse> getAllTour(@RequestParam int page, @RequestParam int size) {
-        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("OPEN", PageRequest.of(page, size));
+        Page<Tour> tourPage = tourRepository.findByStatusIgnoreCase("NOT OPEN", PageRequest.of(page, size));
         List<Tour> tours = tourPage.getContent();
         List<TourResponse> tourResponses = new ArrayList<>();
 
