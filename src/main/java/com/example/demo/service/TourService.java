@@ -204,7 +204,6 @@ public class TourService {
     }
 
     public DataResponse<OpenTourSearchResponse> searchTours(int page, int size, LocalDate startDate, BigDecimal min, BigDecimal max, Set<String> farms) {
-        // Nếu không có điều kiện tìm kiếm, trả về danh sách rỗng
         if (startDate == null && min == null && max == null && (farms == null || farms.isEmpty())) {
             DataResponse<OpenTourSearchResponse> emptyResponse = new DataResponse<>();
             emptyResponse.setListData(new ArrayList<>());
@@ -214,7 +213,6 @@ public class TourService {
             return emptyResponse;
         }
 
-        // Xử lý điều kiện tìm kiếm
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             farmSet.addAll(farms);
@@ -235,17 +233,19 @@ public class TourService {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
 
-        // Tìm danh sách Tour theo điều kiện
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
         List<OpenTourSearchResponse> openTourResponses = new ArrayList<>();
 
         for (Tour tour : tourPage.getContent()) {
             if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
-                List<OpenTour> openTours = openTourRepository.findByTourAndStatus(tour, "OPEN");
-                for (OpenTour openTour : openTours) {
+                // Tìm các OpenTour với trạng thái "OPEN" liên kết với Tour
+                Specification<OpenTour> openTourSpecification = OpenTourSpecification.hasTourAndStatus("OPEN");
+                Page<OpenTour> openTourPage = openTourRepository.findAll(openTourSpecification, PageRequest.of(page, size));
+
+                for (OpenTour openTour : openTourPage.getContent()) {
                     OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
                     openTourResponse.setId(openTour.getId());
-                    openTourResponse.setTourName(openTour.getTourName());
+                    openTourResponse.setTourName(openTour.getTour().getTourName());
                     openTourResponse.setStartDate(openTour.getStartDate());
                     openTourResponse.setPrice(openTour.getPrice());
                     openTourResponse.setDuration(openTour.getDuration());

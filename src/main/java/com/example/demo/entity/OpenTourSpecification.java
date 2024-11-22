@@ -34,6 +34,15 @@ public class OpenTourSpecification {
         };
     }
 
+    public static Specification<OpenTour> hasTourAndStatus(String status) {
+        return (root, query, criteriaBuilder) -> {
+            Join<OpenTour, Tour> tourJoin = root.join("tour"); // ánh xạ đến thuộc tính "tour"
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("status"), status), // status của OpenTour
+                    criteriaBuilder.equal(tourJoin.get("status"), "OPEN") // status của Tour
+            );
+        };
+    }
     public static Specification<OpenTour> hasFarms(Set<String> farms) {
         return (Root<OpenTour> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             Join<OpenTour, Tour> tourJoin = root.join("tour"); // Join OpenTour -> Tour
