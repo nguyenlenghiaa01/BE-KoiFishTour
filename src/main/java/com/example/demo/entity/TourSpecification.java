@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -77,6 +78,12 @@ public class TourSpecification {
         return (root, query, criteriaBuilder) -> {
             if (days <= 0) return criteriaBuilder.conjunction();
             return criteriaBuilder.equal(root.get("duration"), days + " days");
+        };
+    }
+    public static Specification<Tour> hasOpenTourStatus(String status) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Tour, OpenTour> openTourJoin = root.join("openTour", JoinType.LEFT); // Assuming "openTour" is the name of the relationship
+            return criteriaBuilder.equal(openTourJoin.get("status"), status);
         };
     }
 }

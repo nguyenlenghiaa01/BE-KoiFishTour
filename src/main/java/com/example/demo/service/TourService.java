@@ -219,6 +219,9 @@ public class TourService {
 
         Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"));
 
+        // Ensure that we only include Tours that have an associated OpenTour with status "OPEN"
+        specification = specification.and(TourSpecification.hasOpenTourStatus("OPEN"));
+
         if (startDate != null) {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
         }
@@ -267,6 +270,7 @@ public class TourService {
 
         return dataResponse;
     }
+
 
 
 
