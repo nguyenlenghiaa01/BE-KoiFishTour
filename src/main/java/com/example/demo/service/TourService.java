@@ -253,6 +253,7 @@ public class TourService {
             openTourResponse.setSchedule(openTour.getSchedule());
             openTourResponse.setTime(openTour.getTime());
             openTourResponse.setFarmList(tour.getFarms());
+            openTourResponse.setTourId(tour.getTourId());
 
             openTourResponses.add(openTourResponse);
         }
