@@ -238,25 +238,25 @@ public class TourService {
 
         for (Tour tour : tourPage.getContent()) {
             if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
-                // Tìm các OpenTour với trạng thái "OPEN" liên kết với Tour
-                Specification<OpenTour> openTourSpecification = OpenTourSpecification.hasTourAndStatus("OPEN");
-                Page<OpenTour> openTourPage = openTourRepository.findAll(openTourSpecification, PageRequest.of(page, size));
+                // Truy cập trực tiếp vào openTours của Tour
+                List<OpenTour> openTours = tour.getOpenTours();
+                for (OpenTour openTour : openTours) {
+                    if ("OPEN".equals(openTour.getStatus())) {
+                        OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
+                        openTourResponse.setId(openTour.getId());
+                        openTourResponse.setTourName(openTour.getTour().getTourName()); // Không cần thiết vì đã có thông tin tour trong openTour
+                        openTourResponse.setStartDate(openTour.getStartDate());
+                        openTourResponse.setPrice(openTour.getPrice());
+                        openTourResponse.setDuration(openTour.getDuration());
+                        openTourResponse.setStatus(openTour.getStatus());
+                        openTourResponse.setImage(openTour.getImage());
+                        openTourResponse.setDescription(openTour.getDescription());
+                        openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
+                        openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
+                        openTourResponse.setSaleId(openTour.getSale().getId());
 
-                for (OpenTour openTour : openTourPage.getContent()) {
-                    OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
-                    openTourResponse.setId(openTour.getId());
-                    openTourResponse.setTourName(openTour.getTour().getTourName());
-                    openTourResponse.setStartDate(openTour.getStartDate());
-                    openTourResponse.setPrice(openTour.getPrice());
-                    openTourResponse.setDuration(openTour.getDuration());
-                    openTourResponse.setStatus(openTour.getStatus());
-                    openTourResponse.setImage(openTour.getImage());
-                    openTourResponse.setDescription(openTour.getDescription());
-                    openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
-                    openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
-                    openTourResponse.setSaleId(openTour.getSale().getId());
-
-                    openTourResponses.add(openTourResponse);
+                        openTourResponses.add(openTourResponse);
+                    }
                 }
             }
         }
@@ -269,6 +269,7 @@ public class TourService {
 
         return dataResponse;
     }
+
 
 
 
