@@ -218,47 +218,40 @@ public class TourService {
             farmSet.addAll(farms);
         }
 
-        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"))
-                .and(TourSpecification.hasOpenTourStatus("OPEN"));
+        Specification<OpenTour> specification = Specification.where(OpenTourSpecification.hasStatus("OPEN"));
 
         if (startDate != null) {
-            specification = specification.and(TourSpecification.hasStartDate(startDate));
+            specification = specification.and(OpenTourSpecification.hasStartDate(startDate));
         }
 
         if (min != null || max != null) {
-            specification = specification.and(TourSpecification.hasPriceBetween(min, max));
+            specification = specification.and(OpenTourSpecification.hasPriceBetween(min, max));
         }
 
         if (!farmSet.isEmpty()) {
-            specification = specification.and(TourSpecification.hasFarms(farmSet));
+            specification = specification.and(OpenTourSpecification.hasFarms(farmSet));
         }
 
-        Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
+        Page<OpenTour> openTourPage = openTourRepository.findAll(specification, PageRequest.of(page, size));
         List<OpenTourSearchResponse> openTourResponses = new ArrayList<>();
 
-        for (Tour tour : tourPage.getContent()) {
-            if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
-                // Truy cập trực tiếp vào openTours của Tour
-                List<OpenTour> openTours = tour.getOpenTours();
-                for (OpenTour openTour : openTours) {
-                    if ("OPEN".equals(openTour.getStatus())) {
-                        OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
-                        openTourResponse.setId(openTour.getId());
-                        openTourResponse.setTourName(openTour.getTour().getTourName()); // Không cần thiết vì đã có thông tin tour trong openTour
-                        openTourResponse.setStartDate(openTour.getStartDate());
-                        openTourResponse.setPrice(openTour.getPrice());
-                        openTourResponse.setDuration(openTour.getDuration());
-                        openTourResponse.setStatus(openTour.getStatus());
-                        openTourResponse.setImage(openTour.getImage());
-                        openTourResponse.setDescription(openTour.getDescription());
-                        openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
-                        openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
-                        openTourResponse.setSaleId(openTour.getSale().getId());
+        for (OpenTour openTour : openTourPage.getContent()) {
+            OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
+            openTourResponse.setId(openTour.getId());
+            openTourResponse.setTourName(openTour.getTour().getTourName());
+            openTourResponse.setStartDate(openTour.getStartDate());
+            openTourResponse.setPrice(openTour.getPrice());
+            openTourResponse.setDuration(openTour.getTour().getDuration());  // Lấy thông tin duration từ Tour
+            openTourResponse.setStatus(openTour.getStatus());
+            openTourResponse.setImage(openTour.getImage());
+            openTourResponse.setDescription(openTour.getDescription());
+            openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
+            openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
+            openTourResponse.setSaleId(openTour.getSale().getId()); // Assumed sale is an entity
+            openTourResponse.setSchedule(openTour.getSchedule());
+            openTourResponse.setTime(openTour.getTime());
 
-                        openTourResponses.add(openTourResponse);
-                    }
-                }
-            }
+            openTourResponses.add(openTourResponse);
         }
 
         DataResponse<OpenTourSearchResponse> dataResponse = new DataResponse<>();
@@ -269,12 +262,6 @@ public class TourService {
 
         return dataResponse;
     }
-
-
-
-
-
-
 
 
     public DataResponse<TourResponse> getAllTourPrice(
