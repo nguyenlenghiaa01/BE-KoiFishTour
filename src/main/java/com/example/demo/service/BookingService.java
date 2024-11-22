@@ -225,40 +225,26 @@ public class BookingService {
         return dataResponse;
     }
 
-    public DataResponse<BookingForConsulting> getBookingByConsultingTour(@RequestParam int page,
-                                                                     @RequestParam int size,
-                                                                     @RequestParam long openTourId) {
-        Page<Booking> bookingPage = bookingRepository.findAllByOpenTour_Id(openTourId, PageRequest.of(page, size));
-        List<Booking> bookings = bookingPage.getContent();
-        List<BookingForConsulting> activeBookings = new ArrayList<>();
+    public List<BookingForConsulting> getBookingByConsultingTour(@RequestParam String consulId) {
+        Tour tour = tourRepository.findTourByAccount_Code(consulId);
+        List<BookingForConsulting> mapOpenTour = new ArrayList<>();
 
-        for(Booking booking : bookings) {
-            if(!booking.getStatus().equals("DONE")) {
-                BookingForConsulting bookingResponse = new BookingForConsulting();
-                Account customer = accountRepository.findAccountById(booking.getAccount().getId());
+        if(tour == null) {
+            throw new NotFoundException("Tour not found!");
+        }
+        List<OpenTour> openTours = openTourRepository.findAllByTour_TourId(tour.getTourId());
 
-                bookingResponse.setBookingId(booking.getBookingId());
-                bookingResponse.setStatus(booking.getStatus());
-                bookingResponse.setPrice(booking.getPrice());
-                bookingResponse.setBookingDate(booking.getBookingDate());
-                bookingResponse.setAdult(booking.getAdult());
-                bookingResponse.setChild(booking.getChild());
-                bookingResponse.setInfant(booking.getInfant());
-                bookingResponse.setCustomer(customer);
+        for(OpenTour openTour : openTours) {
+                List<Booking> getBooking = bookingRepository.findAllByOpenTour_Id(openTour.getId());
+                BookingForConsulting bfcon = new BookingForConsulting();
+                bfcon.setOpenTour(openTour);
+                bfcon.setBookingOfOpenTour(getBooking);
 
+                mapOpenTour.add(bfcon);
 
-
-                activeBookings.add(bookingResponse);
-            }
         }
 
-        DataResponse<BookingForConsulting> dataResponse = new DataResponse<>();
-        dataResponse.setListData(activeBookings);
-        dataResponse.setPageNumber(bookingPage.getNumber());
-        dataResponse.setTotalElements(bookingPage.getTotalElements());
-        dataResponse.setTotalPages(bookingPage.getTotalPages());
-
-        return dataResponse;
+        return mapOpenTour;
     }
 
     public String handleEndTour(long tourId) {

@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.OpenTour;
 import com.example.demo.entity.Tour;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenToursRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.OpenTourSearchResponse;
 import com.example.demo.model.Response.OpenToursResponse;
+import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.OpenTourRepository;
 import com.example.demo.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ public class OpenTourService {
     TourRepository tourRepository;
     @Autowired
     AuthenticationService authenticationService;
+    @Autowired
+    BookingRepository bookingRepository;
 
     public OpenTour createNewOpenTour(OpenToursRequest openToursRequest) {
         Tour tour = tourRepository.findTourById(openToursRequest.getTourId());
@@ -115,4 +120,62 @@ public class OpenTourService {
         tourRepository.save(tour);
         return openTourRepository.save(openTour);
     }
+
+    public OpenTourSearchResponse getById(long id) {
+        // Fetch the OpenTour entity by ID or throw an exception if not found
+        OpenTour openTour = openTourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Open tour not found!"));
+
+        // Map the OpenTour entity to OpenToursResponse
+        OpenTourSearchResponse openToursResponse = new OpenTourSearchResponse();
+        openToursResponse.setId(openTour.getId());
+        openToursResponse.setTourId(openTour.getTour().getTourId());
+        openToursResponse.setSaleId(openTour.getSale().getId());
+        openToursResponse.setTourName(openTour.getTourName());
+        openToursResponse.setStartDate(openTour.getStartDate());
+        openToursResponse.setDuration(openTour.getDuration());
+        openToursResponse.setImage(openTour.getImage());
+        openToursResponse.setStatus(openTour.getStatus());
+        openToursResponse.setPrice(openTour.getPrice());
+        openToursResponse.setPerAdultPrice(openTour.getPerAdultPrice());
+        openToursResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
+        openToursResponse.setTime(openTour.getTime());
+        openToursResponse.setDescription(openTour.getDescription());
+        openToursResponse.setSchedule(openTour.getSchedule());
+        openToursResponse.setFarmList(openTour.getTour().getFarms());
+
+        return openToursResponse;
+    }
+
+    public String viewSchedule(long id) {
+        OpenTour openTour = openTourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Open tour not found!"));
+
+        return openTour.getSchedule();
+    }
+
+    public OpenTour setToDone(long id) {
+        OpenTour openTour = openTourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Open tour not found!"));
+        Tour tour = openTour.getTour();
+        tour.setStatus("NOT OPEN");
+        List<Booking> bookings = openTour.getBookings();
+
+        for (Booking booking : bookings) {
+            booking.setStatus("DONE");
+        }
+
+        openTour.setBookings(bookings);
+        openTour.setStatus("DONE");
+
+        return openTourRepository.save(openTour);
+    }
+
+    public List<Booking> getBookingsByOpenTour(long id) {
+        OpenTour openTour = openTourRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Open tour not found!"));
+
+        return  openTour.getBookings();
+    }
+
 }

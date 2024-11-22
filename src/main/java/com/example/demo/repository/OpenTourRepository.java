@@ -13,4 +13,6 @@ import java.util.List;
 public interface OpenTourRepository extends JpaRepository<OpenTour,Long>, JpaSpecificationExecutor<OpenTour> {
     OpenTour findOpenTourById(long id);
     List<OpenTour> findByTourAndStatus(Tour tour, String status);
+
+    List<OpenTour> findAllByTour_TourId(String tourId);
 }

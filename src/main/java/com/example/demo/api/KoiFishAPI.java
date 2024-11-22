@@ -58,7 +58,7 @@ public class KoiFishAPI {
     }
 
     @GetMapping("/list-koi/booking-id")
-    public ResponseEntity<List<KoiFishByFarmResponse>> getKoiFishByBooking(@PathVariable String bookingId) {
+    public ResponseEntity<List<KoiFishByFarmResponse>> getKoiFishByBooking(@RequestParam String bookingId) {
         List<KoiFishByFarmResponse> getFishes = koiService.getKoiByBookingId(bookingId);
         return ResponseEntity.ok(getFishes);
     }

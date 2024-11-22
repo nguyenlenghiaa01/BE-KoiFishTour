@@ -81,11 +81,10 @@ public class BookingAPI {
         return ResponseEntity.ok(bookingResponse);
     }
     @GetMapping("/Consulting")
-    public ResponseEntity<DataResponse<BookingForConsulting>> getBooking(@RequestParam int page,
-                                                                    @RequestParam int size,
-                                                                    @RequestParam long tourId) {
-        DataResponse<BookingForConsulting> bookingResponse = bookingService.getBookingByConsultingTour(page, size, tourId);
-        return ResponseEntity.ok(bookingResponse);
+    public ResponseEntity<List<BookingForConsulting>> getBooking(@RequestParam String consulId) {
+        List<BookingForConsulting> responeOpenTourBooking = bookingService.getBookingByConsultingTour(consulId);
+
+        return ResponseEntity.ok(responeOpenTourBooking);
     }
 
     @DeleteMapping("{id}")

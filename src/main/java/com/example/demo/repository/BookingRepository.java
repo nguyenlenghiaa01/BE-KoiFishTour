@@ -38,5 +38,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     // Find all bookings by openTour ID (instead of Tour ID)
     Page<Booking> findAllByOpenTour_Id(Long openTourId, Pageable pageable);
 
-    List<Booking> findAllByOpenTour_Id(Long openTourId);
+    List<Booking> findAllByOpenTour_Id(long openTourId);
+
 }
