@@ -5,13 +5,11 @@ import com.example.demo.Enum.Role;
 import com.example.demo.Enum.TransactionsEnum;
 import com.example.demo.entity.*;
 import com.example.demo.exception.DateException;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.EmailDetail;
 import com.example.demo.model.Request.BookingRequest;
 import com.example.demo.model.Response.*;
 import com.example.demo.repository.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,8 +48,11 @@ public class BookingService {
     @Autowired
     BookingService bookingService;
 
+    @Autowired
+    OpenTourRepository openTourRepository;
+
     public Booking createNewBooking(BookingRequest bookingRequest) {
-        Tour tour = tourRepository.findTourByTourId(bookingRequest.getTourId());
+        OpenTour tour = openTourRepository.findOpenTourById(bookingRequest.getOpenTourId());
         if (tour == null) {
             throw new NotFoundException("Not found tour");
         }
@@ -68,8 +69,8 @@ public class BookingService {
         LocalDate tourEndDate = tourStartDate.plusDays(tourDurationInDays);
 
         for (Booking existingBooking : customer.getBookings()) {
-            LocalDate existingBookingStartDate = existingBooking.getTour().getStartDate();
-            String existingDurationString = existingBooking.getTour().getDuration();
+            LocalDate existingBookingStartDate = existingBooking.getOpenTour().getStartDate();
+            String existingDurationString = existingBooking.getOpenTour().getDuration();
             int existingTourDurationInDays = parseDurationToDays(existingDurationString);
             LocalDate existingBookingEndDate = existingBookingStartDate.plusDays(existingTourDurationInDays);
 
@@ -94,7 +95,7 @@ public class BookingService {
         booking.setChild(bookingRequest.getChild());
         booking.setAdult(bookingRequest.getAdult());
         booking.setInfant(bookingRequest.getInfant());
-        booking.setTour(tour);
+        booking.setOpenTour(tour);
         booking.setAccount(customer);
 
 
@@ -150,7 +151,7 @@ public class BookingService {
             bookingResponse.setInfant(booking.getInfant());
             bookingResponse.setPrice(booking.getPrice());
             bookingResponse.setPhone(booking.getPhone());
-            bookingResponse.setTourId(booking.getTour().getId());
+            bookingResponse.setOpenTourId(booking.getOpenTour().getId());
             bookingResponse.setCustomerId(booking.getAccount().getId());
             bookingResponse.setBookingDate(booking.getBookingDate());
 
@@ -190,9 +191,9 @@ public class BookingService {
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
 
-                Tour tour = booking.getTour();
+                OpenTour tour = booking.getOpenTour();
                 if (tour != null) {
-                    TourResponses tourResponse = new TourResponses();
+                    OpenToursResponse tourResponse = new OpenToursResponse();
                     tourResponse.setId(tour.getId());
                     tourResponse.setTourName(tour.getTourName());
                     tourResponse.setDescription(tour.getDescription());
@@ -200,13 +201,13 @@ public class BookingService {
                     tourResponse.setPrice(tour.getPrice());
                     tourResponse.setImage(tour.getImage());
                     tourResponse.setDuration(tour.getDuration());
-                    tourResponse.setTourId(tour.getTourId());
+                    tourResponse.setTourId(tour.getTour().getId());
                     tourResponse.setTime(tour.getTime());
+                    tourResponse.setSaleId(tour.getSale().getId());
+                    tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
+                    tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
+                    tourResponse.setStatus(tour.getStatus());
 
-                    Account consulting = tour.getAccount();
-                    if (consulting != null) {
-                        tourResponse.setConsultingName(consulting.getFullName());
-                    }
 
                     bookingResponse.setTourId(tourResponse);
                 }
@@ -226,8 +227,8 @@ public class BookingService {
 
     public DataResponse<BookingForConsulting> getBookingByConsultingTour(@RequestParam int page,
                                                                      @RequestParam int size,
-                                                                     @RequestParam String tourId) {
-        Page<Booking> bookingPage = bookingRepository.findAllByTour_TourId(tourId, PageRequest.of(page, size));
+                                                                     @RequestParam long openTourId) {
+        Page<Booking> bookingPage = bookingRepository.findAllByOpenTour_Id(openTourId, PageRequest.of(page, size));
         List<Booking> bookings = bookingPage.getContent();
         List<BookingForConsulting> activeBookings = new ArrayList<>();
 
@@ -260,8 +261,8 @@ public class BookingService {
         return dataResponse;
     }
 
-    public String handleEndTour(String tourId) {
-        List<Booking> bookings = bookingRepository.findAllByTour_TourId(tourId);
+    public String handleEndTour(long tourId) {
+        List<Booking> bookings = bookingRepository.findAllByOpenTour_Id(tourId);
 
         if (bookings.isEmpty()) {
             return "No bookings found for the given tour.";
@@ -292,7 +293,7 @@ public class BookingService {
                 bookingResponse.setInfant(booking.getInfant());
                 bookingResponse.setPhone(booking.getPhone());
                 bookingResponse.setPrice(booking.getPrice());
-                bookingResponse.setTourName(booking.getTour().getTourName());
+                bookingResponse.setTourName(booking.getOpenTour().getTourName());
                 bookingResponse.setCustomerId(booking.getAccount().getId());
                 bookingResponse.setBookingId(booking.getBookingId());
 
@@ -310,7 +311,7 @@ public class BookingService {
     }
 
     public Long getTotalBookingsByMonthAndYear(int month, int year) {
-        return bookingRepository.countBookingsByTourStartDate(month, year);
+        return bookingRepository.countBookingsByOpenTourStartDate(month, year);
     }
 
 

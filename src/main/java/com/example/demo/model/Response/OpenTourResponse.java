@@ -7,6 +7,5 @@ import java.math.BigDecimal;
 @Data
 public class OpenTourResponse {
     private BigDecimal totalPrice;
-
     private String status;
 }

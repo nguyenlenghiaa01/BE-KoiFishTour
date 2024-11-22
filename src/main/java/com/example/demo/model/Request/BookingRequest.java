@@ -31,6 +31,6 @@ public class BookingRequest {
 
 
     private String customerId;
-    private String tourId;
+    private long openTourId;
 }
 

@@ -29,5 +29,5 @@ public class BookingResponse {
     private int child;
     private int infant;
     private long customerId;
-    private long tourId;
+    private long openTourId;
 }

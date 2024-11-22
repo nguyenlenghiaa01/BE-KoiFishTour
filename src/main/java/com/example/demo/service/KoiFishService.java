@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Booking;
-import com.example.demo.entity.Farm;
-import com.example.demo.entity.KoiFish;
-import com.example.demo.entity.Tour;
+import com.example.demo.entity.*;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.KoiFishRequest;
 import com.example.demo.model.Response.DataResponse;
@@ -36,6 +33,8 @@ public class KoiFishService {
     BookingRepository bookingRepository;
     @Autowired
     TourRepository tourRepository;
+    @Autowired
+    OpenTourRepository openTourRepository;
 
 
     public KoiFish createNewKoi(KoiFishRequest koiFishRequest) {
@@ -84,7 +83,14 @@ public class KoiFishService {
 
     public List<KoiFishByFarmResponse> getKoiByBookingId(String bookingId) {
         Booking booking = bookingRepository.findBookingByBookingId(bookingId);
-        Tour tour = booking.getTour();
+        if(booking == null){
+            throw new NotFoundException("Booking not found");
+        }
+        OpenTour openTour = openTourRepository.findOpenTourById(booking.getOpenTour().getId());
+        if(openTour == null){
+            throw new NotFoundException("openTour not found");
+        }
+        Tour tour = openTour.getTour();
         if(tour == null) {
             throw new NotFoundException("Tour not found!");
         }
@@ -136,7 +142,11 @@ public class KoiFishService {
         if(booking == null) {
             throw new NotFoundException("Booking not found!");
         }
-        Tour tour = tourRepository.findById(booking.getTour().getId())
+        OpenTour openTour = openTourRepository.findOpenTourById(booking.getOpenTour().getId());
+        if(openTour == null){
+            throw new NotFoundException("openTour not found");
+        }
+        Tour tour = tourRepository.findById(openTour.getTour().getId())
                 .orElseThrow(() -> new NotFoundException("Tour not found!"));
         Set<Farm> farms = tour.getFarms();
         if (farms.isEmpty()) {

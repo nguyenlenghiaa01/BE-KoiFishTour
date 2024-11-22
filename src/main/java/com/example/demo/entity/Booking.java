@@ -74,12 +74,11 @@ public class Booking {
     Payment payment;
 
     @ManyToOne
-    @JoinColumn(name = "tour_id")
-    private Tour tour;
+    @JoinColumn(name = "openTour_id")
+    private OpenTour openTour;
 
     @OneToOne(mappedBy = "booking")
     @JsonIgnore
     private KoiFishOrder koiFishOrder;
-
 
 }

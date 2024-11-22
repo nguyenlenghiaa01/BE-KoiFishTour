@@ -39,6 +39,8 @@ public class KoiFishOrderService {
 
     @Autowired
     CustomTourRepository customTourRepository;
+    @Autowired
+    OpenTourRepository openTourRepository;
 
 
 
@@ -49,7 +51,11 @@ public class KoiFishOrderService {
         if(booking == null) {
             throw new NotFoundException("Booking not found!");
         }
-        Tour tour = tourRepository.findById(booking.getTour().getId())
+        OpenTour openTour = openTourRepository.findOpenTourById(booking.getOpenTour().getId());
+        if(openTour == null){
+            throw new NotFoundException("openTour not found");
+        }
+        Tour tour = tourRepository.findById(openTour.getTour().getId())
                 .orElseThrow(() -> new RuntimeException("Tour not found!"));
         Account account = accountRepository.findById(tour.getAccount().getId())
                 .orElseThrow(() -> new RuntimeException("Consulting account not found!"));

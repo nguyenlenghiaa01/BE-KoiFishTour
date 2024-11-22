@@ -165,5 +165,9 @@ public class Account implements UserDetails {
     @JsonIgnore
     private List<CustomBooking> consultingBookings;
 
+    @OneToMany(mappedBy = "sale")
+    @JsonIgnore
+    private List<OpenTour> openTour;
+
 }
 

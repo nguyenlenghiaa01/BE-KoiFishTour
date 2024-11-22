@@ -69,7 +69,7 @@ public class BookingAPI {
     }
 
     @PutMapping("/endTour")
-    public String endTour(@RequestParam String tourId){
+    public String endTour(@RequestParam long tourId){
         return bookingService.handleEndTour(tourId);
     }
 
@@ -83,7 +83,7 @@ public class BookingAPI {
     @GetMapping("/Consulting")
     public ResponseEntity<DataResponse<BookingForConsulting>> getBooking(@RequestParam int page,
                                                                     @RequestParam int size,
-                                                                    @RequestParam String tourId) {
+                                                                    @RequestParam long tourId) {
         DataResponse<BookingForConsulting> bookingResponse = bookingService.getBookingByConsultingTour(page, size, tourId);
         return ResponseEntity.ok(bookingResponse);
     }

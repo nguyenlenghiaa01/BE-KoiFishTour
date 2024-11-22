@@ -105,7 +105,6 @@ public class TourService {
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
-                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
@@ -144,7 +143,6 @@ public class TourService {
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
-                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setTime(tour.getTime());
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
@@ -183,7 +181,6 @@ public class TourService {
                 tourResponse.setStatus(tour.getStatus());
                 tourResponse.setFarms(tour.getFarms());
                 tourResponse.setPrice(tour.getPrice());
-                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
                 tourResponse.setTime(tour.getTime());
@@ -251,7 +248,6 @@ public class TourService {
                 tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
                 tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
                 tourResponse.setTime(tour.getTime());
-                tourResponse.setSchedule(tour.getSchedule());
                 tourResponse.setDescription(tour.getDescription());
                 tourResponse.setFarms(tour.getFarms());
 
@@ -454,7 +450,6 @@ public class TourService {
             tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
             tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
             tourResponse.setTime(tour.getTime());
-            tourResponse.setSchedule(tour.getSchedule());
             tourResponse.setDescription(tour.getDescription());
             tourResponse.setConsultingName(tour.getAccount().getFullName());
             tourResponses.add(tourResponse);

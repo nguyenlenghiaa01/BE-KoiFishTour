@@ -62,7 +62,7 @@ public class DashBoardAPI {
         long customerCount = accountRepository.countByRole(Role.CUSTOMER);
         stats.put("customerCount", customerCount);
 
-        List<Object[]> topTour = bookingRepository.findTop5ToursWithMostBookings();
+        List<Object[]> topTour = bookingRepository.findTop5OpenToursWithMostBookings();
         List<Map<String, Object>> topProductList = new ArrayList<>();
 
         for (Object[] productData : topTour) {

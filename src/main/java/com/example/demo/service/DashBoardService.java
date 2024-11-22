@@ -33,7 +33,7 @@ public class DashBoardService {
         long totalOrder = koiFishOrderRepository.count();
         long booking = bookingRepository.count();
         long customersCount = accountRepository.countByRole(Role.CUSTOMER);
-        List<Object[]> topProducts = bookingRepository.findTop5ToursWithMostBookings();
+        List<Object[]> topProducts = bookingRepository.findTop5OpenToursWithMostBookings();
 
         List<Map<String, Object>> topProductList = new ArrayList<>();
         for (Object[] productsData : topProducts) {

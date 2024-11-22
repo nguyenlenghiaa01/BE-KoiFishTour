@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.OpenTour;
 import com.example.demo.entity.Tour;
+import com.example.demo.repository.OpenTourRepository;
 import com.example.demo.repository.TourRepository;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -16,7 +18,7 @@ import java.util.Optional;
 public class ActivateSemesterJob implements Job {
 
     @Autowired
-    private TourRepository tourRepository;
+    private OpenTourRepository openTourRepository;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -25,11 +27,11 @@ public class ActivateSemesterJob implements Job {
         Timestamp startTime = new Timestamp(startTimeMillis);
         Date currentTime = new Date();
         if (currentTime.after(startTime) || Math.abs(currentTime.getTime() - startTime.getTime()) < 1000) {
-            Optional<Tour> tourOpt = tourRepository.findById(Long.parseLong(openTourId));
+            Optional<OpenTour> tourOpt = openTourRepository.findById(Long.parseLong(openTourId));
             if (tourOpt.isPresent()) {
-                Tour tour = tourOpt.get();
+                OpenTour tour = tourOpt.get();
                 tour.setStatus("OPEN");
-                tourRepository.save(tour);
+                openTourRepository.save(tour);
                 System.out.println("Tour " + openTourId + " active (status: Active).");
             } else {
                 System.out.println("Not Found Tour ID: " + openTourId);
