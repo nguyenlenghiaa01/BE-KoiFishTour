@@ -4,6 +4,7 @@ import com.example.demo.entity.Tour;
 import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.OpenTourSearchResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.model.Response.TourResponses;
 import com.example.demo.service.TourService;
@@ -81,7 +82,7 @@ public class TourAPI {
     }
 
     @GetMapping("/search/first")
-    public DataResponse<TourResponse> searchTours(
+    public DataResponse<OpenTourSearchResponse> searchTours(
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) Double min,
             @RequestParam(required = false) Double max,

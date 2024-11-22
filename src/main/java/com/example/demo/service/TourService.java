@@ -6,12 +6,10 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Request.OpenTourRequest;
 import com.example.demo.model.Request.TourRequest;
 import com.example.demo.model.Response.DataResponse;
+import com.example.demo.model.Response.OpenTourSearchResponse;
 import com.example.demo.model.Response.TourResponse;
 import com.example.demo.model.Response.TourResponses;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.FarmRepository;
-import com.example.demo.repository.SearchHistoryRepository;
-import com.example.demo.repository.TourRepository;
+import com.example.demo.repository.*;
 import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.quartz.SchedulerException;
@@ -42,6 +40,9 @@ public class TourService {
     ScheduleJob scheduleJob;
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    OpenTourRepository openTourRepository;
 
 
 
@@ -202,9 +203,10 @@ public class TourService {
         return dataResponse;
     }
 
-    public DataResponse<TourResponse> searchTours(int page, int size, LocalDate startDate, BigDecimal min, BigDecimal max, Set<String> farms) {
+    public DataResponse<OpenTourSearchResponse> searchTours(int page, int size, LocalDate startDate, BigDecimal min, BigDecimal max, Set<String> farms) {
+        // Nếu không có điều kiện tìm kiếm, trả về danh sách rỗng
         if (startDate == null && min == null && max == null && (farms == null || farms.isEmpty())) {
-            DataResponse<TourResponse> emptyResponse = new DataResponse<>();
+            DataResponse<OpenTourSearchResponse> emptyResponse = new DataResponse<>();
             emptyResponse.setListData(new ArrayList<>());
             emptyResponse.setTotalElements(0);
             emptyResponse.setPageNumber(page);
@@ -212,15 +214,14 @@ public class TourService {
             return emptyResponse;
         }
 
+        // Xử lý điều kiện tìm kiếm
         Set<String> farmSet = new HashSet<>();
         if (farms != null && !farms.isEmpty()) {
             farmSet.addAll(farms);
         }
 
-        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"));
-
-        // Ensure that we only include Tours that have an associated OpenTour with status "OPEN"
-        specification = specification.and(TourSpecification.hasOpenTourStatus("OPEN"));
+        Specification<Tour> specification = Specification.where(TourSpecification.hasStatus("OPEN"))
+                .and(TourSpecification.hasOpenTourStatus("OPEN"));
 
         if (startDate != null) {
             specification = specification.and(TourSpecification.hasStartDate(startDate));
@@ -234,42 +235,41 @@ public class TourService {
             specification = specification.and(TourSpecification.hasFarms(farmSet));
         }
 
+        // Tìm danh sách Tour theo điều kiện
         Page<Tour> tourPage = tourRepository.findAll(specification, PageRequest.of(page, size));
-        List<TourResponse> tourResponses = new ArrayList<>();
+        List<OpenTourSearchResponse> openTourResponses = new ArrayList<>();
 
         for (Tour tour : tourPage.getContent()) {
             if (tour.getStatus().equals("OPEN") && !tour.isDeleted()) {
-                TourResponse tourResponse = new TourResponse();
-                tourResponse.setId(tour.getId());
-                tourResponse.setTourId(tour.getTourId());
-                tourResponse.setTourName(tour.getTourName());
-                tourResponse.setStartDate(tour.getStartDate());
-                tourResponse.setDuration(tour.getDuration());
-                tourResponse.setImage(tour.getImage());
-                tourResponse.setStatus(tour.getStatus());
-                tourResponse.setPrice(tour.getPrice());
-                tourResponse.setPerAdultPrice(tour.getPerAdultPrice());
-                tourResponse.setPerChildrenPrice(tour.getPerChildrenPrice());
-                tourResponse.setTime(tour.getTime());
-                tourResponse.setDescription(tour.getDescription());
-                tourResponse.setFarms(tour.getFarms());
+                List<OpenTour> openTours = openTourRepository.findByTourAndStatus(tour, "OPEN");
+                for (OpenTour openTour : openTours) {
+                    OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
+                    openTourResponse.setId(openTour.getId());
+                    openTourResponse.setTourName(openTour.getTourName());
+                    openTourResponse.setStartDate(openTour.getStartDate());
+                    openTourResponse.setPrice(openTour.getPrice());
+                    openTourResponse.setDuration(openTour.getDuration());
+                    openTourResponse.setStatus(openTour.getStatus());
+                    openTourResponse.setImage(openTour.getImage());
+                    openTourResponse.setDescription(openTour.getDescription());
+                    openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
+                    openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
+                    openTourResponse.setSaleId(openTour.getSale().getId());
 
-                if (tour.getAccount() != null) {
-                    tourResponse.setConsultingId(tour.getAccount().getId());
+                    openTourResponses.add(openTourResponse);
                 }
-
-                tourResponses.add(tourResponse);
             }
         }
 
-        DataResponse<TourResponse> dataResponse = new DataResponse<>();
-        dataResponse.setListData(tourResponses);
-        dataResponse.setTotalElements(tourResponses.size());
-        dataResponse.setPageNumber(tourPage.getNumber());
-        dataResponse.setTotalPages(tourPage.getTotalPages());
+        DataResponse<OpenTourSearchResponse> dataResponse = new DataResponse<>();
+        dataResponse.setListData(openTourResponses);
+        dataResponse.setTotalElements(openTourResponses.size());
+        dataResponse.setPageNumber(page);
+        dataResponse.setTotalPages((int) Math.ceil((double) openTourResponses.size() / size));
 
         return dataResponse;
     }
+
 
 
 
