@@ -68,6 +68,8 @@ public class CustomBookingService {
             customBooking.setStatus("PENDING");
             customBooking.setCreateAt(new Date());
             customBooking.setCustomTour(customTour);
+            customBooking.setCustomer(customer);
+
 
             return customBookingRepository.save(customBooking);
         }

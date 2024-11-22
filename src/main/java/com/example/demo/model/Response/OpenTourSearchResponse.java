@@ -1,8 +1,11 @@
 package com.example.demo.model.Response;
 
+import com.example.demo.entity.Farm;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class OpenTourSearchResponse {
@@ -20,4 +23,5 @@ public class OpenTourSearchResponse {
     private String time;
     private String description;
     private String schedule;
+    private Set<Farm> farmList;
 }

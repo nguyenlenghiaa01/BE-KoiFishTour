@@ -236,6 +236,8 @@ public class TourService {
         List<OpenTourSearchResponse> openTourResponses = new ArrayList<>();
 
         for (OpenTour openTour : openTourPage.getContent()) {
+            Tour tour = tourRepository.findTourById(openTour.getTour().getId());
+            if(tour ==null){throw  new NotFoundException("Not found Tour");}
             OpenTourSearchResponse openTourResponse = new OpenTourSearchResponse();
             openTourResponse.setId(openTour.getId());
             openTourResponse.setTourName(openTour.getTour().getTourName());
@@ -250,6 +252,7 @@ public class TourService {
             openTourResponse.setSaleId(openTour.getSale().getId()); // Assumed sale is an entity
             openTourResponse.setSchedule(openTour.getSchedule());
             openTourResponse.setTime(openTour.getTime());
+            openTourResponse.setFarmList(tour.getFarms());
 
             openTourResponses.add(openTourResponse);
         }
