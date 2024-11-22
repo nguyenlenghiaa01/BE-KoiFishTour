@@ -58,12 +58,13 @@ public class OpenTourService {
         List<OpenTour> openTours = openPage.getContent();
         List<OpenToursResponse> openToursResponses = new ArrayList<>();
         for(OpenTour openTour: openTours) {
-            if (openTour.getStatus().equals("Open")) {
+            if (openTour.getStatus().equals("OPEN")) {
                 OpenToursResponse openTourResponse = new OpenToursResponse();
                 openTourResponse.setId(openTour.getId());
+                openTourResponse.setTourId(openTour.getTour().getId());
                 openTourResponse.setDescription(openTour.getDescription());
                 openTourResponse.setDuration(openTour.getDuration());
-                openTourResponse.setPrice(openTourResponse.getPrice());
+                openTourResponse.setPrice(openTour.getPrice());
                 openTourResponse.setTime(openTour.getTime());
                 openTourResponse.setImage(openTour.getImage());
                 openTourResponse.setStatus(openTour.getStatus());
@@ -73,6 +74,7 @@ public class OpenTourService {
                 openTourResponse.setPerAdultPrice(openTour.getPerAdultPrice());
                 openTourResponse.setPerChildrenPrice(openTour.getPerChildrenPrice());
                 openTourResponse.setTourId(openTourResponse.getTourId());
+                openTourResponse.setSchedule(openTour.getSchedule());
 
                 openToursResponses.add(openTourResponse);
             }

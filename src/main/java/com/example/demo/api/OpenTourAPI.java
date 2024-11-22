@@ -46,7 +46,7 @@ public class OpenTourAPI {
         return ResponseEntity.ok(deletedOpenTour);
     }
 
-    @PutMapping("/set-not-open")
+    @PutMapping("/set-not-open/{id}")
     public ResponseEntity<OpenTour> closeTour(@PathVariable long id){
         OpenTour openTour = openTourService.closeTour(id);
         return ResponseEntity.ok(openTour);

@@ -21,4 +21,5 @@ public class OpenToursResponse {
     private double perChildrenPrice;
     private String time;
     private String description;
+    private String schedule;
 }
