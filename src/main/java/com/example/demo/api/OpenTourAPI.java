@@ -45,4 +45,10 @@ public class OpenTourAPI {
         OpenTour deletedOpenTour = openTourService.deleteOpenTour(id);
         return ResponseEntity.ok(deletedOpenTour);
     }
+
+    @PutMapping("/set-not-open")
+    public ResponseEntity<OpenTour> closeTour(@PathVariable long id){
+        OpenTour openTour = openTourService.closeTour(id);
+        return ResponseEntity.ok(openTour);
+    }
 }

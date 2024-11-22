@@ -47,6 +47,8 @@ public class OpenTourService {
         openTour.setTour(tour);
         openTour.setPerAdultPrice(tour.getPerAdultPrice());
         openTour.setPerChildrenPrice(tour.getPerChildrenPrice());
+        tour.setStatus("OPEN");
+        tourRepository.save(tour);
         return openTourRepository.save(openTour);
 
     }
@@ -98,6 +100,17 @@ public class OpenTourService {
         OpenTour openTour = openTourRepository.findById(id).orElseThrow(() -> new NotFoundException("Open tour not found!"));
 
         openTour.setDeleted(true);
+        return openTourRepository.save(openTour);
+    }
+    public OpenTour closeTour(long id){
+        OpenTour openTour = openTourRepository.findById(id).orElseThrow(() -> new NotFoundException("Open tour not found!"));
+        Tour tour = tourRepository.findTourById(openTour.getTour().getId());
+        if(tour == null){
+            throw new NotFoundException("Tour not found");
+        }
+        openTour.setStatus("NOT OPEN");
+        tour.setStatus("NOT OPEN");
+        tourRepository.save(tour);
         return openTourRepository.save(openTour);
     }
 }
