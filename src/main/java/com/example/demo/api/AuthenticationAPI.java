@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("api")
 @SecurityRequirement(name = "api")
 @CrossOrigin("*")
-public class AuthenticationAPI {
+public class   AuthenticationAPI {
 
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
