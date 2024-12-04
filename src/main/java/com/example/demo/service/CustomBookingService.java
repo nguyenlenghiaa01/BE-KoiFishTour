@@ -86,32 +86,31 @@ public class CustomBookingService {
         if(customer ==null){
             throw  new NotFoundException("Customer not found");
         }
-        Page<CustomBooking> cusPage = customBookingRepository.findByCustomer_Code(id, PageRequest.of(page, size));
-
+        Page<CustomBooking> cusPage = customBookingRepository.findAll(
+                PageRequest.of(page, size, Sort.by(Sort.Order.asc("createAt")))
+        );
         List<CustomBooking> customTours = cusPage.getContent();
         List<CustomBookingResponse> customTourResponses = new ArrayList<>();
 
         for(CustomBooking customBooking : customTours) {
+            CustomBookingResponse customTourResponse = new CustomBookingResponse();
+            customTourResponse.setId(customBooking.getId());
+            customTourResponse.setCusBookingId(customBooking.getCustomBookingId());
+            customTourResponse.setPrice(customBooking.getPrice());
+            customTourResponse.setAddress(customBooking.getCustomTour().getAddress());
+            customTourResponse.setDuration(customBooking.getCustomTour().getDuration());
+            customTourResponse.setStartDate(customBooking.getCustomTour().getStartDate());
+            customTourResponse.setEmail(customBooking.getCustomTour().getEmail());
+            customTourResponse.setPhone(customBooking.getCustomTour().getPhone());
+            customTourResponse.setAdult(customBooking.getCustomTour().getAdult());
+            customTourResponse.setChild(customBooking.getCustomTour().getChild());
+            customTourResponse.setInfant(customBooking.getCustomTour().getInfant());
+            customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
+            customTourResponse.setStatus(customBooking.getStatus());
+            customTourResponse.setFullName(customer.getFullName());
+            customTourResponse.setCustomTour(customBooking.getCustomTour());
 
-                CustomBookingResponse customTourResponse = new CustomBookingResponse();
-                customTourResponse.setId(customBooking.getId());
-                customTourResponse.setCusBookingId(customBooking.getCustomBookingId());
-                customTourResponse.setPrice(customBooking.getPrice());
-                customTourResponse.setAddress(customBooking.getCustomTour().getAddress());
-                customTourResponse.setDuration(customBooking.getCustomTour().getDuration());
-                customTourResponse.setStartDate(customBooking.getCustomTour().getStartDate());
-                customTourResponse.setEmail(customBooking.getCustomTour().getEmail());
-                customTourResponse.setPhone(customBooking.getCustomTour().getPhone());
-                customTourResponse.setAdult(customBooking.getCustomTour().getAdult());
-                customTourResponse.setChild(customBooking.getCustomTour().getChild());
-                customTourResponse.setInfant(customBooking.getCustomTour().getInfant());
-                customTourResponse.setFarm(customBooking.getCustomTour().getFarms());
-                customTourResponse.setStatus(customBooking.getStatus());
-                customTourResponse.setFullName(customer.getFullName());
-                customTourResponse.setCustomTour(customBooking.getCustomTour());
-
-                customTourResponses.add(customTourResponse);
-
+            customTourResponses.add(customTourResponse);
         }
 
         DataResponse<CustomBookingResponse> dataResponse = new DataResponse<>();
@@ -185,7 +184,7 @@ public class CustomBookingService {
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "http://localhost:5174/customtour-payment-success?bookingID=" + booking.getCustomBookingId();
+        String returnUrl = "http://localhost:5173/customtour-payment-success?bookingID=" + booking.getCustomBookingId();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();

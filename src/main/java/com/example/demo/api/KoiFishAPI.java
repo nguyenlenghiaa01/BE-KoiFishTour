@@ -57,11 +57,13 @@ public class KoiFishAPI {
         return ResponseEntity.ok(getFishes);
     }
 
+    @PreAuthorize("hasAuthority('SALE','CUSTOMER','CONSULTING')")
     @GetMapping("/list-koi/booking-id")
     public ResponseEntity<List<KoiFishByFarmResponse>> getKoiFishByBooking(@RequestParam String bookingId) {
         List<KoiFishByFarmResponse> getFishes = koiService.getKoiByBookingId(bookingId);
         return ResponseEntity.ok(getFishes);
     }
+    @PreAuthorize("hasAuthority('SALE','CUSTOMER','CONSULTING')")
     @GetMapping("/list-koi/custom-booking-id")
     public ResponseEntity<List<KoiFishByFarmResponse>> getKoiFishByBookings( String customBookingId) {
         List<KoiFishByFarmResponse> getFishes = koiService.getKoiByCustomBookingId(customBookingId);

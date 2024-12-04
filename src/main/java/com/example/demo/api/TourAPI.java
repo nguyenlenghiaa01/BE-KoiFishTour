@@ -14,6 +14,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.crypto.Data;
@@ -35,6 +36,7 @@ public class TourAPI {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @PreAuthorize("hasAuthority('SALE')")
     @PostMapping
     public ResponseEntity<Tour> create(@Valid @RequestBody TourRequest tourRequest) {
             Tour newTour = tourService.createNewTour(tourRequest);
@@ -48,33 +50,34 @@ public class TourAPI {
         DataResponse<TourResponse> dataResponse = tourService.getAllTour(page, size);
         return ResponseEntity.ok(dataResponse);
     }
-
+    @PreAuthorize("hasAuthority('SALE','MANAGER')")
     @GetMapping("/manager/get/notOpen")
     public ResponseEntity<DataResponse<TourResponse>> getTour(@RequestParam int page, @RequestParam int size){
         DataResponse<TourResponse> dataResponse = tourService.getAllTourNotOpen(page, size);
         simpMessagingTemplate.convertAndSend("topic/tour","CLOSE TOUR");
         return ResponseEntity.ok(dataResponse);
     }
-    @PostMapping("/setOpen")
+    @PreAuthorize("hasAuthority('SALE','ADMIN','MANAGER')")
+    @PutMapping("/setOpen")
     public ResponseEntity<Tour> setOpen (long id) throws SchedulerException {
         Tour tour = tourService.setOpen(id);
         simpMessagingTemplate.convertAndSend("/topic/tour","OPEN TOUR");
         return  ResponseEntity.ok(tour);
     }
-
+    @PreAuthorize("hasAuthority('SALE','ADMIN','MANAGER')")
     @GetMapping("/consulting")
     public ResponseEntity<DataResponse<TourResponse>> getTourByConsulting(@RequestParam String consulId, @RequestParam int page, @RequestParam int size) {
         DataResponse<TourResponse> dataResponse = tourService.getTourByConsulting(consulId, page, size);
         return ResponseEntity.ok(dataResponse);
     }
 
-
+    @PreAuthorize("hasAuthority('SALE','ADMIN','MANAGER','CONSULTING')")
     @GetMapping("/get/all")
     public ResponseEntity<DataResponse<TourResponses>> getAll(@RequestParam int page, @RequestParam int size){
         DataResponse<TourResponses> dataResponse = tourService.getAll(page, size);
         return ResponseEntity.ok(dataResponse);
     }
-
+    @PreAuthorize("hasAuthority('SALE','ADMIN','MANAGER','CONSULTING')")
     @GetMapping
     public ResponseEntity<Tour>getTourById(String id){
         Tour newTour = tourService.getTourId(id);
@@ -106,32 +109,32 @@ public class TourAPI {
 
 
 
-    @GetMapping("/search/second")
-    public DataResponse<TourResponse> getAllTourPrice(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String time) {
+//    @GetMapping("/search/second")
+//    public DataResponse<TourResponse> getAllTourPrice(
+//            @RequestParam int page,
+//            @RequestParam int size,
+//            @RequestParam(required = false) Double minPrice,
+//            @RequestParam(required = false) Double maxPrice,
+//            @RequestParam(required = false) String time) {
+//
+//        return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
+//    }
 
-        return tourService.getAllTourPrice(page, size, minPrice, maxPrice, time);
-    }
-
-
+    @PreAuthorize("hasAuthority('SALE')")
     @PutMapping("{id}")
     public ResponseEntity<Tour> updateTour(@Valid @RequestBody TourRequest tourRequest, @PathVariable long id) {
             Tour updatedTour = tourService.updateTour(tourRequest, id);
             return ResponseEntity.ok(updatedTour);
     }
 
-
+    @PreAuthorize("hasAuthority('SALE')")
     @DeleteMapping("{id}")
     public ResponseEntity<Tour> deleteTour(@PathVariable long id) {
             Tour deletedTour = tourService.deleteTour(id);
             return ResponseEntity.ok(deletedTour);
     }
 
-
+    @PreAuthorize("hasAuthority('SALE')")
     @PostMapping("/schedule")
     public String scheduleTour(OpenTourRequest openTourRequest) {
         try {

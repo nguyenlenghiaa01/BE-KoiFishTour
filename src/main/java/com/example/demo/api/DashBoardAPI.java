@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class DashBoardAPI {
     @Autowired
     AccountRepository accountRepository;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/count-booking")
     public ResponseEntity<Long> getTotalBookings(@RequestBody @Valid BookingTotalRequest bookingTotalRequest) {
         int month = bookingTotalRequest.getMonth();
@@ -42,6 +44,8 @@ public class DashBoardAPI {
         Long totalBookings = bookingService.getTotalBookingsByMonthAndYear(month, year);
         return ResponseEntity.ok(totalBookings);
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
 
     @PostMapping("/count-order")
     public ResponseEntity<Double> getTotalOrders(@RequestBody @Valid KoiFishOrderTotalRequest orderTotalRequest) {
@@ -51,6 +55,7 @@ public class DashBoardAPI {
         return ResponseEntity.ok(totalOrders);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
 
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getDashboardStats() {

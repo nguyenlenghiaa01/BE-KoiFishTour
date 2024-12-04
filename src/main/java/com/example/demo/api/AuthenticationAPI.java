@@ -26,14 +26,13 @@ import java.util.Map;
 @RequestMapping("api")
 @SecurityRequirement(name = "api")
 @CrossOrigin("*")
-public class   AuthenticationAPI {
+public class AuthenticationAPI {
 
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
     AuthenticationService authenticationService;
     @Autowired
     EmailService emailService;
-
     @PostMapping("register")
     public ResponseEntity <AccountResponse>register(@Valid @RequestBody RegisterRequest registerRequest) {
         AccountResponse newAccount = authenticationService.register(registerRequest);
@@ -50,6 +49,7 @@ public class   AuthenticationAPI {
         return ResponseEntity.ok(accountResponse);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("account")
     public ResponseEntity <DataResponse<AccountResponse>>getAllAccount(@RequestParam int page,
                                                        @RequestParam int size){
@@ -70,6 +70,7 @@ public class   AuthenticationAPI {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable long id){
         Account newAccount = authenticationService.deleteAccount(id);
@@ -87,6 +88,7 @@ public class   AuthenticationAPI {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/role")
     public ResponseEntity<Map<String, Integer>> getRoleCounts(){
         Map<String, Integer> account =authenticationService.getAllAccountByRole();

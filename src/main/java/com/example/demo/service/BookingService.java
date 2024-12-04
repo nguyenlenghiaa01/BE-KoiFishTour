@@ -338,7 +338,7 @@ public class BookingService {
         String tmnCode = "V3LITBWK";
         String secretKey = "S1OJUTMQOMLRDMI8D6HVHXCVKH97P33I";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "http://localhost:5174/tourpayment-success?bookingID=" + booking.getBookingId();
+        String returnUrl = "http://localhost:5173/tourpayment-success?bookingID=" + booking.getBookingId();
         String currCode = "VND";
 
         Map<String, String> vnpParams = new TreeMap<>();

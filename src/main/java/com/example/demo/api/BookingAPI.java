@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class BookingAPI {
     SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     BookingService bookingService;
+
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping("/VNPay")
     public ResponseEntity<?> createVNPay(String id) {
         String vnPayUrl = null;
@@ -32,7 +35,7 @@ public class BookingAPI {
         }
         return ResponseEntity.ok(vnPayUrl);
     }
-
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping
     public ResponseEntity<Booking> create(@Valid @RequestBody BookingRequest bookingRequest) {
         Booking newBooking =bookingService.createNewBooking(bookingRequest);
@@ -52,6 +55,7 @@ public class BookingAPI {
         bookingService.createTransactionId(id);
         return ResponseEntity.ok("Success");
     }
+    @PreAuthorize("hasAuthority('SALE') and hasAuthority('CONSULTING')")
 
     @GetMapping("/customerId")
     public ResponseEntity<DataResponse<BookingResponses>> getCustomerBooking(@RequestParam int page,
@@ -60,19 +64,20 @@ public class BookingAPI {
         DataResponse<BookingResponses> bookingResponse = bookingService.getBookingByCustomer(page, size,id);
         return ResponseEntity.ok(bookingResponse);
     }
-
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("/setStatusAfterPayment")
     public ResponseEntity<Booking> updateStatus(String id){
         Booking booking =bookingService.updateStatus(id);
         simpMessagingTemplate.convertAndSend("topic/booking","UPDATE BOOKING");
         return  ResponseEntity.ok(booking);
     }
-
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("/endTour")
     public String endTour(@RequestParam long tourId){
         return bookingService.handleEndTour(tourId);
     }
 
+    @PreAuthorize("hasAuthority('CUSTOMER','SALE','ADMIN')")
     @GetMapping("/history")
     public ResponseEntity<DataResponse<BookingResponse>> getHistory(@RequestParam int page,
                                                                     @RequestParam int size,
@@ -86,6 +91,7 @@ public class BookingAPI {
 
         return ResponseEntity.ok(responeOpenTourBooking);
     }
+    @PreAuthorize("hasAuthority('SALE')")
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable String id){
@@ -93,7 +99,7 @@ public class BookingAPI {
         simpMessagingTemplate.convertAndSend("topic/booking","DELETE BOOKING");
         return ResponseEntity.ok(newBooking);
     }
-
+    @PreAuthorize("hasAuthority('SALE')")
     @DeleteMapping("delete/bookingId")
     public ResponseEntity<Booking> delete(String id){
         Booking newBooking = bookingService.deleteBookings(id);

@@ -31,12 +31,14 @@ public class KoiFishOrderAPI {
     @Autowired
     private KoiFishOrderService koiFishOrderService;
 
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PostMapping
     public ResponseEntity<KoiFishOrder> create(@Valid @RequestBody KoiFishOrderRequest koiFishOrderRequest) {
         KoiFishOrder koiFishOrder = koiFishOrderService.create(koiFishOrderRequest);
         simpMessagingTemplate.convertAndSend("topic/koiOrder","CREATE NEW ORDER");
             return ResponseEntity.ok(koiFishOrder);
     }
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PostMapping("order-customer")
     public ResponseEntity<KoiFishOrder> createCus(@Valid @RequestBody KoiFishOrderBookingRequest koiFishOrderRequest) {
         KoiFishOrder koiFishOrder = koiFishOrderService.createCus(koiFishOrderRequest);
@@ -45,7 +47,7 @@ public class KoiFishOrderAPI {
     }
 
 
-
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("{id}")
     public ResponseEntity<KoiFishOrder> updateOrder(@Valid @RequestBody KoiFishOrderUpdateRequest koiFishOrderRequest, @PathVariable long id) {
             KoiFishOrder updatedOrder = koiFishOrderService.updateOrder(koiFishOrderRequest, id);
@@ -59,49 +61,52 @@ public class KoiFishOrderAPI {
             KoiFishOrder deletedOrder = koiFishOrderService.deleteOrderCart(id);
             return ResponseEntity.ok(deletedOrder);
     }
-
+    @PreAuthorize("hasAuthority('CONSULTING','CUSTOMER','SALE')")
     @GetMapping("customerBooking-id/{id}")
     public ResponseEntity<KoiFishOrder> getOrderByCustomerBookingId(@PathVariable String id) {
         KoiFishOrder order = koiFishOrderService.getOrderByCustomBookingId(id);
         return ResponseEntity.ok(order);
     }
+    @PreAuthorize("hasAuthority('CONSULTING','CUSTOMER','SALE')")
     @GetMapping("booking/{id}")
     public ResponseEntity<KoiFishOrder> getOrderByBookingId(@PathVariable String id) {
         KoiFishOrder order = koiFishOrderService.getOrderByBookingId(id);
         return ResponseEntity.ok(order);
     }
-
+    @PreAuthorize("hasAuthority('CONSULTING','CUSTOMER','SALE')")
     @GetMapping("{orderId}")
     public ResponseEntity<KoiFishOrder> getOrderByOrderId(@PathVariable String orderId) {
         KoiFishOrder order = koiFishOrderService.getOrderByOrderId(orderId);
 
         return ResponseEntity.ok(order);
     }
-
+    @PreAuthorize("hasAuthority('CONSULTING','SALE')")
     @GetMapping("all")
     public ResponseEntity<OrderResponse> getAll(@RequestParam int page, @RequestParam int size) {
         OrderResponse order = koiFishOrderService.getAllOrder(page,size);
         return ResponseEntity.ok(order);
     }
-
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("confirm/{id}")
     public ResponseEntity updateConfirmOrder(@PathVariable long id) {
         KoiFishOrder confirmedOrder = koiFishOrderService.confirmOrder(id);
 
         return ResponseEntity.ok(confirmedOrder);
     }
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("delivering/{id}")
     public ResponseEntity updateDeliveringOrder(@RequestBody Date deliveringDate, @PathVariable long id) {
         KoiFishOrder confirmedOrder = koiFishOrderService.deliveringOrder(deliveringDate,id);
         return ResponseEntity.ok(confirmedOrder);
     }
+    @PreAuthorize("hasAuthority('CONSULTING')")
     @PutMapping("done/{id}")
     public ResponseEntity updateDoneOrder(@PathVariable long id) {
         KoiFishOrder confirmedOrder = koiFishOrderService.doneOrder(id);
 
         return ResponseEntity.ok(confirmedOrder);
     }
-
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PutMapping("cancel/{id}")
     public ResponseEntity confirmOrder(@RequestBody String notes, @PathVariable long id) {
         KoiFishOrder cancelOrder = koiFishOrderService.cancelOrder(notes,id);

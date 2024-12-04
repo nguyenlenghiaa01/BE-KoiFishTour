@@ -38,6 +38,8 @@ public class FeedBackAPI {
         return ResponseEntity.ok(newFeedback);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     @GetMapping("/get")
     public ResponseEntity<DataResponse<FeedbackResponse>> get(
             @RequestParam int page,
@@ -45,6 +47,7 @@ public class FeedBackAPI {
         DataResponse<FeedbackResponse> feedbackResponse = feedbackService.getFeedBack(page, size);
         return ResponseEntity.ok(feedbackResponse);
     }
+
 
     @GetMapping("/guest/get")
     public ResponseEntity<DataResponse<FeedbackResponse>> getAll(
@@ -54,10 +57,11 @@ public class FeedBackAPI {
         return ResponseEntity.ok(feedbackResponse);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     @GetMapping("/bookingId")
     public ResponseEntity<Feedback> getFeedBackByBookingId(@RequestParam String bookingId) {
         Feedback feedback = feedbackService.getFeedBackByBookingId(bookingId);
-
         return ResponseEntity.ok(feedback);
     }
 
